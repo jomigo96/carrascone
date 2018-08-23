@@ -5,8 +5,9 @@
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include <vector>
+#include <set>
 #include <exception>
+#include "TileType.hpp"
 
 class Map{
 	
@@ -19,7 +20,7 @@ public:
 private:
 	sf::Window& window;
 	
-	std::vector<sf::Texture> textures;
+	std::set<TileType, sf::Texture> textures;
 };
 
 #endif /* MAP_HPP */
