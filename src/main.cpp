@@ -1,8 +1,8 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include "Map.hpp"
 
 
-#define TILESIZE 78
 
 int main(void){
 	
@@ -10,6 +10,8 @@ int main(void){
 	
 	sf::RenderWindow window(sf::VideoMode(480, 360), "Carrascone");
     window.setFramerateLimit(60);
+    Map map(window);
+    map.load();
 	
 	sf::Texture tex_chappel;
 	
