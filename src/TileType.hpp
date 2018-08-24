@@ -28,7 +28,9 @@ class TileType{
 	
 public:
 
-	TileType(ItemType up, ItemType right, ItemType down, ItemType left, bool shield, bool connected=true);
+	TileType(ItemType up, ItemType right, ItemType down, ItemType left, bool shield, bool connected);
+	
+	TileType(ItemType up, ItemType right, ItemType down, ItemType left);
 	
 	TileType(char tile);
 	
@@ -47,6 +49,8 @@ public:
 	bool isValid(void) const;
 	
 	bool hasShield(void) const;
+	
+	bool isConnected() const;
 	
 	char getTile(void) const;
 	

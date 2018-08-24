@@ -1,10 +1,20 @@
 #include "TileType.hpp"
+#include <stdint.h>
 
-TileType::TileType(ItemType up, ItemType right, ItemType down, ItemType left, bool shield=false, bool connected=true):
+TileType::TileType(ItemType up, ItemType right, ItemType down, ItemType left, bool shield, bool connected):
 up(up), right(right), down(down), left(left), shield(shield), connected(connected){
 	
 	tile = 0;
-	this.attribute();
+	this->attribute();
+}
+
+TileType::TileType(ItemType up, ItemType right, ItemType down, ItemType left):
+up(up), right(right), down(down), left(left){
+	
+	connected=false;
+	shield=false;
+	tile = 0;
+	this->attribute();
 }
 	
 TileType::TileType(char tile): tile(tile){
@@ -12,7 +22,7 @@ TileType::TileType(char tile): tile(tile){
 	if(tile == 0)
 		throw std::invalid_argument("Can't call with 0, asshole");
 		
-	this.attribute();
+	this->attribute();
 }
 	
 TileType::~TileType(){}
@@ -40,10 +50,10 @@ std::ostream& operator<<( std::ostream& out, const TileType& type ){
 		out << "This tile is a " << type.getDescription() << std::endl;
 	}
 	else{
-		out << "Tile type:\t" << "Up: " << type.up << " Right: "<< type.right << 
+		out << "Tile type --- " << "Up: " << type.up << " Right: "<< type.right << 
 		" Down: " << type.down << " Left: " << type.left << 
-		type.connected ? " - Castles connected - " : "castles not connected - " <<
-		type.shield ? "No shield" : "With shield" << std::endl;
+		(type.connected ? " - Castles connected - " : " - castles not connected - ") <<
+		(type.shield ? "No shield" : "With shield") << std::endl;
 	}
 	return out;
 }
@@ -76,6 +86,8 @@ std::string const& TileType::getDescription(void) const{
 
 void TileType::attribute(void){
 	
+	bool flag=true;
+	
 	if(tile == 0){
 		// assigned with each boundary
 		
@@ -86,21 +98,26 @@ void TileType::attribute(void){
 			
 			for(char c='a'; c<='x'; c++){
 				
-				TileType possible(c);
+				TileType p(c);
 				if(circle_comparison((unsigned)up, (unsigned)right,
-					(unsigned)down, (unsigned)left, (unsigned)c.getUp(),
-					(unsigned)c.getRight(), (unsigned)c.getDown(), 
-					(unsigned)c.getLeft())){
+					(unsigned)down, (unsigned)left, (unsigned)p.getUp(),
+					(unsigned)p.getRight(), (unsigned)p.getDown(), 
+					(unsigned)p.getLeft())){	
 					
-					tile=c;
-					return;
+					if((connected==p.isConnected())&&(shield==p.hasShield())){
+						tile=c;
+						flag=false;
+						break;
+					}
 				}
 			}
-			tile=INVALID_TILE;
-			return;
+			if(flag){
+				tile=INVALID_TILE;
+				return;
+			}
 		}
 		
-	}else{
+	}
 		// assigned by key	
 		
 		switch (tile){
@@ -124,13 +141,13 @@ void TileType::attribute(void){
 				connected=false;		
 				break;				
 			case 'c':
-				up=field;
-				right=field;
-				down=field;
-				left=field;
+				up=castle;
+				right=castle;
+				down=castle;
+				left=castle;
 				description = std::string("4-sided castle");
 				shield=true;
-				connected=true;			
+				connected=false;			
 				break;	
 					
 			case 'd':
@@ -333,9 +350,12 @@ void TileType::attribute(void){
 				break;																	
 		}
 		return;
-	}
+	
 }
 
+bool TileType::isConnected() const{
+	return connected;		
+}
 
 int TileType::getUp() const{
 	return up;
@@ -358,22 +378,22 @@ int TileType::getDown() const{
 
 bool circle_comparison(unsigned int a, unsigned int b, unsigned int c, unsigned int d, unsigned int e, unsigned int f, unsigned int g, unsigned int h){
 	
-	const unsigned int16_t mask = 15; // 0000 0000 0000 1111
+	const uint16_t mask = 15; // 0000 0000 0000 1111
 	
-	unsigned int16_t tag1 = a & mask;
-	tag1 << 4;
+	uint16_t tag1 = a & mask;
+	tag1 <<= 4;
 	tag1 += b & mask;
-	tag1 << 4;
+	tag1 <<= 4;
 	tag1 += c & mask;
-	tag1 << 4;
+	tag1 <<= 4;
 	tag1 += d & mask;
 	
-	unsigned int16_t tag2 = e & mask;
-	tag2 << 4;
+	uint16_t tag2 = e & mask;
+	tag2 <<= 4;
 	tag2 += f & mask;
-	tag2 << 4;
+	tag2 <<= 4;
 	tag2 += g & mask;
-	tag2 << 4;
+	tag2 <<= 4;
 	tag2 += h & mask;	
 	
 	for(int i=0; i<4; i++){
