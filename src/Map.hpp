@@ -5,22 +5,34 @@
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include <set>
+#include <map>
 #include <exception>
+#include <memory>
 #include "TileType.hpp"
+#include "Cell.hpp"
+#include "Tile.hpp"
+
 
 class Map{
 	
 public:
-	Map(sf::Window& window);
+	Map(sf::RenderWindow& window);
 	~Map();
 	
-	void load(void);
+	TileType const& draw(void);
+	
+	bool play(std::shared_ptr<Tile> tile, Cell cell);
+	
+	void render(void) const;
 	
 private:
-	sf::Window& window;
+	sf::RenderWindow& window;
 	
-	std::set<TileType, sf::Texture> textures;
+	std::map<TileType, sf::Texture> textures;
+	std::map<TileType, int> deck;
+	std::map<Cell, std::shared_ptr<Tile>> map;
+	
+	int deck_count(void) const;
 };
 
 #endif /* MAP_HPP */

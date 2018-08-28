@@ -1,8 +1,10 @@
 #include <iostream>
+#include <memory>
 #include <SFML/Graphics.hpp>
 #include "Map.hpp"
-
-
+#include "Tile.hpp"
+#include "TileType.hpp"
+#include "Cell.hpp"
 
 int main(void){
 	
@@ -11,17 +13,22 @@ int main(void){
 	sf::RenderWindow window(sf::VideoMode(480, 360), "Carrascone");
     window.setFramerateLimit(60);
     Map map(window);
-    map.load();
-	
-	sf::Texture tex_chappel;
-	
-	if(!tex_chappel.loadFromFile("textures/tile-a.png")){
-		std::cout << "Error loading tile texture, exiting!" << std::endl;
-		return -1;
-	}
-	
-	sf::Sprite sprite(tex_chappel);
-	
+    
+    std::shared_ptr<Tile> tile (new Tile('i'));
+    
+    map.play(tile, Cell(1,1));	
+    tile= std::shared_ptr<Tile>(new Tile('d'));
+    tile->rotate_clockwise();tile->rotate_clockwise();
+    map.play(tile, Cell(2,1));
+    
+    tile= std::shared_ptr<Tile>(new Tile('k'));
+    tile->rotate_counter_clockwise();
+    map.play(tile, Cell(1,2));
+    
+    tile= std::shared_ptr<Tile>(new Tile('d'));
+    tile->rotate_clockwise();
+    map.play(tile, Cell(0,2));
+    
 	
 	while (window.isOpen()){
 		
@@ -42,13 +49,9 @@ int main(void){
 			}
 		}
 		
-		
-		
-		
-		
 		window.clear();
 		
-		window.draw(sprite);
+		map.render();
 		
 		window.display();
 	}

@@ -42,6 +42,8 @@ public:
 	
 	bool operator!=(const TileType& other) const;
 	
+	bool operator<(const TileType& other) const;
+	
 	friend std::ostream& operator<<( std::ostream& out, const TileType& type );
 	
 	//void operator=(const TileType& other);

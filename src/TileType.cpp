@@ -70,7 +70,9 @@ std::ostream& operator<<( std::ostream& out, const TileType& type ){
 	}
 	return out;
 }
-	
+bool TileType::operator<(const TileType& other) const{
+	return tile<other.getTile();
+}
 	
 bool TileType::operator[](const TileType& other) const{
 
