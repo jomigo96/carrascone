@@ -4,7 +4,7 @@
 
 Map::Map(sf::Window& window): window(window){
 	
-	textures.reserve(24);
+	//textures.reserve(24);
 	std::cout << "Map constructor" << std::endl;
 }
 
@@ -25,7 +25,7 @@ void Map::load(){
 			std::cout << "Error loading file: "<< file << std::endl; 
 			throw "File not found";
 		}
-		textures[i] = tex;
+		//textures[i] = tex;
 		
 	}
 	std::cout << "Tiles loaded" << std::endl;

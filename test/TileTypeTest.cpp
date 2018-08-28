@@ -1,76 +1,94 @@
+#include "catch.hpp"
+
 #include <iostream>
-#include "TileType.hpp"
+#include <string>
+#include "../src/TileType.hpp"
 
+	
+TEST_CASE("Circular comparison"){
+		int a,b,c,d,e,f,g,h;
+	
+		a=1; b=2; c=3; d=4; e=2; f=3; g=4; h=1;		
+		REQUIRE(circle_comparison(a,b,c,d,e,f,g,h) == true);
+		
+		a=1; b=1; c=1; d=1; e=2; f=3; g=4; h=1;
+		REQUIRE(circle_comparison(a,b,c,d,e,f,g,h) == false);
+		
+		a=1; b=2; c=3; d=4; e=1; f=2; g=3; h=4;
+		REQUIRE(circle_comparison(a,b,c,d,e,f,g,h) == true);
+		
+		a=1; b=2; c=3; d=4; e=1; f=3; g=4; h=1;
+		REQUIRE(circle_comparison(a,b,c,d,e,f,g,h) == false);
+		
+		a=4; b=2; c=3; d=4; e=3; f=4; g=4; h=2;
+		REQUIRE(circle_comparison(a,b,c,d,e,f,g,h) == true);
+		
+		a=1; b=1; c=1; d=1; e=1; f=1; g=1; h=1;
+		REQUIRE(circle_comparison(a,b,c,d,e,f,g,h) == true);
+		
+		//Testing joker sides
+		
+		REQUIRE(circle_comparison(-1, 1, 2, 3, 1, 1, 2, 3) == true);
+		
+		REQUIRE(circle_comparison(-1, 1, -1, 3, 1, 1, 3, 2) == true);
+		
+		REQUIRE(circle_comparison(1, -1, 2, 3, 3, 1, 2, 2) == true);
+		
+		REQUIRE(circle_comparison(1, -1, 2, 3, 3, 2, 2, 2) == false);
+}
 
-int main(void){
-	
-	std::cout << "Running test on TileType" << std::endl;
-	
-	std::cout << "Testing circle comparison" << std::endl;
-	
-	bool flag;
-	unsigned a,b,c,d,e,f,g,h;
-	
-	a=1; b=2; c=3; d=4; e=2; f=3; g=4; h=1;
-	flag=circle_comparison(a,b,c,d,e,f,g,h);
-	std::cout << (flag? "OK" : "Fail") << std::endl;
-	
-	a=1; b=1; c=1; d=1; e=2; f=3; g=4; h=1;
-	flag=circle_comparison(a,b,c,d,e,f,g,h);
-	std::cout << (flag? "Fail" : "OK") << std::endl;
-	
-	a=1; b=2; c=3; d=4; e=1; f=2; g=3; h=4;
-	flag=circle_comparison(a,b,c,d,e,f,g,h);
-	std::cout << (flag? "OK" : "Fail") << std::endl;
-	
-	a=1; b=2; c=3; d=4; e=1; f=3; g=4; h=1;
-	flag=circle_comparison(a,b,c,d,e,f,g,h);	
-	std::cout << (flag? "Fail" : "OK") << std::endl;
-	
-	a=1; b=2; c=3; d=4; e=2; f=3; g=4; h=1;
-	flag=circle_comparison(a,b,c,d,e,f,g,h);
-	std::cout << (flag? "OK" : "Fail") << std::endl;
-	
-	a=1; b=1; c=1; d=1; e=1; f=1; g=1; h=1;
-	flag=circle_comparison(a,b,c,d,e,f,g,h);
-	std::cout << (flag? "OK" : "Fail") << std::endl;
+TEST_CASE("Testing constructors"){
 	
 	TileType* tile;
+	TileType t = TileType('e');
 	
 	tile = new TileType(field, field, field, castle, false, false);
-	std::cout << *tile;
-	delete tile;
-	tile = new TileType(castle, castle, castle, castle, true, false);
-	std::cout << *tile;
-	delete tile;	
-	tile = new TileType(field, field, field, field, false, false);
-	std::cout << *tile;
-	delete tile;	
-	tile = new TileType(field, castle, field, castle, false, true);
-	std::cout << *tile;
-	delete tile;
-	tile = new TileType(field, castle, field, castle, true, true);
-	std::cout << *tile;
-	delete tile;
-	tile = new TileType(field, castle, field, castle, false, false);
-	std::cout << *tile;
-	delete tile;	
-	tile = new TileType(road, castle, road, castle, false, false);
-	std::cout << *tile;
-	delete tile;	
-	tile = new TileType(field, field, field, road);
-	std::cout << *tile;
-	delete tile;
-	tile = new TileType(field, field, road, road);
-	std::cout << *tile;
-	delete tile;
-	tile = new TileType(field, road, field, field);
-	std::cout << *tile;
-	delete tile;
-	tile = new TileType(field, field, field, road);
-	std::cout << *tile;
+	REQUIRE(tile->getTile() == 'e');
+	REQUIRE(tile->getUp() == castle);
+	REQUIRE(tile->getRight() == field);
+	REQUIRE(tile->getDown() == field);
+	REQUIRE(tile->getLeft() == field);
+	REQUIRE(tile->getDescription() == std::string("Single castle"));
+	REQUIRE(t == *tile);
+	t=TileType('b');
+	REQUIRE(t != *tile);
+	
+	//Rule of 3
+	t=TileType(*tile);
+	REQUIRE(t == *tile);
+	t= *tile;
+	REQUIRE(t == *tile);
+	TileType tiile;
+	REQUIRE(tiile.isValid() == false);
+	
+	
+	//Undefined tiles
 	delete tile;
 	
-	return 0;
+	tile = new TileType(none, field, road, field);
+	REQUIRE(*tile != t);
+	REQUIRE(tile->isComplete() == false);
+	*tile = TileType(castle, field, castle, field);
+	REQUIRE(tile->isComplete() == true);
+
+	delete tile;
+}
+
+TEST_CASE("Test []operator"){
+	
+	TileType tile1=TileType('l');
+	TileType tile2=TileType(road, castle, none, road);
+	
+	
+	REQUIRE(tile2[tile1] == true);
+	
+	tile1=TileType('d');
+	
+	REQUIRE(tile2[tile1] == false);
 	
 }
+
+
+	
+
+

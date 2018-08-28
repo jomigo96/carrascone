@@ -34,6 +34,8 @@ public:
 	
 	TileType(char tile);
 	
+	TileType(void);
+	
 	~TileType();
 	
 	bool operator==(const TileType& other) const;
@@ -47,6 +49,8 @@ public:
 	bool operator[](const TileType& other) const;
 	
 	bool isValid(void) const;
+	
+	bool isComplete(void) const;
 	
 	bool hasShield(void) const;
 	
@@ -80,7 +84,8 @@ private:
 
 /*!
  * \brief Compares the circle abcd to efgh. Works for numbers 0-15
+ *  Assigning one of the first 4 parameters -1 means that this slot will be ignored in the comparison
  */ 
-bool circle_comparison(unsigned int a, unsigned int b, unsigned int c, unsigned int d, unsigned int e, unsigned int f, unsigned int g, unsigned int h);
+bool circle_comparison(int a, int b, int c, int d, int e, int f, int g, int h);
 
 #endif /* TILETYPE */

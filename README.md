@@ -7,6 +7,7 @@ Carcassone program for local multiplayer, to run in UNIX systems.
 
 + C++11
 + [SFML](https://www.sfml-dev.org/) graphic library 
++ [catch](https://github.com/catchorg/Catch2) testing framework
 
 ## Future expansions
 

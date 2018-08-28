@@ -17,6 +17,19 @@ up(up), right(right), down(down), left(left){
 	this->attribute();
 }
 	
+TileType::TileType(void){
+		
+	up=none;
+	right=none;
+	down=none;
+	left=none;
+	tile=INVALID_TILE;
+	shield=false;
+	connected=false;
+	description=std::string("Empty tile");
+	
+}
+	
 TileType::TileType(char tile): tile(tile){
 		
 	if(tile == 0)
@@ -61,7 +74,17 @@ std::ostream& operator<<( std::ostream& out, const TileType& type ){
 	
 bool TileType::operator[](const TileType& other) const{
 
-	return false;
+	if((this->tile != INCOMPLETE_TILE)|| !other.isValid())
+		throw std::logic_error("First tile must be incomplete, second valid");
+		
+	return circle_comparison( this->up == none ? -1 : this->up,
+							  this->right == none ? -1 : this->right,
+							  this->down == none ? -1 : this->down,
+							  this->left == none ? -1 : this->left,
+							  other.getUp(),
+							  other.getRight(),
+							  other.getDown(),
+							  other.getLeft() );
 }
 	
 bool TileType::isValid(void) const{
@@ -372,36 +395,71 @@ int TileType::getLeft() const{
 int TileType::getDown() const{
 	return down;
 }
+bool TileType::isComplete(void) const{
+	return tile != INCOMPLETE_TILE;
+}
 
 
 // Non member functions
 
-bool circle_comparison(unsigned int a, unsigned int b, unsigned int c, unsigned int d, unsigned int e, unsigned int f, unsigned int g, unsigned int h){
+bool circle_comparison(int a, int b, int c, int d, int e, int f, int g, int h){
 	
 	const uint16_t mask = 15; // 0000 0000 0000 1111
+	uint16_t ign_mask = 0;
 	
-	uint16_t tag1 = a & mask;
-	tag1 <<= 4;
-	tag1 += b & mask;
-	tag1 <<= 4;
-	tag1 += c & mask;
-	tag1 <<= 4;
-	tag1 += d & mask;
+	uint16_t au, bu, cu, du;
+	uint16_t eu = e;
+	uint16_t fu = f;
+	uint16_t gu = g;
+	uint16_t hu = h;
 	
-	uint16_t tag2 = e & mask;
+	if(a==-1){
+		au=mask;
+		ign_mask += mask<<12;
+	}else
+		au=a;
+		
+	if(b==-1){
+		bu=mask;
+		ign_mask += mask<<8;
+	}else
+		bu=b;
+		
+	if(c==-1){
+		cu=mask;
+		ign_mask += mask<<4;
+	}else
+		cu=c;
+		
+	if(d==-1){
+		du=mask;
+		ign_mask += mask;
+	}else
+		du=d;
+	
+	
+	uint16_t tag1 = au & mask;
+	tag1 <<= 4;
+	tag1 += bu & mask;
+	tag1 <<= 4;
+	tag1 += cu & mask;
+	tag1 <<= 4;
+	tag1 += du & mask;
+	
+	uint16_t tag2 = eu & mask;
 	tag2 <<= 4;
-	tag2 += f & mask;
+	tag2 += fu & mask;
 	tag2 <<= 4;
-	tag2 += g & mask;
+	tag2 += gu & mask;
 	tag2 <<= 4;
-	tag2 += h & mask;	
+	tag2 += hu & mask;	
 	
 	for(int i=0; i<4; i++){
 		
-		if(tag1 == tag2)
+		if(tag1 == (tag2 | ign_mask))
 			return true;
 			
-		tag1 = (tag1 << 4) | (tag1 >> 12);	
+		tag2 = (tag2 << 4) | (tag2 >> 12);	
 	}
 	return false;
 }
