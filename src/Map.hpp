@@ -2,6 +2,7 @@
 #define MAP_HPP
 
 #define TILESIZE 78
+#define TILE_WEIGHTS {2, 4, 1, 3, 5, 2, 1, 3, 2, 3, 3, 3, 2, 3, 2, 3, 1, 3, 2, 1, 8, 9, 4, 1}
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
@@ -11,6 +12,7 @@
 #include "TileType.hpp"
 #include "Cell.hpp"
 #include "Tile.hpp"
+
 
 
 class Map{
@@ -24,6 +26,8 @@ public:
 	bool play(std::shared_ptr<Tile> tile, Cell cell);
 	
 	void render(void) const;
+	
+	friend std::ostream& operator<<(std::ostream& os, const Map& map);
 	
 private:
 	sf::RenderWindow& window;

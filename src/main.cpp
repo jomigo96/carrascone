@@ -29,6 +29,7 @@ int main(void){
     tile->rotate_clockwise();
     map.play(tile, Cell(0,2));
     
+    std::cout << map;
 	
 	while (window.isOpen()){
 		

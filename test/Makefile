@@ -5,15 +5,18 @@ EXECUTABLE=test
 
 SOURCES=$(wildcard *.cpp)
 OBJECTS=$(notdir $(SOURCES:.cpp=.o))
+OBJ= *.o
 DOCDIR=../doc
 
 
 test: 
 	$(MAKE) -C ../src
 	cp ../src/TileType.o .
-	g++  $(CPPFLAGS) -o TileTypeTest.o TileTypeTest.cpp
-	g++  $(CPPFLAGS) -o tests-main.o tests-main.cpp
-	g++ TileType.o TileTypeTest.o tests-main.o $(LDFLAGS) -o test 
+	cp ../src/Cell.o .
+	$(CC)  $(CPPFLAGS) -o TileTypeTest.o TileTypeTest.cpp
+	$(CC)  $(CPPFLAGS) -o CellTest.o CellTest.cpp
+	$(CC)  $(CPPFLAGS) -o tests-main.o tests-main.cpp
+	$(CC) $(OBJ) $(LDFLAGS) -o test 
 	
 clean:
 	rm -rf $(OBJECTS) main.o $(EXECUTABLE) $(DOCDIR)/html $(DOCDIR)/latex

@@ -13,7 +13,7 @@ Map::Map(sf::RenderWindow& window): window(window){
 	sf::Texture tex;
 	
 	//Build deck
-	const int weights[] = {2, 4, 1, 3, 5, 2, 1, 3, 2, 3, 3, 3, 2, 3, 2, 3, 1, 3, 2, 1, 8, 9, 4, 1};
+	const int weights[] = TILE_WEIGHTS;
 	
 	for(int i=0; i<=count; i++){
 		
@@ -56,7 +56,6 @@ TileType const& Map::draw(void){
 			v-=i->second;
 		}else{ //Lands here
 			
-			i->second--;
 			return i->first;
 		}	
 	}
@@ -80,6 +79,14 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 	
 	// TODO Checks if piece can be added there
 	map.insert( std::pair<Cell, std::shared_ptr<Tile>>(cell, tile) );
+	std::map<TileType, int>::iterator it = deck.find(*tile);
+	if (it!=deck.end()){
+		if (it->second >0){
+			it->second--;
+		}else
+			return false;
+	}else
+		return false;
 	return true;
 }
 
@@ -105,4 +112,20 @@ void Map::render(void) const{
 		sprite.setPosition(sf::Vector2f(CELL_DIM*(cell.getX()+mod_x), CELL_DIM*(cell.getY()+mod_y)));
 		window.draw(sprite);
 	}
+}
+
+
+std::ostream& operator<<(std::ostream& os, const Map& map){
+	
+	os << std::endl << "showing deck" << std::endl;
+	const int weights[] = TILE_WEIGHTS;
+	for(auto it = map.deck.cbegin(); it != map.deck.cend(); it++){
+	
+		os << it->first.getDescription() << " -- count: " 
+		   << it->second << '/' << weights[(int)it->first.getTile()-'a'] 
+		   << std::endl;
+	
+	}
+	
+	return os;
 }
