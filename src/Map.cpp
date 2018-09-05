@@ -32,6 +32,8 @@ Map::Map(sf::RenderWindow& window): window(window){
 	struct timeval tp;
 	gettimeofday(&tp, NULL);
 	srand(tp.tv_sec);
+	
+	playable = std::shared_ptr<const Tile>(nullptr);
 }
 
 Map::~Map(){}
@@ -112,6 +114,17 @@ void Map::render(void) const{
 		sprite.setPosition(sf::Vector2f(CELL_DIM*(cell.getX()+mod_x), CELL_DIM*(cell.getY()+mod_y)));
 		window.draw(sprite);
 	}
+	if(playable){
+		std::map<TileType, sf::Texture>::const_iterator it = textures.find(*playable);
+		if(it == textures.cend())
+			return; //Maybe exception
+		sprite.setTexture(it->second);
+		sprite.setRotation(playable->get_orientation());
+		int mod_x=(playable->get_orientation()==90 || playable->get_orientation()==180) ? CELL_DIM/2 : -CELL_DIM/2;
+		int mod_y=(playable->get_orientation()>90) ? CELL_DIM/2 : -CELL_DIM/2;
+		sprite.setPosition(playable_pos+sf::Vector2f(mod_x, mod_y));
+		window.draw(sprite);
+	}
 }
 
 
@@ -128,4 +141,21 @@ std::ostream& operator<<(std::ostream& os, const Map& map){
 	}
 	
 	return os;
+}
+
+void Map::setPlayable(std::shared_ptr<const Tile> tile){
+	
+	playable = tile;
+	
+}
+void Map::setPlayablePos(int x, int y){
+	
+	playable_pos.x=x;
+	playable_pos.y=y;
+}
+
+void Map::clearPlayable(void){
+	
+	playable.reset();
+	
 }

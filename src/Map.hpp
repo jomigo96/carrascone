@@ -29,12 +29,20 @@ public:
 	
 	friend std::ostream& operator<<(std::ostream& os, const Map& map);
 	
+	void setPlayable(std::shared_ptr<const Tile> tile);
+	
+	void setPlayablePos(int x, int y);
+	void clearPlayable(void);
+	
 private:
 	sf::RenderWindow& window;
 	
 	std::map<TileType, sf::Texture> textures;
 	std::map<TileType, int> deck;
 	std::map<Cell, std::shared_ptr<Tile>> map;
+	
+	std::shared_ptr<const Tile> playable;
+	sf::Vector2f playable_pos; 
 	
 	int deck_count(void) const;
 };

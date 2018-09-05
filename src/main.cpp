@@ -10,30 +10,60 @@ int main(void){
 	
 	std::cout << "Carrascone is starting!" << std::endl;
 	
-	sf::RenderWindow window(sf::VideoMode(480, 360), "Carrascone");
+	sf::RenderWindow window(sf::VideoMode(1280,720), "Carrascone");
     window.setFramerateLimit(60);
     Map map(window);
-    
-    std::shared_ptr<Tile> tile (new Tile('i'));
-    
-    map.play(tile, Cell(1,1));	
-    tile= std::shared_ptr<Tile>(new Tile('d'));
-    tile->rotate_clockwise();tile->rotate_clockwise();
-    map.play(tile, Cell(2,1));
-    
-    tile= std::shared_ptr<Tile>(new Tile('k'));
-    tile->rotate_counter_clockwise();
-    map.play(tile, Cell(1,2));
-    
-    tile= std::shared_ptr<Tile>(new Tile('d'));
-    tile->rotate_clockwise();
-    map.play(tile, Cell(0,2));
-    
+     
     std::cout << map;
+    bool turn=true;
 	
 	while (window.isOpen()){
 		
 		sf::Event event;
+		
+		
+		TileType t=map.draw();
+		std::shared_ptr<Tile> tile(new Tile(t.getTile()));
+		map.setPlayable(tile);
+		turn=true;
+		
+		while(turn){
+			
+			while( window.pollEvent(event) ){
+				
+				switch (event.type){
+					
+					case sf::Event::Closed:
+					
+						window.close();
+						break;
+						
+					case sf::Event::MouseButtonPressed:
+						
+						switch (event.key.code){
+							case sf::Mouse::Left:
+								turn = ! map.play(tile, Cell(sf::Mouse::getPosition(window).x/CELL_DIM, sf::Mouse::getPosition(window).y/CELL_DIM));
+								map.clearPlayable();
+								break;
+							case sf::Mouse::Right:
+								tile->rotate_clockwise();
+								break;
+							default:
+								break;
+						}
+						break;
+						
+					default:
+						break;
+				}
+			}			
+			if(window.isOpen()){
+				map.setPlayablePos(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
+				window.clear();
+				map.render();
+				window.display();
+			}
+		}
 		
 		while( window.pollEvent(event) ){
 			
