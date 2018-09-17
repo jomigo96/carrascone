@@ -18,13 +18,19 @@ int main(void){
     bool turn=true;
     Cell clicked;
     TileType surroundings;
+    TileType t;
 	
 	while (window.isOpen()){
 		
 		sf::Event event;
 		
-		
-		TileType t=map.draw();
+		try{
+			t=map.draw();
+		}catch(std::length_error){
+			std::cout << "Deck empty" << std::endl;
+			window.close();
+			break;
+		}
 		std::shared_ptr<Tile> tile(new Tile(t.getTile()));
 		map.setPlayable(tile);
 		turn=true;
