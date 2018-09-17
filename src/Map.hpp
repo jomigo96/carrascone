@@ -2,7 +2,7 @@
 #define MAP_HPP
 
 #define TILESIZE 78
-#define TILE_WEIGHTS {2, 4, 1, 3, 5, 2, 1, 3, 2, 3, 3, 3, 2, 3, 2, 3, 1, 3, 2, 1, 8, 9, 4, 1}
+#define TILE_WEIGHTS {2, 4, 1, 2, 5, 2, 1, 3, 2, 3, 3, 3, 2, 3, 2, 3, 1, 3, 2, 1, 8, 9, 4, 1}
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
@@ -32,7 +32,12 @@ public:
 	void setPlayable(std::shared_ptr<const Tile> tile);
 	
 	void setPlayablePos(int x, int y);
+	
 	void clearPlayable(void);
+	
+	TileType getSurroundings(const Cell& l) const;
+	
+	bool cellOccupied(const Cell& c)const;
 	
 private:
 	sf::RenderWindow& window;

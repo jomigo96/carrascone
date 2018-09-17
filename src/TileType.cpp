@@ -116,6 +116,11 @@ void TileType::attribute(void){
 	if(tile == 0){
 		// assigned with each boundary
 		
+		if((up==none)&&(right==none)&&(down==none)&&(left==none)){
+			tile=INVALID_TILE;
+			return;
+		}	
+		
 		if((up==none)||(right==none)||(down==none)||(left==none)){
 			tile=INCOMPLETE_TILE;
 			return;

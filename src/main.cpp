@@ -16,6 +16,8 @@ int main(void){
      
     std::cout << map;
     bool turn=true;
+    Cell clicked;
+    TileType surroundings;
 	
 	while (window.isOpen()){
 		
@@ -36,14 +38,33 @@ int main(void){
 					case sf::Event::Closed:
 					
 						window.close();
+						turn = false;
 						break;
 						
 					case sf::Event::MouseButtonPressed:
 						
 						switch (event.key.code){
 							case sf::Mouse::Left:
-								turn = ! map.play(tile, Cell(sf::Mouse::getPosition(window).x/CELL_DIM, sf::Mouse::getPosition(window).y/CELL_DIM));
-								map.clearPlayable();
+								clicked = Cell(sf::Mouse::getPosition(window).x/CELL_DIM, sf::Mouse::getPosition(window).y/CELL_DIM);
+								
+								if(map.cellOccupied(clicked))
+									break;
+								
+								surroundings = map.getSurroundings(clicked); 
+								if(surroundings.getTile() == INVALID_TILE){
+									break;
+								}
+									
+								try{
+									if( (*tile)[surroundings] ){
+										turn = ! map.play(tile, clicked);
+										map.clearPlayable();
+									}else
+										std::cout << "Tile does not fit there" << std::endl;
+								}catch(std::logic_error){
+									std::cout << "Not handled yet" << std::endl;
+								}
+
 								break;
 							case sf::Mouse::Right:
 								tile->rotate_clockwise();

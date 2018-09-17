@@ -70,7 +70,7 @@ public:
 	
 	int getDown() const;
 	
-private:
+protected:
 
 	ItemType up;
 	ItemType right;

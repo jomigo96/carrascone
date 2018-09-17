@@ -33,6 +33,10 @@ Map::Map(sf::RenderWindow& window): window(window){
 	gettimeofday(&tp, NULL);
 	srand(tp.tv_sec);
 	
+	std::shared_ptr<Tile> first(new Tile('d'));
+	this->play(first, Cell(7,4));
+	
+	
 	playable = std::shared_ptr<const Tile>(nullptr);
 }
 
@@ -157,5 +161,50 @@ void Map::setPlayablePos(int x, int y){
 void Map::clearPlayable(void){
 	
 	playable.reset();
+	
+}
+
+TileType Map::getSurroundings(const Cell& l) const{
+	
+	Cell aux = l + Cell(1,0); // cell to the right
+	
+	ItemType up, right, down, left;
+	
+	try{
+		right = map.at(aux)->getLeft();
+	}catch(std::out_of_range){
+		right = none;		
+	}
+	
+	aux = l + Cell(0,1); // Cell to the bottom
+	
+	try{
+		down = map.at(aux)->getUp();
+	}catch(std::out_of_range){
+		down = none;		
+	}
+	
+	aux = l + Cell(-1, 0); // Cell to the left
+	
+	try{
+		left = map.at(aux)->getRight();
+	}catch(std::out_of_range){
+		left = none;		
+	}
+	
+	aux = l + Cell(0, -1); // Cell to the top
+	
+	try{
+		up = map.at(aux)->getDown();
+	}catch(std::out_of_range){
+		up = none;		
+	}
+	
+	return TileType(up, right, down, left);
+}
+
+bool Map::cellOccupied(const Cell& c)const{
+	
+	return (bool)map.count(c);
 	
 }
