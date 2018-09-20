@@ -115,8 +115,10 @@ ItemType Tile::getLeft()const{
 
 bool Tile::operator[](const TileType& other) const{
 
-	if(other.getTile() != INCOMPLETE_TILE){
-		throw std::invalid_argument("Bad function call, must be incomplete tile");
+	return true;
+
+	if(!other.isValid()){
+		throw std::invalid_argument("Second tile must be valid");
 	}
 	
 	ItemType true_up, true_right, true_down, true_left;

@@ -29,7 +29,7 @@ TileType::TileType(void){
 	right=none;
 	down=none;
 	left=none;
-	tile=INVALID_TILE;
+	tile=EMPTY_TILE;
 	shield=false;
 	connected=false;
 	description=std::string("Empty tile");
@@ -46,7 +46,6 @@ TileType::TileType(char tile): tile(tile){
 	
 TileType::~TileType(){}
 	
-// Will return true if they have the same letter, always false if any is an incomplete tile
 bool TileType::operator==(const TileType& other) const{
 	
 	char tile2 = other.getTile();
@@ -82,8 +81,13 @@ bool TileType::operator<(const TileType& other) const{
 	
 bool TileType::operator[](const TileType& other) const{
 
-	if((this->tile != INCOMPLETE_TILE) || !other.isValid())
-		throw std::logic_error("First tile must be incomplete, second valid");
+	if( !other.isValid() )
+		throw std::invalid_argument("Second tile must be valid");
+		
+	if(this->tile == EMPTY_TILE)
+		return true;
+		
+		
 		
 	return circle_comparison( this->up == none ? -1 : this->up,
 							  this->right == none ? -1 : this->right,
@@ -123,7 +127,7 @@ void TileType::attribute(void){
 		// assigned with each boundary
 		
 		if((up==none)&&(right==none)&&(down==none)&&(left==none)){
-			tile=INVALID_TILE;
+			tile=EMPTY_TILE;
 			return;
 		}	
 		
@@ -135,25 +139,22 @@ void TileType::attribute(void){
 			for(char c='a'; c<='x'; c++){
 				
 				TileType p(c);
-				if(circle_comparison((unsigned)up, (unsigned)right,
-					(unsigned)down, (unsigned)left, (unsigned)p.getUp(),
-					(unsigned)p.getRight(), (unsigned)p.getDown(), 
-					(unsigned)p.getLeft())){	
+				if(circle_comparison(up, right, down, left, 
+					p.getUp(), p.getRight(), p.getDown(), p.getLeft())){	
 					
-					if((connected==p.isConnected())&&(shield==p.hasShield())){
-						tile=c;
-						flag=false;
-						break;
+						if((connected==p.isConnected())&&(shield==p.hasShield())){
+							tile=c;
+							flag=false;
+							break;
 					}
 				}
 			}
 			if(flag){
 				tile=INVALID_TILE;
-				return;
 			}
 		}
 		
-	}
+	}else{
 		// assigned by key	
 		
 		switch (tile){
@@ -385,7 +386,8 @@ void TileType::attribute(void){
 				description = std::string("Invalid tile");
 				break;																	
 		}
-		return;
+	}
+	return;
 	
 }
 

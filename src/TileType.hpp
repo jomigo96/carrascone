@@ -11,8 +11,9 @@
 #include <string>
 #include <exception>
 
-#define INVALID_TILE 0
-#define INCOMPLETE_TILE 1
+#define EMPTY_TILE 0
+#define INVALID_TILE 1
+#define INCOMPLETE_TILE 2
 
 /*!
  * \enum ItemType
@@ -99,9 +100,9 @@ public:
 	friend std::ostream& operator<<( std::ostream& out, const TileType& type );
 	
 	/*!
-	 * \brief operator[], information weather a tile fits somewhere. 
+	 * \brief operator[], information weather a tile fits somewhere, with some possible rotation.
 	 * \param other other tile to be analysed, must be a valid kind.
-	 * \throw logic_error if the calling tile is not complete (has all sides defined) or if the second is not valid.
+	 * \throw invalid_argument if the calling tile is not incomplete (has all sides defined) or if the second is not valid.
 	 * \return bool result of the assertion.
 	 * */
 	bool operator[](const TileType& other) const;

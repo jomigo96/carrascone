@@ -42,16 +42,29 @@ TEST_CASE("Testing constructors"){
 	TileType* tile;
 	TileType t = TileType('e');
 	
-	tile = new TileType(field, field, field, castle, false, false);
+	tile = new TileType(castle, field, field, field, false, false);
 	REQUIRE(tile->getTile() == 'e');
 	REQUIRE(tile->getUp() == castle);
 	REQUIRE(tile->getRight() == field);
 	REQUIRE(tile->getDown() == field);
 	REQUIRE(tile->getLeft() == field);
-	REQUIRE(tile->getDescription() == std::string("Single castle"));
 	REQUIRE(t == *tile);
 	t=TileType('b');
 	REQUIRE(t != *tile);
+	
+	t=TileType('e');
+	tile = new TileType(field, field, castle, field, false, false);
+	REQUIRE(tile->getTile() == 'e');
+	REQUIRE(tile->getUp() == field);
+	REQUIRE(tile->getRight() == field);
+	REQUIRE(tile->getDown() == castle);
+	REQUIRE(tile->getLeft() == field);
+	REQUIRE(t == *tile);
+	t=TileType('b');
+	REQUIRE(t != *tile);
+	
+	t=TileType(road, none, road, field);
+	REQUIRE(t.getTile() == INCOMPLETE_TILE);
 	
 	//Rule of 3
 	t=TileType(*tile);
@@ -86,6 +99,15 @@ TEST_CASE("Test []operator"){
 	
 	REQUIRE(tile2[tile1] == false);
 	
+	tile2=TileType(none, none, castle, road);
+	
+	REQUIRE(tile2[tile1] == true);
+	
+	REQUIRE_THROWS_AS(tile1[tile2], std::invalid_argument);
+	
+	tile2=tile1;
+	
+	REQUIRE(tile2[tile1]);
 }
 
 
