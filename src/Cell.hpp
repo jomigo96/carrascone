@@ -2,7 +2,8 @@
 #define CELL_HPP
 /*!
  * \file Cell.hpp
- * \brief Cell class
+ * \brief Cell header file
+ * \author João Gonçalves
  */
 
 

@@ -1,3 +1,9 @@
+/*!
+ * \file TileType.cpp
+ * \brief TileType class implementation
+ * \author João Gonçalves
+ */
+ 
 #include "TileType.hpp"
 #include <stdint.h>
 
@@ -76,7 +82,7 @@ bool TileType::operator<(const TileType& other) const{
 	
 bool TileType::operator[](const TileType& other) const{
 
-	if((this->tile != INCOMPLETE_TILE)|| !other.isValid())
+	if((this->tile != INCOMPLETE_TILE) || !other.isValid())
 		throw std::logic_error("First tile must be incomplete, second valid");
 		
 	return circle_comparison( this->up == none ? -1 : this->up,

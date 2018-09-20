@@ -1,3 +1,9 @@
+/*!
+ * \file Map.hpp
+ * \brief Map header file
+ * \author João Gonçalves
+ */
+
 #ifndef MAP_HPP
 #define MAP_HPP
 
@@ -14,29 +20,79 @@
 #include "Tile.hpp"
 
 
-
+/*!
+ * \class Map
+ * \brief Map class, stores and manipulates all tiles played, and displayes them to the SFML window.
+ * */
 class Map{
 	
 public:
+
+	/*!
+	 * \brief contructor
+	 * \param window SFML render window object.
+	 * */
 	Map(sf::RenderWindow& window);
-	~Map();
 	
+	/*!
+	 * \brief destructor
+	 * */
+	~Map(); //TODO
+	
+	/*!
+	 * \brief draw one tile from the deck at random
+	 * \return TileType object 
+	 * \throw length_error if the deck is empty
+	 * */
 	TileType const& draw(void);
 	
-	bool play(std::shared_ptr<Tile> tile, Cell cell);
+	/*!
+	 * \brief play a Tile in a given position
+	 * \param tile Tile to be played
+	 * \param cell position where the tile is to be played
+	 * \return boolean stating if the play was successful (possible)
+	 * */
+	bool play(std::shared_ptr<Tile> tile, Cell cell); //TODO: migrate logic from main here
 	
+	/*! 
+	 * \brief Renders all tiles to the render window (does not display)
+	 * */
 	void render(void) const;
 	
+	/*! 
+	 * \brief stream output
+	 * For debugging, specifies the tiles on the deck/played
+	 * */
 	friend std::ostream& operator<<(std::ostream& os, const Map& map);
 	
+	/*!
+	 * \brief adds the Tile currently being played
+	 * \param tile tile to be played
+	 * */
 	void setPlayable(std::shared_ptr<const Tile> tile);
 	
+	/*! 
+	 * \brief setter for the position of the playable tile, in grid coordinates
+	 * */
 	void setPlayablePos(int x, int y);
 	
+	/*!
+	 * \brief destroys the current playable tile
+	 * */
 	void clearPlayable(void);
 	
-	TileType getSurroundings(const Cell& l) const;
+	/*!
+	 * \brief Asserts the neighbourhood of a map position, in the form of a TileType object
+	 * \param c cell position
+	 * \return TileType object (can be valid, incomplete, default type...)
+	 * */
+	TileType getSurroundings(const Cell& c) const;
 	
+	/*!
+	 * \brief checks if a cell is occupied by an already played tile
+	 * \param c cell object
+	 * \return boolean
+	 * */
 	bool cellOccupied(const Cell& c)const;
 	
 private:
@@ -49,6 +105,9 @@ private:
 	std::shared_ptr<const Tile> playable;
 	sf::Vector2f playable_pos; 
 	
+	/*!
+	 * \brief counts the tiles still present in the deck.
+	 */
 	int deck_count(void) const;
 };
 

@@ -1,3 +1,9 @@
+/*!
+ * \file Tile.cpp
+ * \brief Tile class implementation
+ * \author João Gonçalves
+ */
+
 #include "Tile.hpp"
 
 Tile::Tile() : TileType(){
@@ -12,15 +18,27 @@ Tile::Tile(char a) : TileType(a){
 	
 }
 
+Tile::Tile(const TileType& tile){
+	Tile(tile.getTile());
+}
+
 Tile::~Tile(){}
 	
 int Tile::rotate_clockwise(void){
-	orientation = (orientation==270) ? 0 : (orientation+90);
+	
+	const char c = this->getTile();
+	
+	if((c != 'b')&&( c != 'c' )&&( c != 'x'))
+		orientation = (orientation==270) ? 0 : (orientation+90);
 	return orientation;
 }
 
 int Tile::rotate_counter_clockwise(void){
-	orientation = (orientation==0) ? 270 : (orientation-90);
+	
+	const char c = this->getTile();
+	
+	if((c != 'b')&&( c != 'c' )&&( c != 'x'))
+		orientation = (orientation==0) ? 270 : (orientation-90);
 	return orientation;	
 }
 int Tile::get_orientation(void) const{
@@ -98,7 +116,7 @@ ItemType Tile::getLeft()const{
 bool Tile::operator[](const TileType& other) const{
 
 	if(other.getTile() != INCOMPLETE_TILE){
-		throw std::logic_error("Bad function call, must be incomplete tile");
+		throw std::invalid_argument("Bad function call, must be incomplete tile");
 	}
 	
 	ItemType true_up, true_right, true_down, true_left;

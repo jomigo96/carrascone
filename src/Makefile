@@ -15,6 +15,8 @@ $(EXECUTABLE): $(OBJECTS)
 .cc.o:
 	$(CC) $(CPPFLAGS) $< -o $@
 
+doc:
+	$(DOCC) Doxyfile
 
 clean:
 	rm -rf $(OBJECTS) $(EXECUTABLE) $(DOCDIR)/html $(DOCDIR)/latex

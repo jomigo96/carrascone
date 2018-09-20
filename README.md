@@ -25,6 +25,7 @@ Carcassone program for local multiplayer, to run in UNIX systems.
 
 ## Licence
 
+Unlicenced
+
 This was made as a learning exercise, no commercial use intended. Buy the [Carcassonne app](https://play.google.com/store/apps/details?id=com.asmodeedigital.carcassonne&hl=pt) (link visited on 23/08/2018).
 
-You may fork this project and modify it, but you may not redistribute any version of it.

@@ -1,3 +1,9 @@
+/*!
+ * \file main.cpp
+ * \brief main source code
+ * \author João Gonçalves
+ */
+
 #include <iostream>
 #include <memory>
 #include <SFML/Graphics.hpp>
@@ -19,10 +25,10 @@ int main(void){
     Cell clicked;
     TileType surroundings;
     TileType t;
+    sf::Event event;
 	
 	while (window.isOpen()){
 		
-		sf::Event event;
 		
 		try{
 			t=map.draw();
@@ -67,7 +73,7 @@ int main(void){
 										map.clearPlayable();
 									}else
 										std::cout << "Tile does not fit there" << std::endl;
-								}catch(std::logic_error){
+								}catch(std::invalid_argument){
 									std::cout << "Not handled yet" << std::endl;
 								}
 

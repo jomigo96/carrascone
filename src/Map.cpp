@@ -1,3 +1,9 @@
+/*!
+ * \file Map.cpp
+ * \brief Map class implementation
+ * \author João Gonçalves
+ */
+
 #include "Map.hpp"
 #include <cstdlib>
 #include <sys/time.h>
@@ -164,9 +170,9 @@ void Map::clearPlayable(void){
 	
 }
 
-TileType Map::getSurroundings(const Cell& l) const{
+TileType Map::getSurroundings(const Cell& c) const{
 	
-	Cell aux = l + Cell(1,0); // cell to the right
+	Cell aux = c + Cell(1,0); // cell to the right
 	
 	ItemType up, right, down, left;
 	
@@ -176,7 +182,7 @@ TileType Map::getSurroundings(const Cell& l) const{
 		right = none;		
 	}
 	
-	aux = l + Cell(0,1); // Cell to the bottom
+	aux = c + Cell(0,1); // Cell to the bottom
 	
 	try{
 		down = map.at(aux)->getUp();
@@ -184,7 +190,7 @@ TileType Map::getSurroundings(const Cell& l) const{
 		down = none;		
 	}
 	
-	aux = l + Cell(-1, 0); // Cell to the left
+	aux = c + Cell(-1, 0); // Cell to the left
 	
 	try{
 		left = map.at(aux)->getRight();
@@ -192,7 +198,7 @@ TileType Map::getSurroundings(const Cell& l) const{
 		left = none;		
 	}
 	
-	aux = l + Cell(0, -1); // Cell to the top
+	aux = c + Cell(0, -1); // Cell to the top
 	
 	try{
 		up = map.at(aux)->getDown();
