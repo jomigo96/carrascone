@@ -118,9 +118,9 @@ void Map::render(void) const{
 		}	
 			
 		sprite.setTexture(it->second);
-		sprite.setRotation(tile.get_orientation());
-		int mod_x=(tile.get_orientation()==90 || tile.get_orientation()==180) ? 1 : 0;
-		int mod_y=(tile.get_orientation()>90) ? 1 : 0;
+		sprite.setRotation(tile.getOrientation());
+		int mod_x=(tile.getOrientation()==90 || tile.getOrientation()==180) ? 1 : 0;
+		int mod_y=(tile.getOrientation()>90) ? 1 : 0;
 		sprite.setPosition(sf::Vector2f(CELL_DIM*(cell.getX()+mod_x), CELL_DIM*(cell.getY()+mod_y)));
 		window.draw(sprite);
 	}
@@ -129,9 +129,9 @@ void Map::render(void) const{
 		if(it == textures.cend())
 			return; //Maybe exception
 		sprite.setTexture(it->second);
-		sprite.setRotation(playable->get_orientation());
-		int mod_x=(playable->get_orientation()==90 || playable->get_orientation()==180) ? CELL_DIM/2 : -CELL_DIM/2;
-		int mod_y=(playable->get_orientation()>90) ? CELL_DIM/2 : -CELL_DIM/2;
+		sprite.setRotation(playable->getOrientation());
+		int mod_x=(playable->getOrientation()==90 || playable->getOrientation()==180) ? CELL_DIM/2 : -CELL_DIM/2;
+		int mod_y=(playable->getOrientation()>90) ? CELL_DIM/2 : -CELL_DIM/2;
 		sprite.setPosition(playable_pos+sf::Vector2f(mod_x, mod_y));
 		window.draw(sprite);
 	}

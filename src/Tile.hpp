@@ -40,13 +40,6 @@ public:
 	~Tile();
 	
 	/*!
-	 * \brief checks if the calling tile fits somewhere
-	 * \param other incomplete tiletype where the calling tile should go.
-	 * \throw invalid_argument if the TileType is not incomplete, ie, at least one side mustn't be defined.
-	 * */
-	bool operator[](const TileType& other) const;
-	
-	/*!
 	 * \brief rotates the tile clockwise
 	 * \return new orientation
 	 * */
@@ -61,7 +54,7 @@ public:
 	/*!
 	 * \brief getter for the orientation
 	 * */
-	int get_orientation(void) const;
+	int getOrientation(void) const;
 	
 	/*!
 	 * \brief getter for the actual upwards boundary, takes into account orientation
@@ -86,6 +79,15 @@ public:
 private:
 	int orientation;
 };
+
+/*!
+ * \brief Checks if a tile fits in a space
+ * \param tile Tile to be placed
+ * \param space TileType that supports it
+ * \return boolean with the assertion result
+ * \throw logic_error if a weird bug causes orientation not to be one of 0 90 180 270.
+ * */
+bool fits(const Tile& tile, const TileType& space);
 
 
 #endif /* TILE_HPP */

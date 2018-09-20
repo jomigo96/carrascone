@@ -395,19 +395,19 @@ bool TileType::isConnected() const{
 	return connected;		
 }
 
-int TileType::getUp() const{
+ItemType TileType::getUp() const{
 	return up;
 }
 	
-int TileType::getRight() const{
+ItemType TileType::getRight() const{
 	return right;
 }
 	
-int TileType::getLeft() const{
+ItemType TileType::getLeft() const{
 	return left;
 }
 	
-int TileType::getDown() const{
+ItemType TileType::getDown() const{
 	return down;
 }
 bool TileType::isComplete(void) const{

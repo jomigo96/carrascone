@@ -142,22 +142,23 @@ public:
 	/*!
 	 * \brief getter for the upwards boundary
 	 * */
-	int getUp() const;
+	ItemType getUp() const;
 
 	/*!
 	 * \brief getter for the right boundary
 	 * */	
-	int getRight() const;
+	ItemType getRight() const;
 	
 	/*!
 	 * \brief getter for the left boundary
 	 * */
-	int getLeft() const;
+	ItemType getLeft() const;
 	
 	/*!
 	 * \brief getter for the downwards boundary
 	 * */
-	int getDown() const;
+	ItemType getDown() const;
+	
 	
 protected:
 

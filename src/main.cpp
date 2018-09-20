@@ -63,18 +63,18 @@ int main(void){
 									break;
 								
 								surroundings = map.getSurroundings(clicked); 
-								if(surroundings.getTile() == INVALID_TILE){
+								if(surroundings.getTile() == EMPTY_TILE){
 									break;
 								}
 									
 								try{
-									if( (*tile)[surroundings] ){
+									if( fits( (*tile), surroundings) ){
 										turn = ! map.play(tile, clicked);
 										map.clearPlayable();
 									}else
 										std::cout << "Tile does not fit there" << std::endl;
 								}catch(std::invalid_argument){
-									std::cout << "Not handled yet" << std::endl;
+									std::cout << "Weird internal error occurred" << std::endl;
 								}
 
 								break;

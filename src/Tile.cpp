@@ -19,7 +19,7 @@ Tile::Tile(char a) : TileType(a){
 }
 
 Tile::Tile(const TileType& tile){
-	Tile(tile.getTile());
+	*this=Tile(tile.getTile());
 }
 
 Tile::~Tile(){}
@@ -41,7 +41,7 @@ int Tile::rotate_counter_clockwise(void){
 		orientation = (orientation==0) ? 270 : (orientation-90);
 	return orientation;	
 }
-int Tile::get_orientation(void) const{
+int Tile::getOrientation(void) const{
 	return orientation;
 }
 
@@ -113,54 +113,31 @@ ItemType Tile::getLeft()const{
 	}	
 }
 
-bool Tile::operator[](const TileType& other) const{
 
-	return true;
 
-	if(!other.isValid()){
-		throw std::invalid_argument("Second tile must be valid");
-	}
+bool fits(const Tile& tile, const TileType& space){
 	
-	ItemType true_up, true_right, true_down, true_left;
+	if( !tile.isValid())
+		throw std::invalid_argument("That tile does not exist");
+		
+	if( space.getTile() == EMPTY_TILE )
+		return false;
+		
+	ItemType true_up, true_right, true_down, true_left, up, right, down, left;
 	
-	switch(orientation){
+	true_up = tile.getUp();
+	true_down = tile.getDown();
+	true_left = tile.getLeft();
+	true_right = tile.getRight();	
+	up = space.getUp();
+	down = space.getDown();
+	left = space.getLeft();
+	right = space.getRight();
 	
-		case 0: 
-			true_up = TileType::up;
-			true_right = TileType::right;
-			true_down = TileType::down;
-			true_left = TileType::left;
-			break;
-		case 90:
-			true_up = TileType::left;
-			true_right = TileType::up;
-			true_down = TileType::right;
-			true_left = TileType::down;
-			break;
-		case 180:
-			true_up = TileType::down;
-			true_right = TileType::left;
-			true_down = TileType::up;
-			true_left = TileType::right;
-			break;
-		case 270:
-			true_up = TileType::right;
-			true_right = TileType::down;
-			true_down = TileType::left;
-			true_left = TileType::up;
-			break;
-		default:
-			true_up = none;
-			true_right = none;
-			true_down = none;
-			true_left = none;
-	}
-
-	bool flag = true;
-	
-	flag &= (other.getUp()==none || other.getUp()==true_up);
-	flag &= (other.getRight()==none || other.getRight()==true_right);
-	flag &= (other.getDown()==none || other.getDown()==true_down);
-	flag &= (other.getLeft()==none || other.getLeft()==true_left);
-	return flag;
+	return (
+		((up == none)    || (up == true_up))     &&
+		((left == none)  || (left == true_left)) &&
+		((down == none)  || (down == true_down)) &&
+		((right == none) || (right == true_right))  
+		);
 }
