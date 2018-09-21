@@ -31,8 +31,9 @@ public:
 	/*!
 	 * \brief contructor
 	 * \param window SFML render window object.
+	 * \param path directory with the png files
 	 * */
-	Map(sf::RenderWindow& window);
+	Map(sf::RenderWindow& window, const std::string& path);
 	
 	/*!
 	 * \brief destructor

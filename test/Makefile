@@ -1,27 +1,20 @@
 CC=g++
 CPPFLAGS=-c -g -std=c++0x -Wall -Wextra -pedantic
-LDFLAGS=-lsfml-graphics -lsfml-window -lsfml-system
+LDFLAGS=-lsfml-graphics -lsfml-window -lsfml-system -lm
 EXECUTABLE=test
+TESTCASES=../src/TileType.o ../src/Tile.o ../src/Cell.o ../src/Map.o
 
 SOURCES=$(wildcard *.cpp)
 OBJECTS=$(notdir $(SOURCES:.cpp=.o))
-OBJ= *.o
-DOCDIR=../doc
+OBJ=*.o
 
-
-test: 
+$(EXECUTABLE): $(OBJECTS)
 	$(MAKE) -C ../src
-	cp ../src/TileType.o .
-	cp ../src/Cell.o .
-	cp ../src/Tile.o .
-	$(CC)  $(CPPFLAGS) -o TileTypeTest.o TileTypeTest.cpp
-	$(CC)  $(CPPFLAGS) -o TileTest.o TileTest.cpp
-	$(CC)  $(CPPFLAGS) -o CellTest.o CellTest.cpp
-	$(CC)  $(CPPFLAGS) -o tests-main.o tests-main.cpp
-	$(CC) $(OBJ) $(LDFLAGS) -o test 
+	cp $(TESTCASES) .
+	$(CC) $(OBJ) $(LDFLAGS) -o $@ 
 	
 clean:
-	rm -rf $(OBJECTS) main.o $(EXECUTABLE) $(DOCDIR)/html $(DOCDIR)/latex
+	rm -rf $(OBJ) $(EXECUTABLE) 
 
 run: $(EXECUTABLE)
 	./$(EXECUTABLE)

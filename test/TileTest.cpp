@@ -48,8 +48,6 @@ TEST_CASE("Tile: getters"){
 	TileType t('v');
 	tile=Tile(t);
 	
-	std::cout << tile.getUp() << std::endl << tile.getDown() << 
-	 tile.getTile() <<std::endl;
 	
 	REQUIRE(tile.getUp() == field);
 	REQUIRE(tile.getRight() == field);

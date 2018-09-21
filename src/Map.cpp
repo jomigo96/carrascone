@@ -9,13 +9,11 @@
 #include <sys/time.h>
 
 
-Map::Map(sf::RenderWindow& window): window(window){
-	
-	std::cout << "Map constructor" << std::endl;
+Map::Map(sf::RenderWindow& window, const std::string& path): window(window){
 	
 	//Load tile textures
 	const int count = 'x' - 'a';
-	char file[] = "textures/tile-a.png";
+	char file[] = "tile-a.png";
 	sf::Texture tex;
 	
 	//Build deck
@@ -23,9 +21,9 @@ Map::Map(sf::RenderWindow& window): window(window){
 	
 	for(int i=0; i<=count; i++){
 		
-		file[14] = 'a' + i;
+		file[5] = 'a' + i;
 		
-		if(!tex.loadFromFile(file)){
+		if( !tex.loadFromFile( path + std::string(file) ) ){
 			std::cout << "Error loading file: "<< file << std::endl; 
 			throw std::runtime_error("png file error");
 		}
@@ -34,10 +32,9 @@ Map::Map(sf::RenderWindow& window): window(window){
 		deck.emplace(tipe, weights[i]);
 		
 	}
-	std::cout << "Tiles loaded, deck assembled" << std::endl;
 	struct timeval tp;
 	gettimeofday(&tp, NULL);
-	srand(tp.tv_sec);
+	srand(tp.tv_usec);
 	
 	std::shared_ptr<Tile> first(new Tile('d'));
 	this->play(first, Cell(7,4));
@@ -46,7 +43,12 @@ Map::Map(sf::RenderWindow& window): window(window){
 	playable = std::shared_ptr<const Tile>(nullptr);
 }
 
-Map::~Map(){}
+Map::~Map(){
+	
+	
+	
+	
+}
 
 TileType const& Map::draw(void){
 	

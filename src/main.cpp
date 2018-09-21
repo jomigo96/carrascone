@@ -18,7 +18,7 @@ int main(void){
 	
 	sf::RenderWindow window(sf::VideoMode(1280,720), "Carrascone");
     window.setFramerateLimit(60);
-    Map map(window);
+    Map map(window, std::string("textures/"));
      
     std::cout << map;
     bool turn=true;
