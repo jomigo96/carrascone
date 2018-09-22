@@ -7,6 +7,8 @@
 #ifndef FIELD_HPP
 #define FIELD_HPP
 
+#include "MapItem.hpp"
+
 /*!
  * \class Field
  * \brief 

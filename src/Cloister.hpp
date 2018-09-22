@@ -7,6 +7,8 @@
 #ifndef CLOISTER_HPP
 #define CLOISTER_HPP
 
+#include "MapItem.hpp"
+
 /*!
  * \class Cloister
  * \brief 

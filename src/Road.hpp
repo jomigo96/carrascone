@@ -7,6 +7,8 @@
 #ifndef ROAD_HPP
 #define ROAD_HPP
 
+#include "MapItem.hpp"
+
 /*!
  * \class Road
  * \brief 

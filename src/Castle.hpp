@@ -7,6 +7,8 @@
 #ifndef CASTLE_HPP
 #define CASTLE_HPP
 
+#include "MapItem.hpp"
+
 /*!
  * \class Castle
  * \brief 

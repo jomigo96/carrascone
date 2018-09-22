@@ -23,7 +23,7 @@
 
 /*!
  * \class Map
- * \brief Map class, stores and manipulates all tiles played, and displayes them to the SFML window.
+ * \brief Map class, game interface class. Stores and manipulates all tiles played, and displayes them to the SFML window.
  * */
 class Map{
 	
