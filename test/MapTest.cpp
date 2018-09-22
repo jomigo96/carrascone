@@ -75,9 +75,9 @@ TEST_CASE("Map: draw, count"){
 	while(!map.play(play, c)){
 		play->rotate_clockwise();
 		j++;
-		if(j>3){
+		if(j>4){
 			c=Cell(8,4);
-			if(j>7)
+			if(j>8)
 				c=Cell(6,4);
 		}
 	}

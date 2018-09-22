@@ -20,7 +20,7 @@ int main(void){
     window.setFramerateLimit(60);
     Map map(window, std::string("textures/"));
      
-    std::cout << map;
+    //std::cout << map;
     bool turn=true;
     Cell clicked;
     TileType surroundings;
