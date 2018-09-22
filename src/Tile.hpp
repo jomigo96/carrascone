@@ -85,7 +85,8 @@ private:
  * \param tile Tile to be placed
  * \param space TileType that supports it
  * \return boolean with the assertion result
- * \throw logic_error if a weird bug causes orientation not to be one of 0 90 180 270.
+ * \throw runtime_error if a weird bug causes orientation not to be one of 0 90 180 270.
+ * \throw invalid_argument if the tile doesnt exist.
  * */
 bool fits(const Tile& tile, const TileType& space);
 

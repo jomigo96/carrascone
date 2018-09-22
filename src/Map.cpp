@@ -45,8 +45,10 @@ Map::Map(sf::RenderWindow& window, const std::string& path): window(window){
 
 Map::~Map(){
 	
-	
-	
+	for(auto it=map.begin(); it!=map.end(); it++){
+		it->second.reset();
+	}
+	playable.reset();
 	
 }
 
@@ -91,17 +93,46 @@ int Map::deck_count(void) const{
 
 bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 	
-	// TODO Checks if piece can be added there
-	map.insert( std::pair<Cell, std::shared_ptr<Tile>>(cell, tile) );
-	std::map<TileType, int>::iterator it = deck.find(*tile);
-	if (it!=deck.end()){
-		if (it->second >0){
-			it->second--;
+	//Check if it is the first piece to be set
+	if(map.size() == 0){
+		map.insert( std::pair<Cell, std::shared_ptr<Tile>>(cell, tile) );
+		return true;
+	}
+	
+	//Checking if piece fits
+	if(this->cellOccupied(cell))
+		return false;
+																
+	TileType surroundings = this->getSurroundings(cell); 
+	if(surroundings.getTile() == EMPTY_TILE){
+		return false;
+	}
+	
+	bool flag;
+									
+	try{
+		flag = fits( (*tile), surroundings);
+		
+	}catch( std::exception ){
+		// Weird error, should never happen
+		return false;
+	}
+						
+	if(flag){
+	
+		map.insert( std::pair<Cell, std::shared_ptr<Tile>>(cell, tile) );
+		std::map<TileType, int>::iterator it = deck.find(*tile);
+		if (it!=deck.end()){
+			if (it->second >0){
+				it->second--;
+			}else
+				return false;
 		}else
 			return false;
+		return true;
+		
 	}else
 		return false;
-	return true;
 }
 
 void Map::render(void) const{

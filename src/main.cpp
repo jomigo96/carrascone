@@ -59,25 +59,10 @@ int main(void){
 							case sf::Mouse::Left:
 								clicked = Cell(sf::Mouse::getPosition(window).x/CELL_DIM, sf::Mouse::getPosition(window).y/CELL_DIM);
 								
-								if(map.cellOccupied(clicked))
-									break;
-								
-								surroundings = map.getSurroundings(clicked); 
-								if(surroundings.getTile() == EMPTY_TILE){
-									break;
-								}
-									
-								try{
-									if( fits( (*tile), surroundings) ){
-										turn = ! map.play(tile, clicked);
-										map.clearPlayable();
-									}else
-										std::cout << "Tile does not fit there" << std::endl;
-								}catch(std::invalid_argument){
-									std::cout << "Weird internal error occurred" << std::endl;
-								}
-
+								if( !(turn = !map.play(tile, clicked)))
+									map.clearPlayable();
 								break;
+
 							case sf::Mouse::Right:
 								tile->rotate_clockwise();
 								break;

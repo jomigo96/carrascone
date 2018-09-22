@@ -8,6 +8,7 @@
 #define MAP_HPP
 
 #define TILESIZE 78
+#define TILE_NUMBER 24
 #define TILE_WEIGHTS {2, 4, 1, 2, 5, 2, 1, 3, 2, 3, 3, 3, 2, 3, 2, 3, 1, 3, 2, 1, 8, 9, 4, 1}
 
 #include <iostream>
@@ -31,29 +32,29 @@ public:
 	/*!
 	 * \brief contructor
 	 * \param window SFML render window object.
-	 * \param path directory with the png files
+	 * \param path directory with the png files, ending with a '/'
 	 * */
 	Map(sf::RenderWindow& window, const std::string& path);
 	
 	/*!
 	 * \brief destructor
 	 * */
-	~Map(); //TODO
+	~Map(); 
 	
 	/*!
 	 * \brief draw one tile from the deck at random
-	 * \return TileType object 
+	 * \return TileType reference to that tile 
 	 * \throw length_error if the deck is empty
 	 * */
 	TileType const& draw(void);
 	
 	/*!
-	 * \brief play a Tile in a given position
+	 * \brief play a Tile in a given position. Checks if is a valid placement. Always succeds on the first placement, and does not decrement that tile on the deck
 	 * \param tile Tile to be played
 	 * \param cell position where the tile is to be played
 	 * \return boolean stating if the play was successful (possible)
 	 * */
-	bool play(std::shared_ptr<Tile> tile, Cell cell); //TODO: migrate logic from main here
+	bool play(std::shared_ptr<Tile> tile, Cell cell);
 	
 	/*! 
 	 * \brief Renders all tiles to the render window (does not display)
@@ -96,6 +97,11 @@ public:
 	 * */
 	bool cellOccupied(const Cell& c)const;
 	
+	/*!
+	 * \brief counts the tiles still present in the deck.
+	 */
+	int deck_count(void) const;
+	
 private:
 	sf::RenderWindow& window;
 	
@@ -106,10 +112,7 @@ private:
 	std::shared_ptr<const Tile> playable;
 	sf::Vector2f playable_pos; 
 	
-	/*!
-	 * \brief counts the tiles still present in the deck.
-	 */
-	int deck_count(void) const;
+
 };
 
 #endif /* MAP_HPP */
