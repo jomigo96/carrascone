@@ -8,6 +8,7 @@
 #define ROAD_HPP
 
 #include "MapItem.hpp"
+#include <ostream>
 
 /*!
  * \class Road
@@ -16,6 +17,11 @@
 class Road : public MapItem{
 	
 public:
+	Road();
+	Road(std::shared_ptr<Tile> tile, TypeIdentifier key);
+	~Road();
+
+	std::ostream& myprint(std::ostream& os, const Road& R)const;
 
 private:
 

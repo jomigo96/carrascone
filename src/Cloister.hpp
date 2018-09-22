@@ -8,6 +8,7 @@
 #define CLOISTER_HPP
 
 #include "MapItem.hpp"
+#include <ostream>
 
 /*!
  * \class Cloister
@@ -16,6 +17,11 @@
 class Cloister : public MapItem{
 	
 public:
+	Cloister();
+	Cloister(std::shared_ptr<Tile> tile, TypeIdentifier key);
+	~Cloister();
+	
+	std::ostream& myprint(std::ostream& os, const Cloister& c)const;
 
 private:
 

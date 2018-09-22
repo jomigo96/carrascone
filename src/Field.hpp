@@ -8,6 +8,7 @@
 #define FIELD_HPP
 
 #include "MapItem.hpp"
+#include <ostream>
 
 /*!
  * \class Field
@@ -16,6 +17,11 @@
 class Field : public MapItem{
 	
 public:
+	Field();
+	Field(std::shared_ptr<Tile> tile, TypeIdentifier key);
+	~Field();
+	
+	std::ostream& myprint(std::ostream& os, const Field& f)const;
 
 private:
 

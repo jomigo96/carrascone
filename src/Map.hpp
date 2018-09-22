@@ -16,10 +16,15 @@
 #include <map>
 #include <exception>
 #include <memory>
+#include <list>
 #include "TileType.hpp"
 #include "Cell.hpp"
 #include "Tile.hpp"
-
+#include "MapItem.hpp"
+#include "Field.hpp"
+#include "Road.hpp"
+#include "Castle.hpp"
+#include "Cloister.hpp"
 
 /*!
  * \class Map
@@ -108,6 +113,8 @@ private:
 	std::map<TileType, sf::Texture> textures;
 	std::map<TileType, int> deck;
 	std::map<Cell, std::shared_ptr<Tile>> map;
+	
+	std::list<std::shared_ptr<MapItem>> items;
 	
 	std::shared_ptr<const Tile> playable;
 	sf::Vector2f playable_pos; 

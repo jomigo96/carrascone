@@ -7,6 +7,7 @@
 #include "Map.hpp"
 #include <cstdlib>
 #include <sys/time.h>
+#include <stack>
 
 
 Map::Map(sf::RenderWindow& window, const std::string& path): window(window){
@@ -50,6 +51,9 @@ Map::~Map(){
 	}
 	playable.reset();
 	
+	for(auto it=items.begin(); it!=items.end(); it++){
+		it->reset();
+	}
 }
 
 TileType const& Map::draw(void){
@@ -117,7 +121,8 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 		// Weird error, should never happen
 		return false;
 	}
-						
+			
+	// Play that piece and decrement the deck			
 	if(flag){
 	
 		map.insert( std::pair<Cell, std::shared_ptr<Tile>>(cell, tile) );
@@ -129,10 +134,196 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 				return false;
 		}else
 			return false;
-		return true;
 		
 	}else
 		return false;
+		
+	std::stack<std::shared_ptr<MapItem>> stack;
+		
+	//	Create and merge MapItems
+	switch(tile->getTile()){
+		case 'a':{
+			std::shared_ptr<Field> f(new Field(tile, field1));
+			std::shared_ptr<Road> r(new Road(tile, road1));
+			std::shared_ptr<Cloister> c(new Cloister(tile, cloister));
+			stack.push(f);
+			stack.push(r);
+			stack.push(c);
+			break;
+		}
+		case 'b':{
+			std::shared_ptr<Field> f(new Field(tile, field1));
+			std::shared_ptr<Cloister> c(new Cloister(tile, cloister));
+			stack.push(f);
+			stack.push(c);
+			break;
+		}
+		case 'c':{
+			std::shared_ptr<Castle> c(new Castle(tile, castle1));
+			stack.push(c);
+			break;
+		}
+		case 'd':{
+			std::shared_ptr<Field> f1(new Field(tile, field1));
+			std::shared_ptr<Field> f2(new Field(tile, field2));
+			std::shared_ptr<Road> r(new Road(tile, road1));
+			std::shared_ptr<Castle> c(new Castle(tile, castle1));
+			stack.push(f1);
+			stack.push(f2);
+			stack.push(r);
+			stack.push(c);
+			break;
+		}
+		case 'e':{
+			std::shared_ptr<Field> f(new Field(tile, field1));
+			std::shared_ptr<Castle> c(new Castle(tile, castle1));
+			stack.push(f);
+			stack.push(c);
+			break;
+		}
+		case 'f':
+		case 'g':{
+			std::shared_ptr<Field> f1(new Field(tile, field1));
+			std::shared_ptr<Field> f2(new Field(tile, field2));
+			std::shared_ptr<Castle> c(new Castle(tile, castle1));
+			stack.push(f1);
+			stack.push(f1);
+			stack.push(c);
+			break;
+		}
+		case 'h':
+		case 'i':{
+			std::shared_ptr<Field> f(new Field(tile, field1));
+			std::shared_ptr<Castle> c1(new Castle(tile, castle1));
+			std::shared_ptr<Castle> c2(new Castle(tile, castle2));
+			stack.push(c1);
+			stack.push(c2);
+			stack.push(f);
+			break;
+		}
+		case 'j':
+		case 'k':{
+			std::shared_ptr<Field> f1(new Field(tile, field1));
+			std::shared_ptr<Field> f2(new Field(tile, field2));
+			std::shared_ptr<Castle> c(new Castle(tile, castle1));
+			std::shared_ptr<Road> r(new Road(tile, road1));
+			stack.push(c);
+			stack.push(r);
+			stack.push(f1);
+			stack.push(f2);
+			break;
+		}
+		case 'l':{
+			std::shared_ptr<Field> f1(new Field(tile, field1));
+			std::shared_ptr<Field> f2(new Field(tile, field2));
+			std::shared_ptr<Field> f3(new Field(tile, field3));
+			std::shared_ptr<Castle> c(new Castle(tile, castle1));
+			std::shared_ptr<Road> r1(new Road(tile, road1));
+			std::shared_ptr<Road> r2(new Road(tile, road2));
+			std::shared_ptr<Road> r3(new Road(tile, road3));
+			stack.push(c);
+			stack.push(r1);
+			stack.push(r2);
+			stack.push(r3);
+			stack.push(f1);
+			stack.push(f2);
+			stack.push(f3);
+			break;
+		}
+		case 'm':
+		case 'n':{
+			std::shared_ptr<Field> f(new Field(tile, field1));
+			std::shared_ptr<Castle> c(new Castle(tile, castle1));
+			stack.push(c);
+			stack.push(f);
+			break;
+		}
+		case 'o':
+		case 'p':{
+			std::shared_ptr<Field> f1(new Field(tile, field1));
+			std::shared_ptr<Field> f2(new Field(tile, field2));
+			std::shared_ptr<Castle> c(new Castle(tile, castle1));
+			std::shared_ptr<Road> r(new Road(tile, road1));
+			stack.push(c);
+			stack.push(r);
+			stack.push(f1);
+			stack.push(f2);
+			break;
+		}
+		case 'q':
+		case 'r':{
+			std::shared_ptr<Field> f(new Field(tile, field1));
+			std::shared_ptr<Castle> c(new Castle(tile, castle1));
+			stack.push(c);
+			stack.push(f);
+			break;
+		}
+		case 's':
+		case 't':{
+			std::shared_ptr<Field> f1(new Field(tile, field1));
+			std::shared_ptr<Field> f2(new Field(tile, field2));
+			std::shared_ptr<Castle> c(new Castle(tile, castle1));
+			std::shared_ptr<Road> r(new Road(tile, road1));
+			stack.push(c);
+			stack.push(r);
+			stack.push(f1);
+			stack.push(f2);
+			break;
+		}
+		case 'u':
+		case 'v':{
+			std::shared_ptr<Field> f1(new Field(tile, field1));
+			std::shared_ptr<Field> f2(new Field(tile, field2));
+			std::shared_ptr<Road> r(new Road(tile, road1));
+			stack.push(r);
+			stack.push(f1);
+			stack.push(f2);
+			break;
+		}
+		case 'w':{
+			std::shared_ptr<Field> f1(new Field(tile, field1));
+			std::shared_ptr<Field> f2(new Field(tile, field2));
+			std::shared_ptr<Field> f3(new Field(tile, field3));
+			std::shared_ptr<Road> r1(new Road(tile, road1));
+			std::shared_ptr<Road> r2(new Road(tile, road2));
+			std::shared_ptr<Road> r3(new Road(tile, road3));
+			stack.push(r1);
+			stack.push(r2);
+			stack.push(r3);
+			stack.push(f1);
+			stack.push(f2);
+			stack.push(f3);
+			break;
+		}
+		case 'x':{
+			std::shared_ptr<Field> f1(new Field(tile, field1));
+			std::shared_ptr<Field> f2(new Field(tile, field2));
+			std::shared_ptr<Field> f3(new Field(tile, field3));
+			std::shared_ptr<Field> f4(new Field(tile, field4));
+			std::shared_ptr<Road> r1(new Road(tile, road1));
+			std::shared_ptr<Road> r2(new Road(tile, road2));
+			std::shared_ptr<Road> r3(new Road(tile, road3));
+			std::shared_ptr<Road> r4(new Road(tile, road4));
+			stack.push(r1);
+			stack.push(r2);
+			stack.push(r3);
+			stack.push(r4);
+			stack.push(f1);
+			stack.push(f2);
+			stack.push(f3);
+			stack.push(f4);
+			break;
+		}
+		default: break;
+	}	
+	
+	std::shared_ptr<MapItem> ptr(nullptr);
+	while(!stack.empty()){
+		std::cout << *(stack.top());
+		stack.pop();
+	}
+			
+	return true;
 }
 
 void Map::render(void) const{

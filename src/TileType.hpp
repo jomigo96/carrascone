@@ -171,6 +171,8 @@ protected:
 	bool connected;
 	std::string description;
 	
+	
+	
 private:	
 
 	void attribute(void);
