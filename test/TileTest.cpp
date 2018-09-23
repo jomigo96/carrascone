@@ -4,6 +4,8 @@
 #include <string>
 #include "../src/Tile.hpp"
 #include "../src/TileType.hpp"
+#include "../src/MapItem.hpp"
+#include <stack>
 
 TEST_CASE("Tile: fits"){
 	
@@ -59,4 +61,108 @@ TEST_CASE("Tile: getters"){
 	REQUIRE(tile.getRight() == field);
 	REQUIRE(tile.getDown() == field);
 	REQUIRE(tile.getLeft() == road);
+}
+
+TEST_CASE("Tile: MapItem getters"){
+	
+	TypeIdentifier t1,t2,t3;
+	
+	SECTION("Tile 'a'"){
+		Tile tile('a');
+		
+		std::stack<TypeIdentifier>* stack = tile.getMapItems(left);
+		
+		REQUIRE(stack->size() == 1);
+		CHECK(stack->top() == field1);
+		stack->pop();
+		delete stack;
+		
+		tile.rotate_clockwise();
+		stack = tile.getMapItems(left);
+		REQUIRE(stack->size() == 3);
+		t1=stack->top(); stack->pop();
+		t2=stack->top(); stack->pop();
+		t3=stack->top(); stack->pop();
+		delete stack;
+		
+		CHECK(t1==field1);
+		CHECK(t2==field1);
+		CHECK(t3==road1);
+
+	}
+	SECTION("Tile 'l'"){
+	
+		Tile tile = Tile('l');
+		std::stack<TypeIdentifier>* stack = tile.getMapItems(left);
+		REQUIRE(stack->size() == 3);
+		t1=stack->top(); stack->pop();
+		t2=stack->top(); stack->pop();
+		t3=stack->top(); stack->pop();
+		delete stack;
+		
+		CHECK(t1==field3);
+		CHECK(t2==field1);
+		CHECK(t3==road3);
+		
+		tile.rotate_clockwise();
+		stack = tile.getMapItems(left);
+		REQUIRE(stack->size() == 3);
+		t1=stack->top(); stack->pop();
+		t2=stack->top(); stack->pop();
+		t3=stack->top(); stack->pop();
+		delete stack;
+		
+		CHECK(t1 == field2);
+		CHECK(t2 == field3);
+		CHECK(t3 == road2);
+		
+		tile.rotate_clockwise();
+		stack = tile.getMapItems(left);
+		REQUIRE(stack->size() == 1);
+		t1=stack->top(); stack->pop();
+		delete stack;
+		
+		CHECK(t1 == castle1);
+	}
+	SECTION("Tile 'r'"){
+		std::stack<TypeIdentifier>* stack;
+		
+		Tile tile('r');
+		
+		stack=tile.getMapItems(left);
+		REQUIRE(stack->size() == 1);
+		t1=stack->top(); stack->pop(); delete stack;
+		CHECK(t1 == castle1);
+		stack=tile.getMapItems(up);
+		REQUIRE(stack->size() == 1);
+		t1=stack->top(); stack->pop(); delete stack;
+		CHECK(t1 == castle1);
+		stack=tile.getMapItems(right);
+		REQUIRE(stack->size() == 1);
+		t1=stack->top(); stack->pop(); delete stack;
+		CHECK(t1 == castle1);
+		stack=tile.getMapItems(down);
+		REQUIRE(stack->size() == 1);
+		t1=stack->top(); stack->pop(); delete stack;
+		CHECK(t1 == field1);	
+		
+		tile.rotate_clockwise();
+		
+		stack=tile.getMapItems(left);
+		REQUIRE(stack->size() == 1);
+		t1=stack->top(); stack->pop(); delete stack;
+		CHECK(t1 == field1);
+		stack=tile.getMapItems(up);
+		REQUIRE(stack->size() == 1);
+		t1=stack->top(); stack->pop(); delete stack;
+		CHECK(t1 == castle1);
+		stack=tile.getMapItems(right);
+		REQUIRE(stack->size() == 1);
+		t1=stack->top(); stack->pop(); delete stack;
+		CHECK(t1 == castle1);
+		stack=tile.getMapItems(down);
+		REQUIRE(stack->size() == 1);
+		t1=stack->top(); stack->pop(); delete stack;
+		CHECK(t1 == castle1);			
+	}
 }

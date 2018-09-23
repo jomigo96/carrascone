@@ -11,6 +11,18 @@
 #include "MapItem.hpp"
 #include <stack>
 
+class MapItem;
+
+enum Direction : unsigned int{
+	
+	up,
+	right,
+	down,
+	left
+	
+};
+
+enum TypeIdentifier : unsigned int;
 
 /*!
  * \class Tile
@@ -79,6 +91,8 @@ public:
 	 * */	
 	ItemType getLeft()const;
 	
+	ItemType getSide(Direction d)const;
+
 	/*!
 	 * 	\brief returns a stack with the mapitems(identified by this Tile
 	 *  pointer and the TypeIdentifier) to merge to. This stack should
@@ -89,12 +103,8 @@ public:
 	 *  one on the right-hand side.
 	 *  \throw runtime_error
 	 *  \throw logic_error
-	 * */
-	std::stack<TypeIdentifier>* getLeftMapItems()const;
-	std::stack<TypeIdentifier>* getRightMapItems()const;
-	std::stack<TypeIdentifier>* getUpMapItems()const;
-	std::stack<TypeIdentifier>* getDownMapItems()const;
-	
+	 * */	
+	std::stack<TypeIdentifier>* getMapItems(Direction d)const;
 	
 private:
 	int orientation;

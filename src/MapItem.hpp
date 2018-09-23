@@ -7,7 +7,7 @@
 #ifndef MAPITEM_HPP
 #define MAPITEM_HPP
 
-#include "Cell.hpp"
+//#include "Cell.hpp"
 #include "Player.hpp"
 #include "Tile.hpp"
 #include <memory>
@@ -15,6 +15,7 @@
 #include <ostream>
 //#include <tuple>
 
+class Tile;
 
 /*!
  * \enum TypeIdentifier
@@ -29,7 +30,7 @@
  * on the bottom left, road1 on top, road2 on bottom, road3 on the left,
  * and castle1 on the right.
  * */
-enum TypeIdentifier{
+enum TypeIdentifier: unsigned int{
 	
 	//Roads
 	road1,
@@ -51,6 +52,7 @@ enum TypeIdentifier{
 	
 };
 
+//forward declarations
 class Tile;
 
 /*!

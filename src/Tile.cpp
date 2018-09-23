@@ -113,7 +113,16 @@ ItemType Tile::getLeft()const{
 	}	
 }
 
+ItemType Tile::getSide(Direction d)const{
 
+	switch(d){
+		case Direction::up: return this->getUp();
+		case Direction::right: return this->getRight();
+		case Direction::down: return this->getDown();
+		case Direction::left: return this->getLeft();
+		default: return this->getLeft();
+	}
+}
 
 bool fits(const Tile& tile, const TileType& space){
 	
@@ -143,13 +152,31 @@ bool fits(const Tile& tile, const TileType& space){
 }
 
 
-std::stack<TypeIdentifier>* Tile::getLeftMapItems()const{
+std::stack<TypeIdentifier>* Tile::getMapItems(Direction d)const{
+	
+	auto rotate_right = [](int a){ return (a==270) ? 0 : (a+90); };
+	
+	int angle = this->orientation;
+	
+	switch(d){
+		case Direction::up:
+			angle=rotate_right(angle);
+		case Direction::right:	
+			angle=rotate_right(angle);
+		case Direction::down:
+			angle=rotate_right(angle);
+			break;
+		case Direction::left:
+			break;
+	}
+	
+	
 	auto stack = new std::stack<TypeIdentifier>;
 	
 	if(!this->isValid())
 		throw std::logic_error("Must be called with a valid tile");
 	
-	switch(this->getLeft()){
+	switch(this->getSide(d)){
 		case castle:
 			switch(this->tile){
 				case 'c':
@@ -171,7 +198,7 @@ std::stack<TypeIdentifier>* Tile::getLeftMapItems()const{
 					stack->push(castle1);
 					break;
 				case 'h':
-					switch(this->orientation){
+					switch(angle){
 						case 0:
 							stack->push(castle2);
 							break;
@@ -183,7 +210,7 @@ std::stack<TypeIdentifier>* Tile::getLeftMapItems()const{
 							break;
 					}
 				case 'i':
-					switch(this->orientation){
+					switch(angle){
 						case 90:
 							stack->push(castle2);
 							break;
@@ -222,25 +249,25 @@ std::stack<TypeIdentifier>* Tile::getLeftMapItems()const{
 					stack->push(field2);
 					break;
 				case 'u':
-					if(this->orientation == 0)
+					if(angle == 0)
 						stack->push(field2);
-					else if(this->orientation == 180)
+					else if(angle == 180)
 						stack->push(field1);
 					else
 						throw std::runtime_error("Orientation and sides do not match");
 					break;
 				case 'f':
-					if(this->orientation == 90)
+					if(angle == 90)
 						stack->push(field1);
-					else if(this->orientation == 270)
+					else if(angle == 270)
 						stack->push(field2);
 					else
 						throw std::runtime_error("Orientation and sides do not match");					
 					break;
 				case 'g':
-					if(this->orientation == 180)
+					if(angle == 180)
 						stack->push(field1);
-					else if(this->orientation == 0)
+					else if(angle == 0)
 						stack->push(field2);
 					else
 						throw std::runtime_error("Orientation and sides do not match");									
@@ -254,13 +281,14 @@ std::stack<TypeIdentifier>* Tile::getLeftMapItems()const{
 				case 'a':
 					stack->push(road1);
 					stack->push(field1);
+					stack->push(field1);
 					break;
 				case 'd':
 					stack->push(road1);
-					if(this->orientation == 90){
+					if(angle == 90){
 						stack->push(field2);
 						stack->push(field1);
-					}else if(this->orientation == 270){
+					}else if(angle == 270){
 						stack->push(field1);
 						stack->push(field2);						
 					}else
@@ -268,10 +296,10 @@ std::stack<TypeIdentifier>* Tile::getLeftMapItems()const{
 					break;
 				case 'j':
 					stack->push(road1);
-					if(this->orientation == 90){
+					if(angle == 90){
 						stack->push(field1);
 						stack->push(field2);
-					}else if(this->orientation == 180){
+					}else if(angle == 180){
 						stack->push(field2);
 						stack->push(field1);
 					}else
@@ -279,17 +307,17 @@ std::stack<TypeIdentifier>* Tile::getLeftMapItems()const{
 					break;
 				case 'k':
 					stack->push(road1);
-					if(this->orientation == 0){
+					if(angle == 0){
 						stack->push(field2);
 						stack->push(field1);
-					}else if(this->orientation == 270){
+					}else if(angle == 270){
 						stack->push(field1);
 						stack->push(field2);
 					}else
 						throw std::runtime_error("Orientation and sides do not match");
 					break;
 				case 'l':
-					switch(this->orientation){
+					switch(angle){
 						case 0:
 							stack->push(road3);
 							stack->push(field1);
@@ -311,7 +339,7 @@ std::stack<TypeIdentifier>* Tile::getLeftMapItems()const{
 					break;
 				case 'o':
 				case 'p':
-					switch(this->orientation){
+					switch(angle){
 						case 90:
 							stack->push(road1);
 							stack->push(field1);
@@ -334,10 +362,10 @@ std::stack<TypeIdentifier>* Tile::getLeftMapItems()const{
 					break;
 				case 'u':
 					stack->push(road1);
-					if(this->orientation == 90){
+					if(angle == 90){
 						stack->push(field1);
 						stack->push(field2);
-					}else if(this->orientation == 270){
+					}else if(angle == 270){
 						stack->push(field2);
 						stack->push(field1);
 					}else
@@ -345,15 +373,15 @@ std::stack<TypeIdentifier>* Tile::getLeftMapItems()const{
 					break;
 				case 'v':
 					stack->push(road1);
-					if(this->orientation == 0){
+					if(angle == 0){
 						stack->push(field1);
 						stack->push(field2);
-					}else if(this->orientation == 90){
+					}else if(angle == 90){
 					}else
 						throw std::runtime_error("Orientation and sides do not match");
 					break;
 				case 'w':
-					switch(this->orientation){
+					switch(angle){
 						case 0:
 							stack->push(road3);
 							stack->push(field1);
@@ -374,7 +402,7 @@ std::stack<TypeIdentifier>* Tile::getLeftMapItems()const{
 					}
 					break;
 				case 'x':
-					switch(this->orientation){
+					switch(angle){
 						case 0:
 							stack->push(road4);
 							stack->push(field1);
@@ -407,12 +435,4 @@ std::stack<TypeIdentifier>* Tile::getLeftMapItems()const{
 	}
 	return stack;
 }
-std::stack<TypeIdentifier>* Tile::getRightMapItems()const{
-	return new std::stack<TypeIdentifier>;
-}
-std::stack<TypeIdentifier>* Tile::getUpMapItems()const{
-	return new std::stack<TypeIdentifier>;
-}
-std::stack<TypeIdentifier>* Tile::getDownMapItems()const{
-	return new std::stack<TypeIdentifier>;
-}
+
