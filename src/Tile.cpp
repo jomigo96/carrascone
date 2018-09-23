@@ -141,3 +141,278 @@ bool fits(const Tile& tile, const TileType& space){
 		((right == none) || (right == true_right))  
 		);
 }
+
+
+std::stack<TypeIdentifier>* Tile::getLeftMapItems()const{
+	auto stack = new std::stack<TypeIdentifier>;
+	
+	if(!this->isValid())
+		throw std::logic_error("Must be called with a valid tile");
+	
+	switch(this->getLeft()){
+		case castle:
+			switch(this->tile){
+				case 'c':
+				case 'd':
+				case 'e':
+				case 'f':
+				case 'g':
+				case 'j':
+				case 'k':
+				case 'l':
+				case 'm':
+				case 'n':
+				case 'o':
+				case 'p':
+				case 'q':
+				case 'r':
+				case 's':
+				case 't':
+					stack->push(castle1);
+					break;
+				case 'h':
+					switch(this->orientation){
+						case 0:
+							stack->push(castle2);
+							break;
+						case 180:
+							stack->push(castle1);
+							break;
+						default:
+							throw std::runtime_error("Orientation and sides do not match");
+							break;
+					}
+				case 'i':
+					switch(this->orientation){
+						case 90:
+							stack->push(castle2);
+							break;
+						case 180:
+							stack->push(castle1);
+							break;
+						default:
+							throw std::runtime_error("Orientation and sides do not match");
+							break;
+					}
+					break;
+				default:
+					throw std::runtime_error("Side and tiletype dont match");
+					break;
+			}
+			break;
+			
+		case field:
+			switch(this->tile){
+				case 'a':
+				case 'b':
+				case 'e':
+				case 'h':
+				case 'i':
+				case 'j':
+				case 'm':
+				case 'n':
+				case 'q':
+				case 'r':
+				case 'v':
+				case 'w':
+					stack->push(field1);
+					break;
+				case 'd':
+				case 'k':
+					stack->push(field2);
+					break;
+				case 'u':
+					if(this->orientation == 0)
+						stack->push(field2);
+					else if(this->orientation == 180)
+						stack->push(field1);
+					else
+						throw std::runtime_error("Orientation and sides do not match");
+					break;
+				case 'f':
+					if(this->orientation == 90)
+						stack->push(field1);
+					else if(this->orientation == 270)
+						stack->push(field2);
+					else
+						throw std::runtime_error("Orientation and sides do not match");					
+					break;
+				case 'g':
+					if(this->orientation == 180)
+						stack->push(field1);
+					else if(this->orientation == 0)
+						stack->push(field2);
+					else
+						throw std::runtime_error("Orientation and sides do not match");									
+					break;
+				default:
+					throw std::runtime_error("Side and tiletype dont match");
+			}
+			break;
+		case road:
+			switch(this->tile){
+				case 'a':
+					stack->push(road1);
+					stack->push(field1);
+					break;
+				case 'd':
+					stack->push(road1);
+					if(this->orientation == 90){
+						stack->push(field2);
+						stack->push(field1);
+					}else if(this->orientation == 270){
+						stack->push(field1);
+						stack->push(field2);						
+					}else
+						throw std::runtime_error("Orientation and sides do not match");
+					break;
+				case 'j':
+					stack->push(road1);
+					if(this->orientation == 90){
+						stack->push(field1);
+						stack->push(field2);
+					}else if(this->orientation == 180){
+						stack->push(field2);
+						stack->push(field1);
+					}else
+						throw std::runtime_error("Orientation and sides do not match");									
+					break;
+				case 'k':
+					stack->push(road1);
+					if(this->orientation == 0){
+						stack->push(field2);
+						stack->push(field1);
+					}else if(this->orientation == 270){
+						stack->push(field1);
+						stack->push(field2);
+					}else
+						throw std::runtime_error("Orientation and sides do not match");
+					break;
+				case 'l':
+					switch(this->orientation){
+						case 0:
+							stack->push(road3);
+							stack->push(field1);
+							stack->push(field3);
+							break;
+						case 90:
+							stack->push(road2);
+							stack->push(field3);
+							stack->push(field2);
+							break;
+						case 270:
+							stack->push(road1);
+							stack->push(field2);
+							stack->push(field1);
+							break;							
+						default:
+							throw std::runtime_error("Orientation and sides do not match");
+					}
+					break;
+				case 'o':
+				case 'p':
+					switch(this->orientation){
+						case 90:
+							stack->push(road1);
+							stack->push(field1);
+							stack->push(field2);
+							break;
+						case 180:
+							stack->push(road1);
+							stack->push(field2);
+							stack->push(field1);	
+							break;						
+						default:
+							throw std::runtime_error("Orientation and sides do not match");
+					}
+					break;
+				case 's':
+				case 't':
+					stack->push(road1);
+					stack->push(field2);
+					stack->push(field1);
+					break;
+				case 'u':
+					stack->push(road1);
+					if(this->orientation == 90){
+						stack->push(field1);
+						stack->push(field2);
+					}else if(this->orientation == 270){
+						stack->push(field2);
+						stack->push(field1);
+					}else
+						throw std::runtime_error("Orientation and sides do not match");
+					break;
+				case 'v':
+					stack->push(road1);
+					if(this->orientation == 0){
+						stack->push(field1);
+						stack->push(field2);
+					}else if(this->orientation == 90){
+					}else
+						throw std::runtime_error("Orientation and sides do not match");
+					break;
+				case 'w':
+					switch(this->orientation){
+						case 0:
+							stack->push(road3);
+							stack->push(field1);
+							stack->push(field3);
+							break;
+						case 90:
+							stack->push(road2);
+							stack->push(field3);
+							stack->push(field2);
+							break;
+						case 180:
+							stack->push(road1);
+							stack->push(field2);
+							stack->push(field1);
+							break;
+						default:
+							throw std::runtime_error("Orientation and sides do not match");
+					}
+					break;
+				case 'x':
+					switch(this->orientation){
+						case 0:
+							stack->push(road4);
+							stack->push(field1);
+							stack->push(field4);
+							break;
+						case 90:
+							stack->push(road3);
+							stack->push(field4);
+							stack->push(field3);
+							break;
+						case 180:
+							stack->push(road2);
+							stack->push(field3);
+							stack->push(field2);
+							break;
+						case 270:
+							stack->push(road1);
+							stack->push(field2);
+							stack->push(field1);
+							break;
+						default:
+							throw std::runtime_error("Bad orientation");
+					}
+					break;
+				default:
+					throw std::runtime_error("Side and tiletype dont match");
+			}
+			break;
+		default: break;
+	}
+	return stack;
+}
+std::stack<TypeIdentifier>* Tile::getRightMapItems()const{
+	return new std::stack<TypeIdentifier>;
+}
+std::stack<TypeIdentifier>* Tile::getUpMapItems()const{
+	return new std::stack<TypeIdentifier>;
+}
+std::stack<TypeIdentifier>* Tile::getDownMapItems()const{
+	return new std::stack<TypeIdentifier>;
+}

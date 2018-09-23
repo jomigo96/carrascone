@@ -6,10 +6,11 @@
 #include <iostream>
 #include <memory>
 
+
+using namespace std;
+
 /*
 TEST_CASE("Map: Randomness"){
-	
-	
 	
 	sf::RenderWindow window(sf::VideoMode(1280,720), "Carrascone");
     window.setFramerateLimit(60);
@@ -50,7 +51,7 @@ TEST_CASE("Map: Randomness"){
 }
 */
 
-
+/*
 TEST_CASE("Map: draw, count"){
 	
 	sf::RenderWindow window;
@@ -82,4 +83,26 @@ TEST_CASE("Map: draw, count"){
 		}
 	}
 	REQUIRE(--count == map.deck_count());
-}
+}*/
+
+/*
+TEST_CASE("Shared_ptr comparisons"){
+	
+	
+	shared_ptr<int> ptr1(new int(5));
+	shared_ptr<int> ptr2(new int(5));
+	shared_ptr<int> ptr3(ptr1);
+	
+	CHECK(*ptr1 == *ptr2);
+	(*ptr2)++;
+	CHECK(*ptr1 != *ptr2);
+	
+	CHECK(ptr1 == ptr3);
+	
+}*/
+
+
+
+
+
+

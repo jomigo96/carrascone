@@ -8,7 +8,17 @@
 
 
 MapItem::MapItem(){}
-MapItem::~MapItem(){}
+MapItem::~MapItem(){
+
+	for(auto it=span.begin(); it!=span.end(); it++){
+		it->first.reset();
+	}
+	
+	for(auto it=owners.begin(); it!=owners.end(); it++){
+		it->reset();
+	}
+	
+}
 
 MapItem::MapItem(std::shared_ptr<Tile> tile, TypeIdentifier key){
 	
@@ -24,10 +34,11 @@ std::ostream& operator<<(std::ostream& os, const MapItem& item){
 
 std::ostream& MapItem::myprint(std::ostream& os, const MapItem& item)const{
 	
-	os << "Base type" << std::endl;
+	os << &item << std::endl;
 	return os;
 }
 
 std::vector<std::pair<std::shared_ptr<Tile>, TypeIdentifier>> const& MapItem::getSpan(void)const{
 	return span;
 }
+

@@ -8,6 +8,9 @@
 #define TILE_HPP
 
 #include "TileType.hpp"
+#include "MapItem.hpp"
+#include <stack>
+
 
 /*!
  * \class Tile
@@ -75,6 +78,23 @@ public:
 	 * \brief getter for the actual left boundary, takes into account orientation
 	 * */	
 	ItemType getLeft()const;
+	
+	/*!
+	 * 	\brief returns a stack with the mapitems(identified by this Tile
+	 *  pointer and the TypeIdentifier) to merge to. This stack should
+	 *  then be deleted by the caller.
+	 * 
+	 * 	For ambiguities where two fields must be connected, the one 
+	 *  which appears first in the stack(closer to the top) is the
+	 *  one on the right-hand side.
+	 *  \throw runtime_error
+	 *  \throw logic_error
+	 * */
+	std::stack<TypeIdentifier>* getLeftMapItems()const;
+	std::stack<TypeIdentifier>* getRightMapItems()const;
+	std::stack<TypeIdentifier>* getUpMapItems()const;
+	std::stack<TypeIdentifier>* getDownMapItems()const;
+	
 	
 private:
 	int orientation;

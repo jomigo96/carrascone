@@ -15,6 +15,7 @@
 #include <ostream>
 //#include <tuple>
 
+
 /*!
  * \enum TypeIdentifier
  * \brief Information to identify a MapItem for each Tile
@@ -50,6 +51,8 @@ enum TypeIdentifier{
 	
 };
 
+class Tile;
+
 /*!
  * \class MapItem
  * \brief Base class for map elements such as castles, fields, roads
@@ -63,8 +66,8 @@ public:
 	
 	friend std::ostream& operator<<(std::ostream& os, const MapItem& item);
 	
-	// merge - join two mapitems
-	// score - attribute points to players uppon closure
+	// merge - join two mapitems(not for type cloister)
+	// virtual score - attribute points to players uppon closure
 	
 	std::vector<std::pair<std::shared_ptr<Tile>, TypeIdentifier>> const& getSpan(void)const;
 	
