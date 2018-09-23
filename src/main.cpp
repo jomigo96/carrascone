@@ -59,8 +59,10 @@ int main(void){
 							case sf::Mouse::Left:
 								clicked = Cell(sf::Mouse::getPosition(window).x/CELL_DIM, sf::Mouse::getPosition(window).y/CELL_DIM);
 								
-								if( !(turn = !map.play(tile, clicked)))
+								if( !(turn = !map.play(tile, clicked))){
 									map.clearPlayable();
+									std::cout << map;
+								}
 								break;
 
 							case sf::Mouse::Right:

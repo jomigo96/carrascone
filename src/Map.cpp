@@ -100,6 +100,12 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 	//Check if it is the first piece to be set
 	if(map.size() == 0){
 		map.insert( std::pair<Cell, std::shared_ptr<Tile>>(cell, tile) );
+		
+		items.emplace_back(new Field(tile, field1));
+		items.emplace_back(new Field(tile, field2));
+		items.emplace_back(new Road(tile, road1));
+		items.emplace_back(new Castle(tile, castle1));
+		
 		return true;
 	}
 	
@@ -317,9 +323,9 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 		default: break;
 	}	
 	
-	std::shared_ptr<MapItem> ptr(nullptr);
+
 	while(!stack.empty()){
-		std::cout << *(stack.top());
+		items.push_back(stack.top());
 		stack.pop();
 	}
 			
@@ -364,6 +370,9 @@ void Map::render(void) const{
 
 std::ostream& operator<<(std::ostream& os, const Map& map){
 	
+	/* 
+	// Show deck contents
+	
 	os << std::endl << "showing deck" << std::endl;
 	const int weights[] = TILE_WEIGHTS;
 	for(auto it = map.deck.cbegin(); it != map.deck.cend(); it++){
@@ -372,6 +381,13 @@ std::ostream& operator<<(std::ostream& os, const Map& map){
 		   << it->second << '/' << weights[(int)it->first.getTile()-'a'] 
 		   << std::endl;
 	
+	}
+	*/
+	
+	// Show MapItems
+	
+	for(auto it=map.items.cbegin(); it!=map.items.cend(); it++){
+		os << "Showing Item:"<< std::endl << **it << std::endl;
 	}
 	
 	return os;

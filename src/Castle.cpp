@@ -34,6 +34,7 @@ std::ostream& Castle::myprint(std::ostream& os, const MapItem& item)const{
 		}
 		os << "tiletype " << it->first->getTile() << " item " << s << " | ";
 	}
+	os << std::endl;
 	return os;
 }
 

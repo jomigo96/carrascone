@@ -21,7 +21,7 @@ public:
 	Road(std::shared_ptr<Tile> tile, TypeIdentifier key);
 	~Road();
 
-	std::ostream& myprint(std::ostream& os, const Road& R)const;
+	std::ostream& myprint(std::ostream& os, const MapItem& item)const;
 
 private:
 

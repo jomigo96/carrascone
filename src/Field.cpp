@@ -12,13 +12,14 @@ Field::Field(std::shared_ptr<Tile> tile, TypeIdentifier key): MapItem(tile, key)
 
 Field::~Field(){}
 
-std::ostream& Field::myprint(std::ostream& os, const Field& f)const{
+std::ostream& Field::myprint(std::ostream& os, const MapItem& item)const{
 
 	os << "Field on tiles : ";
 	
 	std::string s;
+	auto span = item.getSpan();
 	
-	for(auto it=f.span.cbegin(); it!=f.span.cend(); it++){
+	for(auto it=span.cbegin(); it!=span.cend(); it++){
 		
 		switch(it->second){
 			case field1:
@@ -37,6 +38,7 @@ std::ostream& Field::myprint(std::ostream& os, const Field& f)const{
 		}
 		os << "tiletype " << it->first->getTile() << " item " << s << " | ";
 	}
+	os << std::endl;
 	return os;
 
 }

@@ -21,7 +21,7 @@ public:
 	Field(std::shared_ptr<Tile> tile, TypeIdentifier key);
 	~Field();
 	
-	std::ostream& myprint(std::ostream& os, const Field& f)const;
+	std::ostream& myprint(std::ostream& os, const MapItem& item)const;
 
 private:
 

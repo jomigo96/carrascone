@@ -12,16 +12,11 @@ Cloister::Cloister(std::shared_ptr<Tile> tile, TypeIdentifier key) : MapItem(til
 
 Cloister::~Cloister(){}
 
-std::ostream& Cloister::myprint(std::ostream& os, const Cloister& c)const{
-	os << "Cloister on tile : ";
+std::ostream& Cloister::myprint(std::ostream& os, const MapItem& item)const{
 	
-	std::string s;
+	auto span = item.getSpan();
 	
-	for(auto it=c.span.cbegin(); it!=c.span.cend(); it++){
-		os << it->first->getTile(); 
-	}
-	
-	os<<std::endl;
+	os << "Cloister with tiletype " << span.cbegin()->first->getTile() << std::endl;
 	
 	return os;
 	

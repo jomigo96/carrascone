@@ -12,13 +12,14 @@ Road::Road(std::shared_ptr<Tile> tile, TypeIdentifier key) : MapItem(tile, key){
 
 Road::~Road(){}
 
-std::ostream& Road::myprint(std::ostream& os, const Road& R)const{
+std::ostream& Road::myprint(std::ostream& os, const MapItem& item)const{
 	
-	os << "road on tiles : ";
+	os << "Road on tiles : ";
 	
 	std::string s;
+	auto span = item.getSpan();
 	
-	for(auto it=R.span.cbegin(); it!=R.span.cend(); it++){
+	for(auto it=span.cbegin(); it!=span.cend(); it++){
 		
 		switch(it->second){
 			case road1:
@@ -37,5 +38,6 @@ std::ostream& Road::myprint(std::ostream& os, const Road& R)const{
 		}
 		os << "tiletype " << it->first->getTile() << " item " << s << " | ";
 	}
+	os << std::endl;
 	return os;
 }

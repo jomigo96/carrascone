@@ -21,7 +21,7 @@ public:
 	Cloister(std::shared_ptr<Tile> tile, TypeIdentifier key);
 	~Cloister();
 	
-	std::ostream& myprint(std::ostream& os, const Cloister& c)const;
+	std::ostream& myprint(std::ostream& os, const MapItem& item)const;
 
 private:
 
