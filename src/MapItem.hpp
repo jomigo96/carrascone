@@ -72,6 +72,13 @@ public:
 	// virtual score - attribute points to players uppon closure
 	
 	std::vector<std::pair<std::shared_ptr<Tile>, TypeIdentifier>> const& getSpan(void)const;
+	std::vector<std::shared_ptr<Player>> const& getOwners()const;
+	
+	TypeIdentifier getFirst()const;
+	
+	void mergeWith(const MapItem& other);
+	
+	bool hasItem(std::shared_ptr<const Tile> tileptr, TypeIdentifier type)const;
 	
 protected:
 	std::vector<std::pair<std::shared_ptr<Tile>, TypeIdentifier>> span;

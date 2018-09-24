@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <sys/time.h>
 #include <stack>
+#include <list>
 
 
 Map::Map(sf::RenderWindow& window, const std::string& path): window(window){
@@ -144,29 +145,31 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 	}else
 		return false;
 		
-	std::stack<std::shared_ptr<MapItem>> stack;
+	std::list<std::shared_ptr<MapItem>> list;
 		
 	//	Create and merge MapItems
+	//  Im ashamed of this, dont look
+	
 	switch(tile->getTile()){
 		case 'a':{
 			std::shared_ptr<Field> f(new Field(tile, field1));
 			std::shared_ptr<Road> r(new Road(tile, road1));
 			std::shared_ptr<Cloister> c(new Cloister(tile, cloister));
-			stack.push(f);
-			stack.push(r);
-			stack.push(c);
+			list.push_back(f);
+			list.push_back(r);
+			list.push_back(c);
 			break;
 		}
 		case 'b':{
 			std::shared_ptr<Field> f(new Field(tile, field1));
 			std::shared_ptr<Cloister> c(new Cloister(tile, cloister));
-			stack.push(f);
-			stack.push(c);
+			list.push_back(f);
+			list.push_back(c);
 			break;
 		}
 		case 'c':{
 			std::shared_ptr<Castle> c(new Castle(tile, castle1));
-			stack.push(c);
+			list.push_back(c);
 			break;
 		}
 		case 'd':{
@@ -174,17 +177,17 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 			std::shared_ptr<Field> f2(new Field(tile, field2));
 			std::shared_ptr<Road> r(new Road(tile, road1));
 			std::shared_ptr<Castle> c(new Castle(tile, castle1));
-			stack.push(f1);
-			stack.push(f2);
-			stack.push(r);
-			stack.push(c);
+			list.push_back(f1);
+			list.push_back(f2);
+			list.push_back(r);
+			list.push_back(c);
 			break;
 		}
 		case 'e':{
 			std::shared_ptr<Field> f(new Field(tile, field1));
 			std::shared_ptr<Castle> c(new Castle(tile, castle1));
-			stack.push(f);
-			stack.push(c);
+			list.push_back(f);
+			list.push_back(c);
 			break;
 		}
 		case 'f':
@@ -192,9 +195,9 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 			std::shared_ptr<Field> f1(new Field(tile, field1));
 			std::shared_ptr<Field> f2(new Field(tile, field2));
 			std::shared_ptr<Castle> c(new Castle(tile, castle1));
-			stack.push(f1);
-			stack.push(f1);
-			stack.push(c);
+			list.push_back(f1);
+			list.push_back(f1);
+			list.push_back(c);
 			break;
 		}
 		case 'h':
@@ -202,9 +205,9 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 			std::shared_ptr<Field> f(new Field(tile, field1));
 			std::shared_ptr<Castle> c1(new Castle(tile, castle1));
 			std::shared_ptr<Castle> c2(new Castle(tile, castle2));
-			stack.push(c1);
-			stack.push(c2);
-			stack.push(f);
+			list.push_back(c1);
+			list.push_back(c2);
+			list.push_back(f);
 			break;
 		}
 		case 'j':
@@ -213,10 +216,10 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 			std::shared_ptr<Field> f2(new Field(tile, field2));
 			std::shared_ptr<Castle> c(new Castle(tile, castle1));
 			std::shared_ptr<Road> r(new Road(tile, road1));
-			stack.push(c);
-			stack.push(r);
-			stack.push(f1);
-			stack.push(f2);
+			list.push_back(c);
+			list.push_back(r);
+			list.push_back(f1);
+			list.push_back(f2);
 			break;
 		}
 		case 'l':{
@@ -227,21 +230,21 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 			std::shared_ptr<Road> r1(new Road(tile, road1));
 			std::shared_ptr<Road> r2(new Road(tile, road2));
 			std::shared_ptr<Road> r3(new Road(tile, road3));
-			stack.push(c);
-			stack.push(r1);
-			stack.push(r2);
-			stack.push(r3);
-			stack.push(f1);
-			stack.push(f2);
-			stack.push(f3);
+			list.push_back(c);
+			list.push_back(r1);
+			list.push_back(r2);
+			list.push_back(r3);
+			list.push_back(f1);
+			list.push_back(f2);
+			list.push_back(f3);
 			break;
 		}
 		case 'm':
 		case 'n':{
 			std::shared_ptr<Field> f(new Field(tile, field1));
 			std::shared_ptr<Castle> c(new Castle(tile, castle1));
-			stack.push(c);
-			stack.push(f);
+			list.push_back(c);
+			list.push_back(f);
 			break;
 		}
 		case 'o':
@@ -250,18 +253,18 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 			std::shared_ptr<Field> f2(new Field(tile, field2));
 			std::shared_ptr<Castle> c(new Castle(tile, castle1));
 			std::shared_ptr<Road> r(new Road(tile, road1));
-			stack.push(c);
-			stack.push(r);
-			stack.push(f1);
-			stack.push(f2);
+			list.push_back(c);
+			list.push_back(r);
+			list.push_back(f1);
+			list.push_back(f2);
 			break;
 		}
 		case 'q':
 		case 'r':{
 			std::shared_ptr<Field> f(new Field(tile, field1));
 			std::shared_ptr<Castle> c(new Castle(tile, castle1));
-			stack.push(c);
-			stack.push(f);
+			list.push_back(c);
+			list.push_back(f);
 			break;
 		}
 		case 's':
@@ -270,10 +273,10 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 			std::shared_ptr<Field> f2(new Field(tile, field2));
 			std::shared_ptr<Castle> c(new Castle(tile, castle1));
 			std::shared_ptr<Road> r(new Road(tile, road1));
-			stack.push(c);
-			stack.push(r);
-			stack.push(f1);
-			stack.push(f2);
+			list.push_back(c);
+			list.push_back(r);
+			list.push_back(f1);
+			list.push_back(f2);
 			break;
 		}
 		case 'u':
@@ -281,9 +284,9 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 			std::shared_ptr<Field> f1(new Field(tile, field1));
 			std::shared_ptr<Field> f2(new Field(tile, field2));
 			std::shared_ptr<Road> r(new Road(tile, road1));
-			stack.push(r);
-			stack.push(f1);
-			stack.push(f2);
+			list.push_back(r);
+			list.push_back(f1);
+			list.push_back(f2);
 			break;
 		}
 		case 'w':{
@@ -293,12 +296,12 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 			std::shared_ptr<Road> r1(new Road(tile, road1));
 			std::shared_ptr<Road> r2(new Road(tile, road2));
 			std::shared_ptr<Road> r3(new Road(tile, road3));
-			stack.push(r1);
-			stack.push(r2);
-			stack.push(r3);
-			stack.push(f1);
-			stack.push(f2);
-			stack.push(f3);
+			list.push_back(r1);
+			list.push_back(r2);
+			list.push_back(r3);
+			list.push_back(f1);
+			list.push_back(f2);
+			list.push_back(f3);
 			break;
 		}
 		case 'x':{
@@ -310,24 +313,72 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 			std::shared_ptr<Road> r2(new Road(tile, road2));
 			std::shared_ptr<Road> r3(new Road(tile, road3));
 			std::shared_ptr<Road> r4(new Road(tile, road4));
-			stack.push(r1);
-			stack.push(r2);
-			stack.push(r3);
-			stack.push(r4);
-			stack.push(f1);
-			stack.push(f2);
-			stack.push(f3);
-			stack.push(f4);
+			list.push_back(r1);
+			list.push_back(r2);
+			list.push_back(r3);
+			list.push_back(r4);
+			list.push_back(f1);
+			list.push_back(f2);
+			list.push_back(f3);
+			list.push_back(f4);
 			break;
 		}
 		default: break;
 	}	
+	 
 	
+	//std::stack<MapItem>* stack;
+	//TypeIdentifier t1, t2, t3, t4, t5, t6;
+	
+	
+	//Merge and add MapItems
+	//std::shared_ptr<Tile> neighbour;
+	/*
+	if(this->cellOccupied(cell+Cell(0,1))){
+			
+		stack = tile->getMapItems(down);
+		neighbour = std::shared_ptr<Tile>( this->getTileAt(cell+Cell(0,1)) );
+		if(stack->size() == 3){
+			t1=stack->top(); stack->pop();
+			t2=stack->top(); stack->pop();
+			t3=stack->top(); stack->pop();
+			delete stack;
+			stack=neighbour->getMapItems(up);
+			t4=stack->top(); stack->pop();
+			t5=stack->top(); stack->pop();
+			t6=stack->top(); stack->pop();
+			delete stack;
+			
 
-	while(!stack.empty()){
-		items.push_back(stack.top());
-		stack.pop();
-	}
+			for(auto it=list.begin(); it!= list.end(); it++){
+				if(it->getFirst() == t1){
+					
+					std::list<std::shared_ptr<MapItem>>::iterator it2;
+					for(it2=items.begin(); it2!=items.end(); it2++){
+						if((*it2)->hasItem(neighbour, t5))
+							break;
+					}
+					if(it2==items.end())
+						throw std::exception();
+					it2->mergeWith();	
+						
+					
+					list.erase(it);
+					break;
+				}	
+			}
+			
+				
+		}else{
+			t1=stack->top(); stack->pop();
+			delete stack;
+			stack=neighbour->getMapItems(up);
+			t4=stack->top(); stack->pop();
+			delete stack;
+		}			
+	}*/
+		
+	
 			
 	return true;
 }
@@ -453,4 +504,16 @@ bool Map::cellOccupied(const Cell& c)const{
 	
 	return (bool)map.count(c);
 	
+}
+
+std::shared_ptr<const Tile> Map::getTileAt(Cell c)const{
+	
+	for(auto it=map.cbegin(); it!=map.cend(); it++){
+		
+		if(it->first == c)
+			return it->second;
+		
+	}
+	
+	return nullptr;
 }

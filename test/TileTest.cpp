@@ -165,4 +165,48 @@ TEST_CASE("Tile: MapItem getters"){
 		t1=stack->top(); stack->pop(); delete stack;
 		CHECK(t1 == castle1);			
 	}
+	
+	SECTION("Tile 'w'"){
+		std::stack<TypeIdentifier>* stack;
+		
+		Tile tile('w');
+		
+		stack = tile.getMapItems(up);
+		REQUIRE(stack->size() == 1);
+		t1=stack->top(); stack->pop(); delete stack;
+		CHECK(t1 == field1);
+		
+		stack = tile.getMapItems(right);
+		REQUIRE(stack->size() == 3);
+		t1=stack->top(); stack->pop();
+		t2=stack->top(); stack->pop();
+		t3=stack->top(); stack->pop();
+		delete stack;
+		
+		CHECK(t1 == field1);
+		CHECK(t2 == field2);
+		CHECK(t3 == road1);		
+		
+		stack = tile.getMapItems(down);
+		REQUIRE(stack->size() == 3);
+		t1=stack->top(); stack->pop();
+		t2=stack->top(); stack->pop();
+		t3=stack->top(); stack->pop();
+		delete stack;
+		
+		CHECK(t1 == field2);
+		CHECK(t2 == field3);
+		CHECK(t3 == road2);	
+		
+		stack = tile.getMapItems(left);
+		REQUIRE(stack->size() == 3);
+		t1=stack->top(); stack->pop();
+		t2=stack->top(); stack->pop();
+		t3=stack->top(); stack->pop();
+		delete stack;
+		
+		CHECK(t1 == field3);
+		CHECK(t2 == field1);
+		CHECK(t3 == road3);	
+	}
 }

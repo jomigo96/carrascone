@@ -119,7 +119,7 @@ private:
 	std::shared_ptr<const Tile> playable;
 	sf::Vector2f playable_pos; 
 	
-
+	std::shared_ptr<const Tile> getTileAt(Cell c)const;
 };
 
 #endif /* MAP_HPP */
