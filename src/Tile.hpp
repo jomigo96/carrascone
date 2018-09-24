@@ -9,7 +9,7 @@
 
 #include "TileType.hpp"
 #include "MapItem.hpp"
-#include <stack>
+#include <tuple>
 
 class MapItem;
 
@@ -94,17 +94,24 @@ public:
 	ItemType getSide(Direction d)const;
 
 	/*!
-	 * 	\brief returns a stack with the mapitems(identified by this Tile
-	 *  pointer and the TypeIdentifier) to merge to. This stack should
-	 *  then be deleted by the caller.
+	 * \brief Determines the mapitems(identified by this Tile
+	 * pointer and the TypeIdentifier) that can be merge to. 
 	 * 
-	 * 	For ambiguities where two fields must be connected, the one 
-	 *  which appears first in the stack(closer to the top) is the
-	 *  one on the right-hand side.
-	 *  \throw runtime_error
-	 *  \throw logic_error
+	 * In the case that the border is a field or a castle, it will be
+	 * present in the first element of the tuple, and the other ones
+	 * will hold invalid. In the case it is a road, the convention is
+	 * the first element has the field to the right-hand side when 
+	 * looking at the tile border, the second element the one to the 
+	 * left-hand side, and the third one the road.
+	 * 
+	 * \return A tuple with 3 elements, of which at least the first one
+	 * has a useful value.
+	 * 
+	 * \throw runtime_error if it encounters a weird mis-match in 
+	 * orientation. (should never happen)
+	 * \throw logic_error if the tile is not a known type, from a-x.
 	 * */	
-	std::stack<TypeIdentifier>* getMapItems(Direction d)const;
+	std::tuple<TypeIdentifier, TypeIdentifier, TypeIdentifier> getMapItems(Direction d)const;
 	
 private:
 	int orientation;

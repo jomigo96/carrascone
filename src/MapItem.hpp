@@ -48,8 +48,10 @@ enum TypeIdentifier: unsigned int{
 	field3,
 	field4,
 	
-	cloister
+	cloister,
 	
+	//none
+	invalid
 };
 
 //forward declarations
