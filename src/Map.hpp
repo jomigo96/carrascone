@@ -107,7 +107,10 @@ public:
 	 */
 	int deck_count(void) const;
 	
+	
+	
 private:
+	//Variables
 	sf::RenderWindow& window;
 	
 	std::map<TileType, sf::Texture> textures;
@@ -119,7 +122,13 @@ private:
 	std::shared_ptr<const Tile> playable;
 	sf::Vector2f playable_pos; 
 	
+	
+	//Methods
 	std::shared_ptr<const Tile> getTileAt(Cell c)const;
+	void mergeItems(Cell c, std::list<std::shared_ptr<MapItem>>& newitems);
+	
 };
+
+std::shared_ptr<MapItem> getItem(std::list<std::shared_ptr<MapItem>>& origin, std::shared_ptr<Tile> tile, TypeIdentifier type);
 
 #endif /* MAP_HPP */

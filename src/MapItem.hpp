@@ -78,7 +78,7 @@ public:
 	
 	TypeIdentifier getFirst()const;
 	
-	void mergeWith(const MapItem& other);
+	void mergeWith(std::shared_ptr<MapItem> other);
 	
 	bool hasItem(std::shared_ptr<const Tile> tileptr, TypeIdentifier type)const;
 	

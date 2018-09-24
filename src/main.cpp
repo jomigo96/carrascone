@@ -61,7 +61,8 @@ int main(void){
 								
 								if( !(turn = !map.play(tile, clicked))){
 									map.clearPlayable();
-									std::cout << map;
+									//std::cout << map;
+									//std::cout << map;
 								}
 								break;
 

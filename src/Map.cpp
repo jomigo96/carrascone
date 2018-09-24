@@ -145,31 +145,31 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 	}else
 		return false;
 		
-	std::list<std::shared_ptr<MapItem>> list;
-		
 	//	Create and merge MapItems
 	//  Im ashamed of this, dont look
+	
+	std::list<std::shared_ptr<MapItem>> items;
 	
 	switch(tile->getTile()){
 		case 'a':{
 			std::shared_ptr<Field> f(new Field(tile, field1));
 			std::shared_ptr<Road> r(new Road(tile, road1));
 			std::shared_ptr<Cloister> c(new Cloister(tile, cloister));
-			list.push_back(f);
-			list.push_back(r);
-			list.push_back(c);
+			items.push_back(f);
+			items.push_back(r);
+			items.push_back(c);
 			break;
 		}
 		case 'b':{
 			std::shared_ptr<Field> f(new Field(tile, field1));
 			std::shared_ptr<Cloister> c(new Cloister(tile, cloister));
-			list.push_back(f);
-			list.push_back(c);
+			items.push_back(f);
+			items.push_back(c);
 			break;
 		}
 		case 'c':{
 			std::shared_ptr<Castle> c(new Castle(tile, castle1));
-			list.push_back(c);
+			items.push_back(c);
 			break;
 		}
 		case 'd':{
@@ -177,17 +177,17 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 			std::shared_ptr<Field> f2(new Field(tile, field2));
 			std::shared_ptr<Road> r(new Road(tile, road1));
 			std::shared_ptr<Castle> c(new Castle(tile, castle1));
-			list.push_back(f1);
-			list.push_back(f2);
-			list.push_back(r);
-			list.push_back(c);
+			items.push_back(f1);
+			items.push_back(f2);
+			items.push_back(r);
+			items.push_back(c);
 			break;
 		}
 		case 'e':{
 			std::shared_ptr<Field> f(new Field(tile, field1));
 			std::shared_ptr<Castle> c(new Castle(tile, castle1));
-			list.push_back(f);
-			list.push_back(c);
+			items.push_back(f);
+			items.push_back(c);
 			break;
 		}
 		case 'f':
@@ -195,9 +195,9 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 			std::shared_ptr<Field> f1(new Field(tile, field1));
 			std::shared_ptr<Field> f2(new Field(tile, field2));
 			std::shared_ptr<Castle> c(new Castle(tile, castle1));
-			list.push_back(f1);
-			list.push_back(f1);
-			list.push_back(c);
+			items.push_back(f1);
+			items.push_back(f1);
+			items.push_back(c);
 			break;
 		}
 		case 'h':
@@ -205,9 +205,9 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 			std::shared_ptr<Field> f(new Field(tile, field1));
 			std::shared_ptr<Castle> c1(new Castle(tile, castle1));
 			std::shared_ptr<Castle> c2(new Castle(tile, castle2));
-			list.push_back(c1);
-			list.push_back(c2);
-			list.push_back(f);
+			items.push_back(c1);
+			items.push_back(c2);
+			items.push_back(f);
 			break;
 		}
 		case 'j':
@@ -216,10 +216,10 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 			std::shared_ptr<Field> f2(new Field(tile, field2));
 			std::shared_ptr<Castle> c(new Castle(tile, castle1));
 			std::shared_ptr<Road> r(new Road(tile, road1));
-			list.push_back(c);
-			list.push_back(r);
-			list.push_back(f1);
-			list.push_back(f2);
+			items.push_back(c);
+			items.push_back(r);
+			items.push_back(f1);
+			items.push_back(f2);
 			break;
 		}
 		case 'l':{
@@ -230,21 +230,21 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 			std::shared_ptr<Road> r1(new Road(tile, road1));
 			std::shared_ptr<Road> r2(new Road(tile, road2));
 			std::shared_ptr<Road> r3(new Road(tile, road3));
-			list.push_back(c);
-			list.push_back(r1);
-			list.push_back(r2);
-			list.push_back(r3);
-			list.push_back(f1);
-			list.push_back(f2);
-			list.push_back(f3);
+			items.push_back(c);
+			items.push_back(r1);
+			items.push_back(r2);
+			items.push_back(r3);
+			items.push_back(f1);
+			items.push_back(f2);
+			items.push_back(f3);
 			break;
 		}
 		case 'm':
 		case 'n':{
 			std::shared_ptr<Field> f(new Field(tile, field1));
 			std::shared_ptr<Castle> c(new Castle(tile, castle1));
-			list.push_back(c);
-			list.push_back(f);
+			items.push_back(c);
+			items.push_back(f);
 			break;
 		}
 		case 'o':
@@ -253,18 +253,18 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 			std::shared_ptr<Field> f2(new Field(tile, field2));
 			std::shared_ptr<Castle> c(new Castle(tile, castle1));
 			std::shared_ptr<Road> r(new Road(tile, road1));
-			list.push_back(c);
-			list.push_back(r);
-			list.push_back(f1);
-			list.push_back(f2);
+			items.push_back(c);
+			items.push_back(r);
+			items.push_back(f1);
+			items.push_back(f2);
 			break;
 		}
 		case 'q':
 		case 'r':{
 			std::shared_ptr<Field> f(new Field(tile, field1));
 			std::shared_ptr<Castle> c(new Castle(tile, castle1));
-			list.push_back(c);
-			list.push_back(f);
+			items.push_back(c);
+			items.push_back(f);
 			break;
 		}
 		case 's':
@@ -273,10 +273,10 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 			std::shared_ptr<Field> f2(new Field(tile, field2));
 			std::shared_ptr<Castle> c(new Castle(tile, castle1));
 			std::shared_ptr<Road> r(new Road(tile, road1));
-			list.push_back(c);
-			list.push_back(r);
-			list.push_back(f1);
-			list.push_back(f2);
+			items.push_back(c);
+			items.push_back(r);
+			items.push_back(f1);
+			items.push_back(f2);
 			break;
 		}
 		case 'u':
@@ -284,9 +284,9 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 			std::shared_ptr<Field> f1(new Field(tile, field1));
 			std::shared_ptr<Field> f2(new Field(tile, field2));
 			std::shared_ptr<Road> r(new Road(tile, road1));
-			list.push_back(r);
-			list.push_back(f1);
-			list.push_back(f2);
+			items.push_back(r);
+			items.push_back(f1);
+			items.push_back(f2);
 			break;
 		}
 		case 'w':{
@@ -296,12 +296,12 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 			std::shared_ptr<Road> r1(new Road(tile, road1));
 			std::shared_ptr<Road> r2(new Road(tile, road2));
 			std::shared_ptr<Road> r3(new Road(tile, road3));
-			list.push_back(r1);
-			list.push_back(r2);
-			list.push_back(r3);
-			list.push_back(f1);
-			list.push_back(f2);
-			list.push_back(f3);
+			items.push_back(r1);
+			items.push_back(r2);
+			items.push_back(r3);
+			items.push_back(f1);
+			items.push_back(f2);
+			items.push_back(f3);
 			break;
 		}
 		case 'x':{
@@ -313,72 +313,20 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 			std::shared_ptr<Road> r2(new Road(tile, road2));
 			std::shared_ptr<Road> r3(new Road(tile, road3));
 			std::shared_ptr<Road> r4(new Road(tile, road4));
-			list.push_back(r1);
-			list.push_back(r2);
-			list.push_back(r3);
-			list.push_back(r4);
-			list.push_back(f1);
-			list.push_back(f2);
-			list.push_back(f3);
-			list.push_back(f4);
+			items.push_back(r1);
+			items.push_back(r2);
+			items.push_back(r3);
+			items.push_back(r4);
+			items.push_back(f1);
+			items.push_back(f2);
+			items.push_back(f3);
+			items.push_back(f4);
 			break;
 		}
 		default: break;
 	}	
 	 
-	
-	//std::stack<MapItem>* stack;
-	//TypeIdentifier t1, t2, t3, t4, t5, t6;
-	
-	
-	//Merge and add MapItems
-	//std::shared_ptr<Tile> neighbour;
-	/*
-	if(this->cellOccupied(cell+Cell(0,1))){
-			
-		stack = tile->getMapItems(down);
-		neighbour = std::shared_ptr<Tile>( this->getTileAt(cell+Cell(0,1)) );
-		if(stack->size() == 3){
-			t1=stack->top(); stack->pop();
-			t2=stack->top(); stack->pop();
-			t3=stack->top(); stack->pop();
-			delete stack;
-			stack=neighbour->getMapItems(up);
-			t4=stack->top(); stack->pop();
-			t5=stack->top(); stack->pop();
-			t6=stack->top(); stack->pop();
-			delete stack;
-			
-
-			for(auto it=list.begin(); it!= list.end(); it++){
-				if(it->getFirst() == t1){
-					
-					std::list<std::shared_ptr<MapItem>>::iterator it2;
-					for(it2=items.begin(); it2!=items.end(); it2++){
-						if((*it2)->hasItem(neighbour, t5))
-							break;
-					}
-					if(it2==items.end())
-						throw std::exception();
-					it2->mergeWith();	
-						
-					
-					list.erase(it);
-					break;
-				}	
-			}
-			
-				
-		}else{
-			t1=stack->top(); stack->pop();
-			delete stack;
-			stack=neighbour->getMapItems(up);
-			t4=stack->top(); stack->pop();
-			delete stack;
-		}			
-	}*/
-		
-	
+	this->mergeItems(cell, items);	
 			
 	return true;
 }
@@ -436,6 +384,7 @@ std::ostream& operator<<(std::ostream& os, const Map& map){
 	*/
 	
 	// Show MapItems
+	os<< "-------------------------------------"<<std::endl;
 	
 	for(auto it=map.items.cbegin(); it!=map.items.cend(); it++){
 		os << "Showing Item:"<< std::endl << **it << std::endl;
@@ -515,5 +464,208 @@ std::shared_ptr<const Tile> Map::getTileAt(Cell c)const{
 		
 	}
 	
+	return nullptr;
+}
+
+void Map::mergeItems(Cell c, std::list<std::shared_ptr<MapItem>>& newitems){
+	
+	std::shared_ptr<Tile> tile, other;
+	std::tuple<TypeIdentifier, TypeIdentifier, TypeIdentifier> t1, t2;
+	std::shared_ptr<MapItem> item1, item2;
+
+	if(!this->cellOccupied(c))
+		throw std::length_error("Tile not found");
+		
+	tile=this->map[c];
+	
+	//Merge with the cell to the top
+	if(this->cellOccupied(c+Cell(0,-1))){
+		
+		other=this->map[c+Cell(0,-1)];
+		t1=tile->getMapItems(up);
+		t2=other->getMapItems(down);
+		
+		if(tile->getUp() != road){
+			
+			item1=getItem(newitems, tile, std::get<0>(t1));
+			if(item1 == nullptr){
+				item1=getItem(this->items, tile, std::get<0>(t1));
+				
+				if(item1 == nullptr){std::cout << "Failed at Alpha" << std::endl; return;}
+				
+				
+				this->items.remove(item1);
+			}
+			else{
+				newitems.remove(item1);
+			}
+			item2=getItem(this->items, other, std::get<0>(t2));
+			if(item2 == nullptr){std::cout << "Failed at Bravo" << std::endl; return;}
+			item2->mergeWith(item1);
+			
+		}else{
+			item1=getItem(newitems, tile, std::get<0>(t1));
+			if(item1 == nullptr){
+				item1=getItem(this->items, tile, std::get<0>(t1));
+				
+				if(item1 == nullptr){std::cout << "Failed at Charlie" << std::endl; return;}
+				
+				
+				this->items.remove(item1);
+			}
+			else{
+				newitems.remove(item1);
+			}
+			item2=getItem(this->items, other, std::get<1>(t2));
+			if(item2 == nullptr){std::cout << "Failed at Echo" << std::endl; return;}
+			item2->mergeWith(item1);
+			/////////////////////////////////////////
+			item1=getItem(newitems, tile, std::get<1>(t1));
+			if(item1 == nullptr){
+				item1=getItem(this->items, tile, std::get<1>(t1));
+				
+				if(item1 == nullptr){std::cout << "Failed at Delta" << std::endl; return;}
+				
+				
+				this->items.remove(item1);
+			}
+			else{
+				newitems.remove(item1);
+			}
+			item2=getItem(this->items, other, std::get<0>(t2));
+			if(item2 == nullptr){std::cout << "Failed at Foxtrot" << std::endl; return;}
+			item2->mergeWith(item1);
+			///////////////////////////////////////////////////
+			item1=getItem(newitems, tile, std::get<2>(t1));
+			if(item1 == nullptr){
+				item1=getItem(this->items, tile, std::get<2>(t1));
+				
+				if(item1 == nullptr){std::cout << "Failed at Golf" << std::endl; return;}
+				
+				
+				this->items.remove(item1);
+			}
+			else{
+				newitems.remove(item1);
+			}
+			item2=getItem(this->items, other, std::get<2>(t2));
+			if(item2 == nullptr){std::cout << "Failed at Hotel" << std::endl; return;}
+			item2->mergeWith(item1);		
+		}
+
+	}/*
+	
+	//Merge with the cell to the right
+	if(this->cellOccupied(c+Cell(1,0))){
+		
+		other=this->map[c+Cell(1,0)];
+		t1=tile->getMapItems(right);
+		t2=other->getMapItems(left);
+		
+		if(tile->getRight() != road){
+			
+			item1=this->getItem(tile, std::get<0>(t1));
+			item2=this->getItem(other, std::get<0>(t2));
+			item2->mergeWith(item1);
+			this->items.remove(item1);
+			
+		}else{
+			item1=this->getItem(tile, std::get<0>(t1));
+			item2=this->getItem(other, std::get<1>(t2));
+			item2->mergeWith(item1);
+			this->items.remove(item1);
+			
+			item1=this->getItem(tile, std::get<1>(t1));
+			item2=this->getItem(other, std::get<0>(t2));
+			item2->mergeWith(item1);
+			this->items.remove(item1);
+			
+			item1=this->getItem(tile, std::get<2>(t1));
+			item2=this->getItem(other, std::get<2>(t2));
+			item2->mergeWith(item1);
+			this->items.remove(item1);			
+		}
+
+	}
+	
+	//Merge with the cell to the bottom
+	if(this->cellOccupied(c+Cell(0,1))){
+
+		other=this->map[c+Cell(0,1)];
+		t1=tile->getMapItems(down);
+		t2=other->getMapItems(up);
+		
+		if(tile->getDown() != road){
+			
+			item1=this->getItem(tile, std::get<0>(t1));
+			item2=this->getItem(other, std::get<0>(t2));
+			item2->mergeWith(item1);
+			this->items.remove(item1);
+			
+		}else{
+			item1=this->getItem(tile, std::get<0>(t1));
+			item2=this->getItem(other, std::get<1>(t2));
+			item2->mergeWith(item1);
+			this->items.remove(item1);
+			
+			item1=this->getItem(tile, std::get<1>(t1));
+			item2=this->getItem(other, std::get<0>(t2));
+			item2->mergeWith(item1);
+			this->items.remove(item1);
+			
+			item1=this->getItem(tile, std::get<2>(t1));
+			item2=this->getItem(other, std::get<2>(t2));
+			item2->mergeWith(item1);
+			this->items.remove(item1);			
+		}		
+
+	}
+	
+	//Merge with the cell to the left
+	if(this->cellOccupied(c+Cell(-1,0))){
+
+		other=this->map[c+Cell(-1,0)];
+		t1=tile->getMapItems(left);
+		t2=other->getMapItems(right);
+		
+		if(tile->getLeft() != road){
+			
+			item1=this->getItem(tile, std::get<0>(t1));
+			item2=this->getItem(other, std::get<0>(t2));
+			item2->mergeWith(item1);
+			this->items.remove(item1);
+			
+		}else{
+			item1=this->getItem(tile, std::get<0>(t1));
+			item2=this->getItem(other, std::get<1>(t2));
+			item2->mergeWith(item1);
+			this->items.remove(item1);
+			
+			item1=this->getItem(tile, std::get<1>(t1));
+			item2=this->getItem(other, std::get<0>(t2));
+			item2->mergeWith(item1);
+			this->items.remove(item1);
+			
+			item1=this->getItem(tile, std::get<2>(t1));
+			item2=this->getItem(other, std::get<2>(t2));
+			item2->mergeWith(item1);
+			this->items.remove(item1);			
+		}		
+
+	}*/
+	
+	//Insert remaining items
+	for(auto it=newitems.begin(); it!=newitems.end(); it++){
+		this->items.push_back(*it);
+	}
+	
+}
+
+std::shared_ptr<MapItem> getItem(std::list<std::shared_ptr<MapItem>>& origin, std::shared_ptr<Tile> tile, TypeIdentifier type){
+	
+	for(auto it=origin.begin(); it!=origin.end(); it++){
+		if((**it).hasItem(tile, type))
+			return *it;
+	}
 	return nullptr;
 }

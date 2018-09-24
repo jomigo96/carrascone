@@ -85,23 +85,29 @@ TEST_CASE("Map: draw, count"){
 	REQUIRE(--count == map.deck_count());
 }*/
 
-/*
-TEST_CASE("Shared_ptr comparisons"){
-	
-	
-	shared_ptr<int> ptr1(new int(5));
-	shared_ptr<int> ptr2(new int(5));
-	shared_ptr<int> ptr3(ptr1);
-	
-	CHECK(*ptr1 == *ptr2);
-	(*ptr2)++;
-	CHECK(*ptr1 != *ptr2);
-	
-	CHECK(ptr1 == ptr3);
-	
-}*/
 
-
+TEST_CASE("Merges"){
+	
+	sf::RenderWindow window(sf::VideoMode(1280,720), "Carrascone");
+    window.setFramerateLimit(60);
+		
+	
+	Map map(window, std::string("../src/textures/"));
+	
+	shared_ptr<Tile> tile(new Tile('o'));
+	tile->rotate_clockwise();
+	tile->rotate_clockwise();
+	CHECK(map.play(tile, Cell(7,5))==true);
+	
+	tile = shared_ptr<Tile>(new Tile('d'));
+	tile->rotate_counter_clockwise();
+	map.play(tile, Cell(7,6));
+	
+	std::cout << map;
+	map.render();
+	window.display();
+	getchar();
+}
 
 
 
