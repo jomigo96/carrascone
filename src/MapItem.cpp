@@ -49,6 +49,9 @@ std::vector<std::shared_ptr<Player>> const& MapItem::getOwners()const{
 
 void MapItem::mergeWith(std::shared_ptr<MapItem> other){
 	
+	if(this == other.get())
+		return;
+	
 	auto owners = other->getOwners();
 	auto span = other->getSpan();
 	

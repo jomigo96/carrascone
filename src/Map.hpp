@@ -125,7 +125,8 @@ private:
 	
 	//Methods
 	std::shared_ptr<const Tile> getTileAt(Cell c)const;
-	void mergeItems(Cell c, std::list<std::shared_ptr<MapItem>>& newitems);
+	bool mergeItems(Cell c, std::list<std::shared_ptr<MapItem>>& newitems);
+	bool mapItemExists(std::shared_ptr<MapItem> item)const;
 	
 };
 

@@ -62,6 +62,9 @@ TEST_CASE("Tile: getters"){
 	REQUIRE(tile.getRight() == field);
 	REQUIRE(tile.getDown() == field);
 	REQUIRE(tile.getLeft() == road);
+	
+	tile=Tile('d');
+	CHECK(tile.getSide(right) == castle);
 }
 
 TEST_CASE("Tile: MapItem getters"){
@@ -134,6 +137,22 @@ TEST_CASE("Tile: MapItem getters"){
 		out = tile.getMapItems(right);
 		first=field1; second=field2; third=road1;
 		CHECK(out == exp);
+		
+		while(tile.rotate_clockwise()!=0)
+			;
+		
+		out = tile.getMapItems(up);
+		first=field1; second=field2; third=road1;
+		CHECK(out == exp);
+		out = tile.getMapItems(right);
+		first=castle1; second=invalid; third=invalid;
+		CHECK(out == exp);	
+		out = tile.getMapItems(down);
+		first=field2; second=field3; third=road2;
+		CHECK(out == exp);	
+		out = tile.getMapItems(left);
+		first=field3; second=field1; third=road3;
+		CHECK(out == exp);			
 
 	}
 	

@@ -383,12 +383,22 @@ std::ostream& operator<<(std::ostream& os, const Map& map){
 	}
 	*/
 	
+	/*
 	// Show MapItems
 	os<< "-------------------------------------"<<std::endl;
 	
 	for(auto it=map.items.cbegin(); it!=map.items.cend(); it++){
 		os << "Showing Item:"<< std::endl << **it << std::endl;
 	}
+	*/
+	
+	// Count MapItems
+	int count=0;
+	for(auto it=map.items.cbegin(); it!=map.items.cend(); it++){
+		count++;
+	}
+	os << "Map has " << count << " items." << std::endl;
+	
 	
 	return os;
 }
@@ -467,7 +477,7 @@ std::shared_ptr<const Tile> Map::getTileAt(Cell c)const{
 	return nullptr;
 }
 
-void Map::mergeItems(Cell c, std::list<std::shared_ptr<MapItem>>& newitems){
+bool Map::mergeItems(Cell c, std::list<std::shared_ptr<MapItem>>& newitems){
 	
 	std::shared_ptr<Tile> tile, other;
 	std::tuple<TypeIdentifier, TypeIdentifier, TypeIdentifier> t1, t2;
@@ -478,186 +488,125 @@ void Map::mergeItems(Cell c, std::list<std::shared_ptr<MapItem>>& newitems){
 		
 	tile=this->map[c];
 	
-	//Merge with the cell to the top
-	if(this->cellOccupied(c+Cell(0,-1))){
+	Cell nei;
+	Direction dir1, dir2;
+	
+	for(int i=0; i<4; i++){
 		
-		other=this->map[c+Cell(0,-1)];
-		t1=tile->getMapItems(up);
-		t2=other->getMapItems(down);
-		
-		if(tile->getUp() != road){
-			
-			item1=getItem(newitems, tile, std::get<0>(t1));
-			if(item1 == nullptr){
-				item1=getItem(this->items, tile, std::get<0>(t1));
-				
-				if(item1 == nullptr){std::cout << "Failed at Alpha" << std::endl; return;}
-				
-				
-				this->items.remove(item1);
-			}
-			else{
-				newitems.remove(item1);
-			}
-			item2=getItem(this->items, other, std::get<0>(t2));
-			if(item2 == nullptr){std::cout << "Failed at Bravo" << std::endl; return;}
-			item2->mergeWith(item1);
-			
-		}else{
-			item1=getItem(newitems, tile, std::get<0>(t1));
-			if(item1 == nullptr){
-				item1=getItem(this->items, tile, std::get<0>(t1));
-				
-				if(item1 == nullptr){std::cout << "Failed at Charlie" << std::endl; return;}
-				
-				
-				this->items.remove(item1);
-			}
-			else{
-				newitems.remove(item1);
-			}
-			item2=getItem(this->items, other, std::get<1>(t2));
-			if(item2 == nullptr){std::cout << "Failed at Echo" << std::endl; return;}
-			item2->mergeWith(item1);
-			/////////////////////////////////////////
-			item1=getItem(newitems, tile, std::get<1>(t1));
-			if(item1 == nullptr){
-				item1=getItem(this->items, tile, std::get<1>(t1));
-				
-				if(item1 == nullptr){std::cout << "Failed at Delta" << std::endl; return;}
-				
-				
-				this->items.remove(item1);
-			}
-			else{
-				newitems.remove(item1);
-			}
-			item2=getItem(this->items, other, std::get<0>(t2));
-			if(item2 == nullptr){std::cout << "Failed at Foxtrot" << std::endl; return;}
-			item2->mergeWith(item1);
-			///////////////////////////////////////////////////
-			item1=getItem(newitems, tile, std::get<2>(t1));
-			if(item1 == nullptr){
-				item1=getItem(this->items, tile, std::get<2>(t1));
-				
-				if(item1 == nullptr){std::cout << "Failed at Golf" << std::endl; return;}
-				
-				
-				this->items.remove(item1);
-			}
-			else{
-				newitems.remove(item1);
-			}
-			item2=getItem(this->items, other, std::get<2>(t2));
-			if(item2 == nullptr){std::cout << "Failed at Hotel" << std::endl; return;}
-			item2->mergeWith(item1);		
+		if(i==0){//Up
+			nei=c+Cell(0,-1);
+			dir1=up;
+			dir2=down;
 		}
-
-	}/*
-	
-	//Merge with the cell to the right
-	if(this->cellOccupied(c+Cell(1,0))){
-		
-		other=this->map[c+Cell(1,0)];
-		t1=tile->getMapItems(right);
-		t2=other->getMapItems(left);
-		
-		if(tile->getRight() != road){
-			
-			item1=this->getItem(tile, std::get<0>(t1));
-			item2=this->getItem(other, std::get<0>(t2));
-			item2->mergeWith(item1);
-			this->items.remove(item1);
-			
-		}else{
-			item1=this->getItem(tile, std::get<0>(t1));
-			item2=this->getItem(other, std::get<1>(t2));
-			item2->mergeWith(item1);
-			this->items.remove(item1);
-			
-			item1=this->getItem(tile, std::get<1>(t1));
-			item2=this->getItem(other, std::get<0>(t2));
-			item2->mergeWith(item1);
-			this->items.remove(item1);
-			
-			item1=this->getItem(tile, std::get<2>(t1));
-			item2=this->getItem(other, std::get<2>(t2));
-			item2->mergeWith(item1);
-			this->items.remove(item1);			
+		if(i==1){//Right
+			nei=c+Cell(1,0);
+			dir1=right;
+			dir2=left;
 		}
-
+		if(i==2){//Down
+			nei=c+Cell(0,1);
+			dir1=down;
+			dir2=up;
+		}
+		if(i==3){//Left
+			nei=c+Cell(-1,0);
+			dir1=left;
+			dir2=right;
+		}				
+		if(this->cellOccupied(nei)){
+			
+			other=this->map[nei];
+			t1=tile->getMapItems(dir1);
+			t2=other->getMapItems(dir2);
+			
+			if(tile->getSide(dir1) != road){
+				
+				item1=getItem(newitems, tile, std::get<0>(t1));
+				if(item1 == nullptr){
+					item1=getItem(this->items, tile, std::get<0>(t1));
+					
+					if(item1 == nullptr){std::cout << "Failed at Alpha "<<i << std::endl; return false;}
+					
+					
+					//this->items.remove(item1);
+				}
+				else{
+					newitems.remove(item1);
+				}
+				item2=getItem(this->items, other, std::get<0>(t2));
+				if(item2 == nullptr){std::cout << "Failed at Bravo "<<i << std::endl; return false;}
+				if((this->mapItemExists(item1))&&(this->mapItemExists(item2))&&(item1 != item2))
+					this->items.remove(item1);
+				item2->mergeWith(item1);
+				
+			}else{
+				item1=getItem(newitems, tile, std::get<0>(t1));
+				if(item1 == nullptr){
+					item1=getItem(this->items, tile, std::get<0>(t1));
+					
+					if(item1 == nullptr){std::cout << "Failed at Charlie "<<i << std::endl; return false;}
+					
+					
+					//this->items.remove(item1);
+				}
+				else{
+					newitems.remove(item1);
+				}
+				item2=getItem(this->items, other, std::get<1>(t2));
+				if(item2 == nullptr){std::cout << "Failed at Echo "<<i << std::endl; return false;}
+				if((this->mapItemExists(item1))&&(this->mapItemExists(item2))&&(item1 != item2))
+					this->items.remove(item1);
+				item2->mergeWith(item1);
+				
+				/////////////////////////////////////////
+				
+				item1=getItem(newitems, tile, std::get<1>(t1));
+				if(item1 == nullptr){
+					item1=getItem(this->items, tile, std::get<1>(t1));
+					
+					if(item1 == nullptr){std::cout << "Failed at Delta "<<i << std::endl; return false;}
+					
+					
+					//this->items.remove(item1);
+				}
+				else{
+					newitems.remove(item1);
+				}
+				item2=getItem(this->items, other, std::get<0>(t2));
+				if(item2 == nullptr){std::cout << "Failed at Foxtrot " <<i<< std::endl; return false;}
+				if((this->mapItemExists(item1))&&(this->mapItemExists(item2))&&(item1 != item2))
+					this->items.remove(item1);
+				item2->mergeWith(item1);
+				
+				///////////////////////////////////////////////////
+				
+				item1=getItem(newitems, tile, std::get<2>(t1));
+				if(item1 == nullptr){
+					item1=getItem(this->items, tile, std::get<2>(t1));
+					
+					if(item1 == nullptr){std::cout << "Failed at Golf" << std::endl; return false;}
+					
+					
+					//this->items.remove(item1);
+				}
+				else{
+					newitems.remove(item1);
+				}
+				item2=getItem(this->items, other, std::get<2>(t2));
+				if(item2 == nullptr){std::cout << "Failed at Hotel" << std::endl; return false;}
+				if((this->mapItemExists(item1))&&(this->mapItemExists(item2))&&(item1 != item2))
+					this->items.remove(item1);
+				item2->mergeWith(item1);		
+			}			
+			
+		}
 	}
-	
-	//Merge with the cell to the bottom
-	if(this->cellOccupied(c+Cell(0,1))){
-
-		other=this->map[c+Cell(0,1)];
-		t1=tile->getMapItems(down);
-		t2=other->getMapItems(up);
-		
-		if(tile->getDown() != road){
-			
-			item1=this->getItem(tile, std::get<0>(t1));
-			item2=this->getItem(other, std::get<0>(t2));
-			item2->mergeWith(item1);
-			this->items.remove(item1);
-			
-		}else{
-			item1=this->getItem(tile, std::get<0>(t1));
-			item2=this->getItem(other, std::get<1>(t2));
-			item2->mergeWith(item1);
-			this->items.remove(item1);
-			
-			item1=this->getItem(tile, std::get<1>(t1));
-			item2=this->getItem(other, std::get<0>(t2));
-			item2->mergeWith(item1);
-			this->items.remove(item1);
-			
-			item1=this->getItem(tile, std::get<2>(t1));
-			item2=this->getItem(other, std::get<2>(t2));
-			item2->mergeWith(item1);
-			this->items.remove(item1);			
-		}		
-
-	}
-	
-	//Merge with the cell to the left
-	if(this->cellOccupied(c+Cell(-1,0))){
-
-		other=this->map[c+Cell(-1,0)];
-		t1=tile->getMapItems(left);
-		t2=other->getMapItems(right);
-		
-		if(tile->getLeft() != road){
-			
-			item1=this->getItem(tile, std::get<0>(t1));
-			item2=this->getItem(other, std::get<0>(t2));
-			item2->mergeWith(item1);
-			this->items.remove(item1);
-			
-		}else{
-			item1=this->getItem(tile, std::get<0>(t1));
-			item2=this->getItem(other, std::get<1>(t2));
-			item2->mergeWith(item1);
-			this->items.remove(item1);
-			
-			item1=this->getItem(tile, std::get<1>(t1));
-			item2=this->getItem(other, std::get<0>(t2));
-			item2->mergeWith(item1);
-			this->items.remove(item1);
-			
-			item1=this->getItem(tile, std::get<2>(t1));
-			item2=this->getItem(other, std::get<2>(t2));
-			item2->mergeWith(item1);
-			this->items.remove(item1);			
-		}		
-
-	}*/
 	
 	//Insert remaining items
 	for(auto it=newitems.begin(); it!=newitems.end(); it++){
 		this->items.push_back(*it);
 	}
+	return true;
 	
 }
 
@@ -668,4 +617,13 @@ std::shared_ptr<MapItem> getItem(std::list<std::shared_ptr<MapItem>>& origin, st
 			return *it;
 	}
 	return nullptr;
+}
+
+bool Map::mapItemExists(std::shared_ptr<MapItem> item)const{
+
+	for(auto it=this->items.cbegin(); it!=this->items.cend(); it++){
+		if(item == *it)
+			return true;
+	}
+	return false;
 }

@@ -90,23 +90,52 @@ TEST_CASE("Merges"){
 	
 	sf::RenderWindow window(sf::VideoMode(1280,720), "Carrascone");
     window.setFramerateLimit(60);
-		
+	//window.close();	
 	
 	Map map(window, std::string("../src/textures/"));
+	/*
+	shared_ptr<Tile> tile(new Tile('u'));
+	CHECK(map.play(tile, Cell(6,4))==true);
 	
-	shared_ptr<Tile> tile(new Tile('o'));
-	tile->rotate_clockwise();
-	tile->rotate_clockwise();
+	tile = shared_ptr<Tile>(new Tile('u'));
 	CHECK(map.play(tile, Cell(7,5))==true);
 	
-	tile = shared_ptr<Tile>(new Tile('d'));
-	tile->rotate_counter_clockwise();
-	map.play(tile, Cell(7,6));
+	tile = shared_ptr<Tile>(new Tile('v'));
+	tile->rotate_clockwise();
+	CHECK(map.play(tile, Cell(6,5))==true);
 	
-	std::cout << map;
+	
+	shared_ptr<Tile> tile(new Tile('a'));
+	CHECK(map.play(tile, Cell(7,3))==true);
+	*/
+	
+	shared_ptr<Tile> tile(new Tile('v'));
+	map.play(tile, Cell(7,3));
+	tile=shared_ptr<Tile>(new Tile('v'));
+	tile->rotate_clockwise(); tile->rotate_clockwise();
+	map.play(tile, Cell(6,3));
+	tile=shared_ptr<Tile>(new Tile('v'));
+	map.play(tile, Cell(7,2));
+	tile=shared_ptr<Tile>(new Tile('v'));
+	tile->rotate_clockwise(); tile->rotate_clockwise();
+	map.play(tile, Cell(8,3));
+	tile=shared_ptr<Tile>(new Tile('u'));
+	tile->rotate_clockwise();
+	map.play(tile, Cell(7,2));
+	tile=shared_ptr<Tile>(new Tile('v'));
+	tile->rotate_counter_clockwise();
+	map.play(tile, Cell(6,2));
+	
+	cout<<map;
+	//This fails
+	tile=shared_ptr<Tile>(new Tile('v'));
+	map.play(tile, Cell(8,2));
+	
+	
 	map.render();
 	window.display();
 	getchar();
+	std::cout << map;
 }
 
 

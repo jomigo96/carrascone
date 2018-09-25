@@ -62,7 +62,6 @@ int main(void){
 								if( !(turn = !map.play(tile, clicked))){
 									map.clearPlayable();
 									//std::cout << map;
-									//std::cout << map;
 								}
 								break;
 
@@ -71,6 +70,20 @@ int main(void){
 								break;
 							default:
 								break;
+						}
+						break;
+						
+					case sf::Event::KeyPressed:
+						switch (event.key.code){
+						
+							case sf::Keyboard::P:
+								std::cout << map;
+								break;
+							case sf::Keyboard::O:							
+								tile=std::shared_ptr<Tile>(new Tile(map.draw().getTile()));
+								map.setPlayable(tile);
+								break;
+							default: break;
 						}
 						break;
 						
