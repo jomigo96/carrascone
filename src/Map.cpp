@@ -42,7 +42,8 @@ Map::Map(sf::RenderWindow& window, const std::string& path): window(window){
 	this->play(first, Cell(7,4));
 	
 	
-	playable = std::shared_ptr<const Tile>(nullptr);
+	playable = nullptr;
+	last_played = nullptr;
 }
 
 Map::~Map(){
@@ -196,7 +197,7 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 			std::shared_ptr<Field> f2(new Field(tile, field2));
 			std::shared_ptr<Castle> c(new Castle(tile, castle1));
 			items.push_back(f1);
-			items.push_back(f1);
+			items.push_back(f2);
 			items.push_back(c);
 			break;
 		}
@@ -327,6 +328,8 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 	}	
 	 
 	this->mergeItems(cell, items);	
+	
+	last_played=tile;
 			
 	return true;
 }

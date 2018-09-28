@@ -16,7 +16,7 @@ std::ostream& Cloister::myprint(std::ostream& os, const MapItem& item)const{
 	
 	auto span = item.getSpan();
 	
-	os << "Cloister with tiletype " << span.cbegin()->first->getTile() << std::endl;
+	os << "Cloister with tiletype " << std::get<0>(*span.cbegin())->getTile() << std::endl;
 	
 	return os;
 	

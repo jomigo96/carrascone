@@ -21,7 +21,7 @@ std::ostream& Road::myprint(std::ostream& os, const MapItem& item)const{
 	
 	for(auto it=span.cbegin(); it!=span.cend(); it++){
 		
-		switch(it->second){
+		switch(std::get<1>(*it)){
 			case road1:
 				s=std::string("road1");
 				break;
@@ -36,7 +36,7 @@ std::ostream& Road::myprint(std::ostream& os, const MapItem& item)const{
 				break;				
 			default: break;
 		}
-		os << "tiletype " << it->first->getTile() << " item " << s << " | ";
+		os << "tiletype " << std::get<0>(*it)->getTile() << " item " << s << " | ";
 	}
 	os << std::endl;
 	return os;

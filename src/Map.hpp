@@ -120,6 +120,7 @@ private:
 	std::list<std::shared_ptr<MapItem>> items;
 	
 	std::shared_ptr<const Tile> playable;
+	std::shared_ptr<const Tile> last_played;
 	sf::Vector2f playable_pos; 
 	
 	

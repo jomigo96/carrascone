@@ -13,7 +13,6 @@
 #include <memory>
 #include <vector>
 #include <ostream>
-//#include <tuple>
 
 class Tile;
 
@@ -73,8 +72,7 @@ public:
 	// merge - join two mapitems(not for type cloister)
 	// virtual score - attribute points to players uppon closure
 	
-	std::vector<std::pair<std::shared_ptr<Tile>, TypeIdentifier>> const& getSpan(void)const;
-	std::vector<std::shared_ptr<Player>> const& getOwners()const;
+	std::vector<std::tuple<std::shared_ptr<Tile>, TypeIdentifier, std::shared_ptr<Player>>>const& getSpan(void)const;
 	
 	TypeIdentifier getFirst()const;
 	
@@ -83,8 +81,7 @@ public:
 	bool hasItem(std::shared_ptr<const Tile> tileptr, TypeIdentifier type)const;
 	
 protected:
-	std::vector<std::pair<std::shared_ptr<Tile>, TypeIdentifier>> span;
-	std::vector<std::shared_ptr<Player>> owners;
+	std::vector<std::tuple<std::shared_ptr<Tile>, TypeIdentifier, std::shared_ptr<Player>>> span;
 	// connects;
 	
 private:

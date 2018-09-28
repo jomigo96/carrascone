@@ -12,11 +12,8 @@ MapItem::MapItem(){}
 MapItem::~MapItem(){
 
 	for(auto it=span.begin(); it!=span.end(); it++){
-		it->first.reset();
-	}
-	
-	for(auto it=owners.begin(); it!=owners.end(); it++){
-		it->reset();
+		std::get<0>(*it).reset();
+		std::get<2>(*it).reset();
 	}
 	
 }
@@ -24,7 +21,7 @@ MapItem::~MapItem(){
 MapItem::MapItem(std::shared_ptr<Tile> tile, TypeIdentifier key){
 	
 	span.push_back(
-		std::pair<std::shared_ptr<Tile>, TypeIdentifier>(tile, key));
+		std::tuple<std::shared_ptr<Tile>, TypeIdentifier, std::shared_ptr<Player>>(tile, key, nullptr));
 	
 }
 
@@ -39,20 +36,16 @@ std::ostream& MapItem::myprint(std::ostream& os, const MapItem& item)const{
 	return os;
 }
 
-std::vector<std::pair<std::shared_ptr<Tile>, TypeIdentifier>> const& MapItem::getSpan(void)const{
+std::vector<std::tuple<std::shared_ptr<Tile>, TypeIdentifier, std::shared_ptr<Player>>> const& MapItem::getSpan(void)const{
 	return span;
 }
 
-std::vector<std::shared_ptr<Player>> const& MapItem::getOwners()const{
-	return owners;
-}
 
 void MapItem::mergeWith(std::shared_ptr<MapItem> other){
 	
 	if(this == other.get())
 		return;
 	
-	auto owners = other->getOwners();
 	auto span = other->getSpan();
 	
 	this->span.reserve(span.size());
@@ -60,15 +53,12 @@ void MapItem::mergeWith(std::shared_ptr<MapItem> other){
 	for(auto it = span.cbegin(); it!=span.cend(); it++){
 		this->span.push_back(*it);
 	}
-	for(auto it = owners.cbegin(); it!=owners.cend(); it++){
-		this->owners.push_back(*it);
-	}
 }
 
 TypeIdentifier MapItem::getFirst()const{
 	
 	if(this->span.size()>0)
-		return this->span.begin()->second;
+		return std::get<1>(*this->span.begin());
 	throw std::length_error("Empty mapitem");
 	
 }
@@ -76,7 +66,7 @@ TypeIdentifier MapItem::getFirst()const{
 bool MapItem::hasItem(std::shared_ptr<const Tile> tileptr, TypeIdentifier type)const{
 	
 	for(auto it=this->span.cbegin(); it!=this->span.cend(); it++){
-		if((it->first == tileptr)&&(it->second == type))
+		if((std::get<0>(*it) == tileptr)&&(std::get<1>(*it) == type))
 			return true;
 	}
 	return false;
