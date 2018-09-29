@@ -12,74 +12,74 @@
 
 
 Map::Map(sf::RenderWindow& window, const std::string& path): window(window){
-	
+
 	//Load tile textures
 	const int count = 'x' - 'a';
 	char file[] = "tile-a.png";
 	sf::Texture tex;
-	
+
 	//Build deck
 	const int weights[] = TILE_WEIGHTS;
-	
+
 	for(int i=0; i<=count; i++){
-		
+
 		file[5] = 'a' + i;
-		
+
 		if( !tex.loadFromFile( path + std::string(file) ) ){
-			std::cout << "Error loading file: "<< file << std::endl; 
+			std::cout << "Error loading file: "<< file << std::endl;
 			throw std::runtime_error("png file error");
 		}
 		TileType tipe = TileType('a' + i);
 		textures.emplace(tipe, tex);
 		deck.emplace(tipe, weights[i]);
-		
+
 	}
 	struct timeval tp;
 	gettimeofday(&tp, NULL);
 	srand(tp.tv_usec);
-	
+
 	std::shared_ptr<Tile> first(new Tile('d'));
-	this->play(first, Cell(7,4));
-	
-	
+	this->play(first, START_POSITION);
+
+
 	playable = nullptr;
 	last_played = nullptr;
 }
 
 Map::~Map(){
-	
+
 	for(auto it=map.begin(); it!=map.end(); it++){
 		it->second.reset();
 	}
 	playable.reset();
-	
+
 	for(auto it=items.begin(); it!=items.end(); it++){
 		it->reset();
 	}
 }
 
 TileType const& Map::draw(void){
-	
+
 	const int count = this->deck_count();
 	if(count == 0)
 		throw std::length_error("Deck seems to be empty");
-		
-	
+
+
 	// To extract one random tile, must be fair with regard to the total number of tiles.
 	int v = rand() % count;
-	
+
 	for (auto i = deck.begin(); i != deck.end(); i++){
-		
+
 		if(i->second==0) //This type is all out
 			continue;
-			
+
 		if((v-i->second) > 0){ //Not going to land here
-			
+
 			v-=i->second;
 		}else{ //Lands here
-			
+
 			return i->first;
-		}	
+		}
 	}
 	// By default returns the first I guess
 	std::cout << "Warning: Random tile pull failed, returning first" << std::endl;
@@ -87,52 +87,52 @@ TileType const& Map::draw(void){
 }
 
 int Map::deck_count(void) const{
-	
+
 	int count = 0;
 
 	for (std::map<TileType, int>::const_iterator i = deck.cbegin(); i != deck.cend();  i++){
 		count += i->second;
 	}
-	
+
 	return count;
 }
 
 bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
-	
+
 	//Check if it is the first piece to be set
 	if(map.size() == 0){
 		map.insert( std::pair<Cell, std::shared_ptr<Tile>>(cell, tile) );
-		
+
 		items.emplace_back(new Field(tile, field1));
 		items.emplace_back(new Field(tile, field2));
 		items.emplace_back(new Road(tile, road1));
 		items.emplace_back(new Castle(tile, castle1));
-		
+
 		return true;
 	}
-	
+
 	//Checking if piece fits
 	if(this->cellOccupied(cell))
 		return false;
-																
-	TileType surroundings = this->getSurroundings(cell); 
+
+	TileType surroundings = this->getSurroundings(cell);
 	if(surroundings.getTile() == EMPTY_TILE){
 		return false;
 	}
-	
+
 	bool flag;
-									
+
 	try{
 		flag = fits( (*tile), surroundings);
-		
+
 	}catch( std::exception ){
 		// Weird error, should never happen
 		return false;
 	}
-			
-	// Play that piece and decrement the deck			
+
+	// Play that piece and decrement the deck
 	if(flag){
-	
+
 		map.insert( std::pair<Cell, std::shared_ptr<Tile>>(cell, tile) );
 		std::map<TileType, int>::iterator it = deck.find(*tile);
 		if (it!=deck.end()){
@@ -142,15 +142,15 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 				return false;
 		}else
 			return false;
-		
+
 	}else
 		return false;
-		
+
 	//	Create and merge MapItems
 	//  Im ashamed of this, dont look
-	
+
 	std::list<std::shared_ptr<MapItem>> items;
-	
+
 	switch(tile->getTile()){
 		case 'a':{
 			std::shared_ptr<Field> f(new Field(tile, field1));
@@ -325,30 +325,30 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 			break;
 		}
 		default: break;
-	}	
-	 
-	this->mergeItems(cell, items);	
-	
+	}
+
+	this->mergeItems(cell, items);
+
 	last_played=tile;
-			
+
 	return true;
 }
 
 void Map::render(void) const{
-	
+
 	sf::Sprite sprite;
-	
+
 	for(auto i = map.begin(); i!= map.end(); i++){
-		
+
 		Cell cell = i->first;
-		Tile tile = *(i->second); 	
-			
+		Tile tile = *(i->second);
+
 		std::map<TileType, sf::Texture>::const_iterator it = textures.find(tile);
 		if(it == textures.end()){
 			//std::cout << "Error looking up texture" << std::cout;
 			continue;
-		}	
-			
+		}
+
 		sprite.setTexture(it->second);
 		sprite.setRotation(tile.getOrientation());
 		int mod_x=(tile.getOrientation()==90 || tile.getOrientation()==180) ? 1 : 0;
@@ -371,131 +371,131 @@ void Map::render(void) const{
 
 
 std::ostream& operator<<(std::ostream& os, const Map& map){
-	
-	/* 
+
+	/*
 	// Show deck contents
-	
+
 	os << std::endl << "showing deck" << std::endl;
 	const int weights[] = TILE_WEIGHTS;
 	for(auto it = map.deck.cbegin(); it != map.deck.cend(); it++){
-	
-		os << it->first.getDescription() << " -- count: " 
-		   << it->second << '/' << weights[(int)it->first.getTile()-'a'] 
+
+		os << it->first.getDescription() << " -- count: "
+		   << it->second << '/' << weights[(int)it->first.getTile()-'a']
 		   << std::endl;
-	
+
 	}
 	*/
-	
+
 	/*
 	// Show MapItems
 	os<< "-------------------------------------"<<std::endl;
-	
+
 	for(auto it=map.items.cbegin(); it!=map.items.cend(); it++){
 		os << "Showing Item:"<< std::endl << **it << std::endl;
 	}
 	*/
-	
+
 	// Count MapItems
 	int count=0;
 	for(auto it=map.items.cbegin(); it!=map.items.cend(); it++){
 		count++;
 	}
 	os << "Map has " << count << " items." << std::endl;
-	
-	
+
+
 	return os;
 }
 
 void Map::setPlayable(std::shared_ptr<const Tile> tile){
-	
+
 	playable = tile;
-	
+
 }
 void Map::setPlayablePos(int x, int y){
-	
+
 	playable_pos.x=x;
 	playable_pos.y=y;
 }
 
 void Map::clearPlayable(void){
-	
+
 	playable.reset();
-	
+
 }
 
 TileType Map::getSurroundings(const Cell& c) const{
-	
+
 	Cell aux = c + Cell(1,0); // cell to the right
-	
+
 	ItemType up, right, down, left;
-	
+
 	try{
 		right = map.at(aux)->getLeft();
 	}catch(std::out_of_range){
-		right = none;		
+		right = none;
 	}
-	
+
 	aux = c + Cell(0,1); // Cell to the bottom
-	
+
 	try{
 		down = map.at(aux)->getUp();
 	}catch(std::out_of_range){
-		down = none;		
+		down = none;
 	}
-	
+
 	aux = c + Cell(-1, 0); // Cell to the left
-	
+
 	try{
 		left = map.at(aux)->getRight();
 	}catch(std::out_of_range){
-		left = none;		
+		left = none;
 	}
-	
+
 	aux = c + Cell(0, -1); // Cell to the top
-	
+
 	try{
 		up = map.at(aux)->getDown();
 	}catch(std::out_of_range){
-		up = none;		
+		up = none;
 	}
-	
+
 	return TileType(up, right, down, left);
 }
 
 bool Map::cellOccupied(const Cell& c)const{
-	
+
 	return (bool)map.count(c);
-	
+
 }
 
 std::shared_ptr<const Tile> Map::getTileAt(Cell c)const{
-	
+
 	for(auto it=map.cbegin(); it!=map.cend(); it++){
-		
+
 		if(it->first == c)
 			return it->second;
-		
+
 	}
-	
+
 	return nullptr;
 }
 
 bool Map::mergeItems(Cell c, std::list<std::shared_ptr<MapItem>>& newitems){
-	
+
 	std::shared_ptr<Tile> tile, other;
 	std::tuple<TypeIdentifier, TypeIdentifier, TypeIdentifier> t1, t2;
 	std::shared_ptr<MapItem> item1, item2;
 
 	if(!this->cellOccupied(c))
 		throw std::length_error("Tile not found");
-		
+
 	tile=this->map[c];
-	
+
 	Cell nei;
 	Direction dir1, dir2;
-	
+
 	for(int i=0; i<4; i++){
-		
+
 		if(i==0){//Up
 			nei=c+Cell(0,-1);
 			dir1=up;
@@ -515,22 +515,22 @@ bool Map::mergeItems(Cell c, std::list<std::shared_ptr<MapItem>>& newitems){
 			nei=c+Cell(-1,0);
 			dir1=left;
 			dir2=right;
-		}				
+		}
 		if(this->cellOccupied(nei)){
-			
+
 			other=this->map[nei];
 			t1=tile->getMapItems(dir1);
 			t2=other->getMapItems(dir2);
-			
+
 			if(tile->getSide(dir1) != road){
-				
+
 				item1=getItem(newitems, tile, std::get<0>(t1));
 				if(item1 == nullptr){
 					item1=getItem(this->items, tile, std::get<0>(t1));
-					
+
 					if(item1 == nullptr){std::cout << "Failed at Alpha "<<i << std::endl; return false;}
-					
-					
+
+
 					//this->items.remove(item1);
 				}
 				else{
@@ -541,15 +541,15 @@ bool Map::mergeItems(Cell c, std::list<std::shared_ptr<MapItem>>& newitems){
 				if((this->mapItemExists(item1))&&(this->mapItemExists(item2))&&(item1 != item2))
 					this->items.remove(item1);
 				item2->mergeWith(item1);
-				
+
 			}else{
 				item1=getItem(newitems, tile, std::get<0>(t1));
 				if(item1 == nullptr){
 					item1=getItem(this->items, tile, std::get<0>(t1));
-					
+
 					if(item1 == nullptr){std::cout << "Failed at Charlie "<<i << std::endl; return false;}
-					
-					
+
+
 					//this->items.remove(item1);
 				}
 				else{
@@ -560,16 +560,16 @@ bool Map::mergeItems(Cell c, std::list<std::shared_ptr<MapItem>>& newitems){
 				if((this->mapItemExists(item1))&&(this->mapItemExists(item2))&&(item1 != item2))
 					this->items.remove(item1);
 				item2->mergeWith(item1);
-				
+
 				/////////////////////////////////////////
-				
+
 				item1=getItem(newitems, tile, std::get<1>(t1));
 				if(item1 == nullptr){
 					item1=getItem(this->items, tile, std::get<1>(t1));
-					
+
 					if(item1 == nullptr){std::cout << "Failed at Delta "<<i << std::endl; return false;}
-					
-					
+
+
 					//this->items.remove(item1);
 				}
 				else{
@@ -580,16 +580,16 @@ bool Map::mergeItems(Cell c, std::list<std::shared_ptr<MapItem>>& newitems){
 				if((this->mapItemExists(item1))&&(this->mapItemExists(item2))&&(item1 != item2))
 					this->items.remove(item1);
 				item2->mergeWith(item1);
-				
+
 				///////////////////////////////////////////////////
-				
+
 				item1=getItem(newitems, tile, std::get<2>(t1));
 				if(item1 == nullptr){
 					item1=getItem(this->items, tile, std::get<2>(t1));
-					
+
 					if(item1 == nullptr){std::cout << "Failed at Golf" << std::endl; return false;}
-					
-					
+
+
 					//this->items.remove(item1);
 				}
 				else{
@@ -599,22 +599,22 @@ bool Map::mergeItems(Cell c, std::list<std::shared_ptr<MapItem>>& newitems){
 				if(item2 == nullptr){std::cout << "Failed at Hotel" << std::endl; return false;}
 				if((this->mapItemExists(item1))&&(this->mapItemExists(item2))&&(item1 != item2))
 					this->items.remove(item1);
-				item2->mergeWith(item1);		
-			}			
-			
+				item2->mergeWith(item1);
+			}
+
 		}
 	}
-	
+
 	//Insert remaining items
 	for(auto it=newitems.begin(); it!=newitems.end(); it++){
 		this->items.push_back(*it);
 	}
 	return true;
-	
+
 }
 
 std::shared_ptr<MapItem> getItem(std::list<std::shared_ptr<MapItem>>& origin, std::shared_ptr<Tile> tile, TypeIdentifier type){
-	
+
 	for(auto it=origin.begin(); it!=origin.end(); it++){
 		if((**it).hasItem(tile, type))
 			return *it;
@@ -629,4 +629,37 @@ bool Map::mapItemExists(std::shared_ptr<MapItem> item)const{
 			return true;
 	}
 	return false;
+}
+
+
+void Map::getFreeRealEstate(std::shared_ptr<Tile> tile, std::list<TypeIdentifier>& target)const{
+
+	for(auto it=this->items.cbegin(); it!=this->items.cend(); it++){
+
+		if((*it)->hasTile(tile)){
+			(*it)->freeRealEstate(tile, target);
+		}
+
+	}
+
+}
+
+bool Map::setPiece(TypeIdentifier t, std::shared_ptr<Player> player){
+
+	if(!player->hasPieces())
+		return false;
+
+	for(auto it=items.begin(); it!=items.end(); it++){
+
+		if((*it)->hasItem(last_played, t)){
+			if((*it)->claim(last_played, t, player)){
+				player->takePiece();
+				return true;
+			}
+		}
+
+	}
+
+	return false;
+
 }
