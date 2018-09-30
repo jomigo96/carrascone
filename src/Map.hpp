@@ -113,6 +113,8 @@ public:
 
 	bool setPiece(TypeIdentifier t, std::shared_ptr<Player> player);
 
+	bool selectItemAt(sf::Vector2f pos, std::shared_ptr<Player> player);
+
 
 private:
 	//Variables
@@ -137,6 +139,9 @@ private:
 
 	//Position of the tile being played
 	sf::Vector2f playable_pos;
+
+	//Position clicked laying a follower
+	sf::Vector2f follower_pos;
 
 	//Tile just played
 	std::shared_ptr<const Tile> last_played;

@@ -8,9 +8,9 @@ SOURCES=$(wildcard *.cpp)
 OBJECTS=$(notdir $(SOURCES:.cpp=.o))
 DOCDIR=../doc
 
-  
-$(EXECUTABLE): $(OBJECTS) 
-	$(CC) $(OBJECTS) $(LDFLAGS) -o $@ 
+
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
 
 .cc.o:
 	$(CC) $(CPPFLAGS) $< -o $@
@@ -24,4 +24,8 @@ clean:
 run: $(EXECUTABLE)
 	./$(EXECUTABLE)
 
-.PHONY: all doc clean
+memcheck: $(EXECUTABLE)
+	valgrind --leak-check=full --show-leak-kinds=all ./$<
+
+
+.PHONY: all doc clean memcheck

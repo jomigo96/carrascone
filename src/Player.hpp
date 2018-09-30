@@ -24,8 +24,15 @@ public:
 
 	bool hasPieces()const;
 
+	// true if either name or color match
+	bool operator==(const Player& other)const;
+	bool operator!=(const Player& other)const;
+
 	bool takePiece();
 	bool givePiece();
+
+	sf::Color const& getColor()const;
+	std::string const& getNickname()const;
 
 private:
 	unsigned piece_count;

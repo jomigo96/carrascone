@@ -19,8 +19,8 @@ Carcassone program for local multiplayer, to run in UNIX systems.
 
 ### Misc
 
-+ Compatibility for Windows and MacOX
-+ Network multiplayer with Internet socket communications or a dedicated Server
++ Compatibility and install instructions for Windows and MacOX
++ **Network multiplayer with Internet socket communications or a dedicated Server**
 + AI player
 
 ## Licence

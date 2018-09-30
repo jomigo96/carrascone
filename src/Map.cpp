@@ -39,6 +39,7 @@ Map::Map(sf::RenderWindow& window, const std::string& path): window(window){
 	srand(tp.tv_usec);
 
 	std::shared_ptr<Tile> first(new Tile('d'));
+	first->rotate_counter_clockwise();
 	this->play(first, START_POSITION);
 
 
@@ -662,4 +663,10 @@ bool Map::setPiece(TypeIdentifier t, std::shared_ptr<Player> player){
 
 	return false;
 
+}
+
+
+bool Map::selectItemAt(sf::Vector2f pos, std::shared_ptr<Player> player){
+	player->takePiece();
+	return (true || pos.x==0); //Stub
 }

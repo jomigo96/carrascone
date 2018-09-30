@@ -14,7 +14,7 @@ Player::Player(){
 }
 
 Player::Player(const std::string& name, const sf::Color& colour){
-    
+
     color=colour;
     piece_count=7;
     nickname=name;
@@ -41,4 +41,22 @@ bool Player::givePiece(){
         return (piece_count++);
     else
         return false;
+}
+
+
+bool Player::operator==(const Player& other)const{
+
+    return ((color == other.getColor())||(nickname == other.getNickname()));
+}
+bool Player::operator!=(const Player& other)const{
+
+    return !(*this == other);
+}
+
+sf::Color const& Player::getColor()const{
+    return color;
+}
+
+std::string const& Player::getNickname()const{
+    return nickname;
 }
