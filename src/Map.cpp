@@ -331,6 +331,7 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 	this->mergeItems(cell, items);
 
 	last_played=tile;
+	playable=nullptr;
 
 	return true;
 }
@@ -338,6 +339,8 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 void Map::render(void) const{
 
 	sf::Sprite sprite;
+	const int radius = 8;
+	const float sqrt2 = 0.7071068;
 
 	for(auto i = map.begin(); i!= map.end(); i++){
 
@@ -367,6 +370,33 @@ void Map::render(void) const{
 		int mod_y=(playable->getOrientation()>90) ? CELL_DIM/2 : -CELL_DIM/2;
 		sprite.setPosition(playable_pos+sf::Vector2f(mod_x, mod_y));
 		window.draw(sprite);
+	}
+	if(last_played){
+		Cell c;
+		//Pull cell
+		for(auto it = map.cbegin(); it!= map.cend(); it++){
+			if(it->second == last_played){
+				c=it->first;
+				break;
+			}
+		}
+		sf::CircleShape circle(radius, 30);
+		circle.setFillColor(sf::Color::Transparent);
+		circle.setOutlineColor(sf::Color::Red);
+		circle.setOutlineThickness(1);
+		circle.setOrigin(radius*sqrt2, radius*sqrt2);
+		sf::Vector2f o_position(c.getX()*CELL_DIM, c.getY()*CELL_DIM);
+
+		std::list<TypeIdentifier> list;
+		this->getFreeRealEstate(last_played, list);
+
+		sf::Vector2f offset;
+
+		for(auto it=list.cbegin(); it!=list.cend(); it++){
+			offset=last_played->getItemPosition(*it);
+			circle.setPosition(o_position+offset);
+			window.draw(circle);
+		}
 	}
 }
 
@@ -638,7 +668,9 @@ void Map::getFreeRealEstate(std::shared_ptr<Tile> tile, std::list<TypeIdentifier
 	for(auto it=this->items.cbegin(); it!=this->items.cend(); it++){
 
 		if((*it)->hasTile(tile)){
+
 			(*it)->freeRealEstate(tile, target);
+
 		}
 
 	}
@@ -654,7 +686,7 @@ bool Map::setPiece(TypeIdentifier t, std::shared_ptr<Player> player){
 
 		if((*it)->hasItem(last_played, t)){
 			if((*it)->claim(last_played, t, player)){
-				player->takePiece();
+				//player->takePiece();
 				return true;
 			}
 		}
@@ -667,6 +699,10 @@ bool Map::setPiece(TypeIdentifier t, std::shared_ptr<Player> player){
 
 
 bool Map::selectItemAt(sf::Vector2f pos, std::shared_ptr<Player> player){
-	player->takePiece();
+	//player->takePiece();
+
+
+
+	last_played=nullptr;
 	return (true || pos.x==0); //Stub
 }

@@ -144,7 +144,7 @@ private:
 	sf::Vector2f follower_pos;
 
 	//Tile just played
-	std::shared_ptr<const Tile> last_played;
+	std::shared_ptr<Tile> last_played;
 
 
 	//Methods

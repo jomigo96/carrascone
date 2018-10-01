@@ -31,6 +31,7 @@ int main(void){
 	//std::shared_ptr<Player> current_player;
 	std::shared_ptr<Tile> current_tile;
 
+	//debug;
 
 
 	// Game loop
@@ -174,7 +175,6 @@ int main(void){
 
 		}
 		if(window.isOpen()){
-			map.setPlayablePos(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
 			window.clear();
 			map.render();
 			window.display();
