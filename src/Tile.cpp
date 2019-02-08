@@ -162,8 +162,10 @@ std::tuple<TypeIdentifier, TypeIdentifier, TypeIdentifier> Tile::getMapItems(Dir
 	switch(d){
 		case Direction::up:
 			angle=rotate_right(angle);
+			// fall through
 		case Direction::right:
 			angle=rotate_right(angle);
+			// fall through
 		case Direction::down:
 			angle=rotate_right(angle);
 			break;

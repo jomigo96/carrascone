@@ -11,13 +11,16 @@
 #define TILE_NUMBER 24
 #define TILE_WEIGHTS {2, 4, 1, 2, 5, 2, 1, 3, 2, 3, 3, 3, 2, 3, 2, 3, 1, 3, 2, 1, 8, 9, 4, 1}
 #define START_POSITION Cell(7,4)
+#define CIRCLE_RADIUS 8
 
+#include "configs.hpp"
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <map>
 #include <exception>
 #include <memory>
 #include <list>
+#include <cmath>
 #include "TileType.hpp"
 #include "Cell.hpp"
 #include "Tile.hpp"
@@ -114,6 +117,10 @@ public:
 	bool setPiece(TypeIdentifier t, std::shared_ptr<Player> player);
 
 	bool selectItemAt(sf::Vector2f pos, std::shared_ptr<Player> player);
+
+	int getBoundaries(const Direction dir)const;
+
+	void skipPlayable(void);
 
 
 private:

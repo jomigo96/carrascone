@@ -135,3 +135,52 @@ bool MapItem::claim(std::shared_ptr<const Tile> tile, TypeIdentifier type, std::
 	return false;
 
 }
+
+void MapItem::getOccupiedPosition(std::list<std::tuple<std::shared_ptr<Tile>, TypeIdentifier, std::shared_ptr<Player>>>& list){
+
+	for(auto it = span.cbegin(); it != span.cend(); it++){
+		if(std::get<2>(*it) != nullptr){
+			list.push_back(*it);
+		}
+	}
+}
+
+std::string print_TypeIdentifier(TypeIdentifier t){
+
+
+	switch(t){
+		case road1:
+			return std::string("road1");
+
+		case road2:
+			return std::string("road2");
+		case road3:
+			return std::string("road3");
+		case road4:
+			return std::string("road4");
+
+		//Castles
+		case castle1:
+			return std::string("castle1");
+		case castle2:
+			return std::string("castle2");
+
+		//Fields
+		case field1:
+			return std::string("field1");
+		case field2:
+			return std::string("field2");
+		case field3:
+			return std::string("field3");
+		case field4:
+			return std::string("field4");
+
+		case cloister:
+			return std::string("cloister");
+
+		//none
+		default:
+			return std::string("invalid");
+	}
+	return std::string("invalid");
+}

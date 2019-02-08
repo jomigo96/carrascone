@@ -32,9 +32,10 @@ void PlayerManager::nextState(){
 
     switch (state) {
         case start:
-            if(players.size()>1)
+            if(players.size()>1){
                 current_player = players.begin();
                 state=lay;
+            }
             break;
         case lay:
             state=follower;

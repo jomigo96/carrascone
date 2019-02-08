@@ -4,6 +4,7 @@
  * \author João Gonçalves
  */
 
+#include "configs.hpp"
 #include <iostream>
 #include <memory>
 #include <SFML/Graphics.hpp>
@@ -50,7 +51,9 @@ int main(void){
 			/////////////////////////////// Tile set ///////////////////////////
 			case lay:
 
+#ifdef DEBUG_MAIN
 				std::cout << manager;
+#endif
 				try{
 					t = map.draw();
 				}catch(std::length_error){
@@ -87,6 +90,7 @@ int main(void){
 								}
 								break;
 
+#ifdef DEBUG_ALL
 							case sf::Event::KeyPressed:
 
 								switch (event.key.code) {
@@ -101,7 +105,7 @@ int main(void){
 								}
 
 								break;
-
+#endif
 							default: break;
 						}
 					}
@@ -124,8 +128,11 @@ int main(void){
 					manager.nextState();
 					break;
 				}
+				// Also check here if Tile has any remaining items to claim, skip if so
 
+#ifdef DEBUG_MAIN
 				std::cout << manager;
+#endif
 
 				while(manager.getState() == follower){
 					while( window.pollEvent(event) ){
@@ -146,6 +153,18 @@ int main(void){
 								}
 								break;
 
+							case sf::Event::KeyPressed:
+
+								switch (event.key.code) {
+									case sf::Keyboard::S:
+										manager.nextState();
+										map.skipPlayable();
+										break;
+									default: break;
+								}
+
+									break;
+
 							default: break;
 						}
 					}
@@ -156,9 +175,14 @@ int main(void){
 					}
 				}
 
-				manager.nextState();
 				break;
 			case accept:
+#ifdef DEBUG_MAIN
+				std::cout << "Map boundaries: " << std::endl << "Up: " << map.getBoundaries(up) << std::endl <<
+							"Right: " << map.getBoundaries(right) << std::endl <<
+							"Down: " << map.getBoundaries(down) << std::endl <<
+							"Left: " << map.getBoundaries(left) << std::endl;
+#endif
 				manager.nextState();
 				break;
 			case end:

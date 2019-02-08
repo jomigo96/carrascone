@@ -1,6 +1,6 @@
 CC=g++
 CPPFLAGS=-c -g -std=c++0x -Wall -Wextra -pedantic
-LDFLAGS=-lsfml-graphics -lsfml-window -lsfml-system
+LDFLAGS=-lsfml-graphics -lsfml-window -lsfml-system -lm
 EXECUTABLE=main
 DOCC=doxygen
 

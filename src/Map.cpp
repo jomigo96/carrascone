@@ -26,7 +26,7 @@ Map::Map(sf::RenderWindow& window, const std::string& path): window(window){
 		file[5] = 'a' + i;
 
 		if( !tex.loadFromFile( path + std::string(file) ) ){
-			std::cout << "Error loading file: "<< file << std::endl;
+			std::cerr << "Error loading file: "<< file << std::endl;
 			throw std::runtime_error("png file error");
 		}
 		TileType tipe = TileType('a' + i);
@@ -63,7 +63,7 @@ TileType const& Map::draw(void){
 
 	const int count = this->deck_count();
 	if(count == 0)
-		throw std::length_error("Deck seems to be empty");
+		throw std::length_error("Empty deck");
 
 
 	// To extract one random tile, must be fair with regard to the total number of tiles.
@@ -83,7 +83,7 @@ TileType const& Map::draw(void){
 		}
 	}
 	// By default returns the first I guess
-	std::cout << "Warning: Random tile pull failed, returning first" << std::endl;
+	std::cerr << "Warning: Random tile pull failed, returning first" << std::endl;
 	return deck.begin()->first;
 }
 
@@ -339,9 +339,10 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 void Map::render(void) const{
 
 	sf::Sprite sprite;
-	const int radius = 8;
+	const int radius = CIRCLE_RADIUS;
 	const float sqrt2 = 0.7071068;
 
+	// Tiles
 	for(auto i = map.begin(); i!= map.end(); i++){
 
 		Cell cell = i->first;
@@ -359,6 +360,35 @@ void Map::render(void) const{
 		int mod_y=(tile.getOrientation()>90) ? 1 : 0;
 		sprite.setPosition(sf::Vector2f(CELL_DIM*(cell.getX()+mod_x), CELL_DIM*(cell.getY()+mod_y)));
 		window.draw(sprite);
+	}
+	// Pieces
+	for(auto it=items.cbegin(); it!=items.cend(); it++){
+		if((*it)->hasOccupant()){
+
+			std::list<std::tuple<std::shared_ptr<Tile>, TypeIdentifier, std::shared_ptr<Player>>> positions;
+
+			(*it)->getOccupiedPosition(positions);
+			for(auto stuff : positions){
+				sf::CircleShape circle(radius, 30);
+				sf::Color player_color = std::get<2>(stuff)->getColor();
+				circle.setFillColor(player_color);
+				circle.setOutlineColor(player_color);
+				circle.setOrigin(radius*sqrt2, radius*sqrt2);
+
+				Cell c;
+				//Pull cell
+				for(auto it = map.cbegin(); it!= map.cend(); it++){
+					if(it->second == std::get<0>(stuff)){
+						c=it->first;
+						break;
+					}
+				}
+				sf::Vector2f o_position(c.getX()*CELL_DIM, c.getY()*CELL_DIM);
+				sf::Vector2f offset = std::get<0>(stuff)->getItemPosition(std::get<1>(stuff));
+				circle.setPosition(o_position+offset);
+				window.draw(circle);
+			}
+		}
 	}
 	if(playable){
 		std::map<TileType, sf::Texture>::const_iterator it = textures.find(*playable);
@@ -559,7 +589,7 @@ bool Map::mergeItems(Cell c, std::list<std::shared_ptr<MapItem>>& newitems){
 				if(item1 == nullptr){
 					item1=getItem(this->items, tile, std::get<0>(t1));
 
-					if(item1 == nullptr){std::cout << "Failed at Alpha "<<i << std::endl; return false;}
+					if(item1 == nullptr){std::cerr << "Failed at Alpha "<<i << std::endl; return false;}
 
 
 					//this->items.remove(item1);
@@ -568,7 +598,7 @@ bool Map::mergeItems(Cell c, std::list<std::shared_ptr<MapItem>>& newitems){
 					newitems.remove(item1);
 				}
 				item2=getItem(this->items, other, std::get<0>(t2));
-				if(item2 == nullptr){std::cout << "Failed at Bravo "<<i << std::endl; return false;}
+				if(item2 == nullptr){std::cerr << "Failed at Bravo "<<i << std::endl; return false;}
 				if((this->mapItemExists(item1))&&(this->mapItemExists(item2))&&(item1 != item2))
 					this->items.remove(item1);
 				item2->mergeWith(item1);
@@ -578,7 +608,7 @@ bool Map::mergeItems(Cell c, std::list<std::shared_ptr<MapItem>>& newitems){
 				if(item1 == nullptr){
 					item1=getItem(this->items, tile, std::get<0>(t1));
 
-					if(item1 == nullptr){std::cout << "Failed at Charlie "<<i << std::endl; return false;}
+					if(item1 == nullptr){std::cerr << "Failed at Charlie "<<i << std::endl; return false;}
 
 
 					//this->items.remove(item1);
@@ -587,7 +617,7 @@ bool Map::mergeItems(Cell c, std::list<std::shared_ptr<MapItem>>& newitems){
 					newitems.remove(item1);
 				}
 				item2=getItem(this->items, other, std::get<1>(t2));
-				if(item2 == nullptr){std::cout << "Failed at Echo "<<i << std::endl; return false;}
+				if(item2 == nullptr){std::cerr << "Failed at Echo "<<i << std::endl; return false;}
 				if((this->mapItemExists(item1))&&(this->mapItemExists(item2))&&(item1 != item2))
 					this->items.remove(item1);
 				item2->mergeWith(item1);
@@ -598,7 +628,7 @@ bool Map::mergeItems(Cell c, std::list<std::shared_ptr<MapItem>>& newitems){
 				if(item1 == nullptr){
 					item1=getItem(this->items, tile, std::get<1>(t1));
 
-					if(item1 == nullptr){std::cout << "Failed at Delta "<<i << std::endl; return false;}
+					if(item1 == nullptr){std::cerr << "Failed at Delta "<<i << std::endl; return false;}
 
 
 					//this->items.remove(item1);
@@ -607,7 +637,7 @@ bool Map::mergeItems(Cell c, std::list<std::shared_ptr<MapItem>>& newitems){
 					newitems.remove(item1);
 				}
 				item2=getItem(this->items, other, std::get<0>(t2));
-				if(item2 == nullptr){std::cout << "Failed at Foxtrot " <<i<< std::endl; return false;}
+				if(item2 == nullptr){std::cerr << "Failed at Foxtrot " <<i<< std::endl; return false;}
 				if((this->mapItemExists(item1))&&(this->mapItemExists(item2))&&(item1 != item2))
 					this->items.remove(item1);
 				item2->mergeWith(item1);
@@ -618,7 +648,7 @@ bool Map::mergeItems(Cell c, std::list<std::shared_ptr<MapItem>>& newitems){
 				if(item1 == nullptr){
 					item1=getItem(this->items, tile, std::get<2>(t1));
 
-					if(item1 == nullptr){std::cout << "Failed at Golf" << std::endl; return false;}
+					if(item1 == nullptr){std::cerr << "Failed at Golf" << std::endl; return false;}
 
 
 					//this->items.remove(item1);
@@ -627,7 +657,7 @@ bool Map::mergeItems(Cell c, std::list<std::shared_ptr<MapItem>>& newitems){
 					newitems.remove(item1);
 				}
 				item2=getItem(this->items, other, std::get<2>(t2));
-				if(item2 == nullptr){std::cout << "Failed at Hotel" << std::endl; return false;}
+				if(item2 == nullptr){std::cerr << "Failed at Hotel" << std::endl; return false;}
 				if((this->mapItemExists(item1))&&(this->mapItemExists(item2))&&(item1 != item2))
 					this->items.remove(item1);
 				item2->mergeWith(item1);
@@ -699,10 +729,101 @@ bool Map::setPiece(TypeIdentifier t, std::shared_ptr<Player> player){
 
 
 bool Map::selectItemAt(sf::Vector2f pos, std::shared_ptr<Player> player){
-	//player->takePiece();
+
+	const int radius = CIRCLE_RADIUS;
+	std::list<TypeIdentifier> list;
+	TypeIdentifier clicked_item = invalid;
+	this->getFreeRealEstate(last_played, list);
+
+	sf::Vector2f offset;
+	Cell c;
+	//Pull cell
+	for(auto it = map.cbegin(); it!= map.cend(); it++){
+		if(it->second == last_played){
+			c=it->first;
+			break;
+		}
+	}
+	sf::Vector2f o_position(c.getX()*CELL_DIM, c.getY()*CELL_DIM);
+
+	for(auto it=list.cbegin(); it!=list.cend(); it++){
+		offset=last_played->getItemPosition(*it);
+
+		if(sqrt(pow(o_position.x+offset.x-pos.x, 2) + pow(o_position.y+offset.y-pos.y, 2)) < radius){
+			clicked_item = *it;
+			break;
+		}
+	}
+	if(clicked_item == invalid){
+#ifdef DEBUG_ALL
+		std::cout << "Clicked on no item" << std::endl;
+#endif
+		return false;
+	}
+
+#ifdef DEBUG_ALL
+	std::cout << "Clicked on item " << print_TypeIdentifier(clicked_item) << std::endl;
+#endif
+
+	bool status = false;
+	player->takePiece();
+	for(auto it=items.begin(); it!=items.end(); it++){
+		if((*it)->hasItem(last_played, clicked_item)){
+			status = (*it)->claim(last_played, clicked_item, player);
+			break;
+		}
+	}
+	if(status){
+		last_played=nullptr;
+		return true;
+	}else{
+		return false;
+	}
+
+}
 
 
 
-	last_played=nullptr;
-	return (true || pos.x==0); //Stub
+int Map::getBoundaries(const Direction dir)const{
+
+	Cell c = START_POSITION;
+
+	auto comparor = [dir](Cell c1, Cell c2){
+		switch (dir) {
+			case up:
+				return c2.getY() < c1.getY();
+			case right:
+				return c2.getX() > c1.getX();
+			case down:
+				return c2.getY() > c1.getY();
+			case left:
+				return c2.getX() < c1.getX();
+		}
+		return false;
+	};
+
+	for(auto it=map.cbegin(); it!=map.cend(); it++){
+
+		if(comparor(c, it->first))
+			c=it->first;
+	}
+
+	switch(dir){
+
+		case up:
+			return c.getY()*CELL_DIM;
+		case right:
+			return (c.getX()+1)*CELL_DIM;
+		case down:
+			return (c.getY()+1)*CELL_DIM;
+		case left:
+			return c.getX()*CELL_DIM;
+
+		default: return 0;
+	}
+}
+
+
+void Map::skipPlayable(void){
+	last_played = nullptr;
 }

@@ -15,6 +15,7 @@
 #include <ostream>
 #include <list>
 #include <exception>
+#include <string>
 
 class Tile;
 
@@ -93,6 +94,8 @@ public:
 
 	bool claim(std::shared_ptr<const Tile> tile, TypeIdentifier type, std::shared_ptr<Player> player);
 
+	void getOccupiedPosition(std::list<std::tuple<std::shared_ptr<Tile>, TypeIdentifier, std::shared_ptr<Player>>>& list);
+
 protected:
 	std::vector<std::tuple<std::shared_ptr<Tile>, TypeIdentifier, std::shared_ptr<Player>>> span;
 	bool occupant;
@@ -103,4 +106,9 @@ private:
 	virtual std::ostream& myprint(std::ostream& os, const MapItem& item)const;
 
 };
+
+// Non Member functions for debugging
+
+std::string print_TypeIdentifier(TypeIdentifier t);
+
 #endif /* MAPITEM_HPP */
