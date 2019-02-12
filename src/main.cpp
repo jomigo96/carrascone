@@ -90,7 +90,7 @@ int main(void){
 								}
 								break;
 
-#ifdef DEBUG_ALL
+#ifdef DEBUG_MAIN
 							case sf::Event::KeyPressed:
 
 								switch (event.key.code) {
@@ -146,8 +146,9 @@ int main(void){
 								switch (event.key.code) {
 									case sf::Mouse::Left:
 										turn=map.selectItemAt(sf::Vector2f(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y), manager.getCurrentPlayer());
-										if(turn)
+										if(turn){
 											manager.nextState();
+										}
 										break;
 									default: break;
 								}
@@ -176,8 +177,9 @@ int main(void){
 				}
 
 				break;
+
 			case accept:
-#ifdef DEBUG_MAIN
+#ifdef DEBUG_MAIN1
 				std::cout << "Map boundaries: " << std::endl << "Up: " << map.getBoundaries(up) << std::endl <<
 							"Right: " << map.getBoundaries(right) << std::endl <<
 							"Down: " << map.getBoundaries(down) << std::endl <<
@@ -187,6 +189,8 @@ int main(void){
 				break;
 			case end:
 				//Count points etc
+				map.closeItems(clicked);
+				manager.nextState();
 				break;
 			case error:
 				window.close();

@@ -13,7 +13,7 @@ $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
 
 .cc.o:
-	$(CC) $(CPPFLAGS) $< -o $@
+	$(CC) $(CPPFLAGS) -o $@
 
 doc:
 	$(DOCC) Doxyfile

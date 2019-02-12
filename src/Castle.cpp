@@ -14,15 +14,15 @@ Castle::Castle(std::shared_ptr<Tile> tile, TypeIdentifier key) : MapItem(tile, k
 Castle::~Castle(){}
 
 std::ostream& Castle::myprint(std::ostream& os, const MapItem& item)const{
-	
+
 	os << "Castle on tiles : ";
-	
+
 	auto span = item.getSpan();
-	
+
 	std::string s;
-	
+
 	for(auto it=span.cbegin(); it!=span.cend(); it++){
-		
+
 		switch(std::get<1>(*it)){
 			case castle1:
 				s=std::string("castle1");
@@ -38,3 +38,6 @@ std::ostream& Castle::myprint(std::ostream& os, const MapItem& item)const{
 	return os;
 }
 
+void Castle::checkCloseAndProcess(std::map<Cell, std::shared_ptr<Tile>> const& map){
+
+}

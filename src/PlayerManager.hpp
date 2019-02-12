@@ -13,6 +13,7 @@
 #include <memory>
 #include <iostream>
 #include "Player.hpp"
+#include "configs.hpp"
 
 
 enum State : unsigned{

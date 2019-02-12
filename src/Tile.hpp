@@ -11,6 +11,7 @@
 #include "SFML/Graphics.hpp"
 #include "MapItem.hpp"
 #include <tuple>
+#include "configs.hpp"
 
 class MapItem;
 

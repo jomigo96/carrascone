@@ -44,10 +44,12 @@ void PlayerManager::nextState(){
             state=accept;
             break;
         case accept:
-            state=lay;
             if(++current_player == players.end())
                 current_player = players.begin();
+            state=end;
             break;
+        case end:
+            state=lay;
         default:
             break;
     }

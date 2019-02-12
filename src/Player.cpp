@@ -60,3 +60,12 @@ sf::Color const& Player::getColor()const{
 std::string const& Player::getNickname()const{
     return nickname;
 }
+
+void Player::givePoints(int p){
+    if(p>0){
+        points += p;
+#ifdef DEBUG_PLAYER
+        std::cout << nickname << " gets " << p << " points" << std::endl;
+#endif
+    }
+}

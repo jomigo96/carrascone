@@ -7,13 +7,25 @@
 #ifndef MAP_HPP
 #define MAP_HPP
 
+ #include "configs.hpp"
+
 #define TILESIZE 78
+
+#ifdef SMALL_SCALE_RUN
+
+#define TILE_NUMBER 24
+#define TILE_WEIGHTS {1, 0, 0, 1, 5, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0}
+
+#else
+
 #define TILE_NUMBER 24
 #define TILE_WEIGHTS {2, 4, 1, 2, 5, 2, 1, 3, 2, 3, 3, 3, 2, 3, 2, 3, 1, 3, 2, 1, 8, 9, 4, 1}
+
+#endif //SMALL_SCALE_RUN
+
 #define START_POSITION Cell(7,4)
 #define CIRCLE_RADIUS 8
 
-#include "configs.hpp"
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <map>
@@ -121,6 +133,9 @@ public:
 	int getBoundaries(const Direction dir)const;
 
 	void skipPlayable(void);
+
+	// Close mapitems and attribute points
+	void closeItems(const Cell& origin);
 
 
 private:

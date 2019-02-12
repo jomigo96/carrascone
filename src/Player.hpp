@@ -9,6 +9,8 @@
 
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <iostream>
+#include "configs.hpp"
 
 /*!
  * \class Player
@@ -30,6 +32,7 @@ public:
 
 	bool takePiece();
 	bool givePiece();
+	void givePoints(int p);
 
 	sf::Color const& getColor()const;
 	std::string const& getNickname()const;
@@ -38,5 +41,6 @@ private:
 	unsigned piece_count;
 	sf::Color color;
 	std::string nickname;
+	int points;
 };
 #endif /* PLAYER_HPP */

@@ -60,6 +60,8 @@ void MapItem::mergeWith(std::shared_ptr<MapItem> other){
 	for(auto it = span.cbegin(); it!=span.cend(); it++){
 		this->span.push_back(*it);
 	}
+
+	this->occupant |= other->occupant;
 }
 
 TypeIdentifier MapItem::getFirst()const{

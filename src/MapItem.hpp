@@ -8,8 +8,10 @@
 #define MAPITEM_HPP
 
 //#include "Cell.hpp"
+#include "configs.hpp"
 #include "Player.hpp"
 #include "Tile.hpp"
+#include "Cell.hpp"
 #include <memory>
 #include <vector>
 #include <ostream>
@@ -95,6 +97,8 @@ public:
 	bool claim(std::shared_ptr<const Tile> tile, TypeIdentifier type, std::shared_ptr<Player> player);
 
 	void getOccupiedPosition(std::list<std::tuple<std::shared_ptr<Tile>, TypeIdentifier, std::shared_ptr<Player>>>& list);
+
+	virtual void checkCloseAndProcess(std::map<Cell, std::shared_ptr<Tile>> const& map) = 0;
 
 protected:
 	std::vector<std::tuple<std::shared_ptr<Tile>, TypeIdentifier, std::shared_ptr<Player>>> span;

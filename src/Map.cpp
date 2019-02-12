@@ -755,13 +755,13 @@ bool Map::selectItemAt(sf::Vector2f pos, std::shared_ptr<Player> player){
 		}
 	}
 	if(clicked_item == invalid){
-#ifdef DEBUG_ALL
+#ifdef DEBUG_MAP
 		std::cout << "Clicked on no item" << std::endl;
 #endif
 		return false;
 	}
 
-#ifdef DEBUG_ALL
+#ifdef DEBUG_MAP
 	std::cout << "Clicked on item " << print_TypeIdentifier(clicked_item) << std::endl;
 #endif
 
@@ -826,4 +826,25 @@ int Map::getBoundaries(const Direction dir)const{
 
 void Map::skipPlayable(void){
 	last_played = nullptr;
+}
+
+
+void Map::closeItems(const Cell& origin){
+
+	std::shared_ptr<Tile> last;
+
+	try{
+		last = this->map.at(origin);
+	}catch(std::out_of_range){
+		return;
+	}
+
+
+	for(auto it=items.begin(); it!=items.end(); it++){
+		if((*it)->hasTile(last)){
+			(*it)->checkCloseAndProcess(this->map);
+		}
+	}
+	//Also check for cloisters next to me
+
 }

@@ -9,19 +9,22 @@
 
 #include "MapItem.hpp"
 #include <ostream>
+#include "configs.hpp"
 
 /*!
  * \class Cloister
- * \brief 
+ * \brief
  * */
 class Cloister : public MapItem{
-	
+
 public:
 	Cloister();
 	Cloister(std::shared_ptr<Tile> tile, TypeIdentifier key);
 	~Cloister();
-	
+
 	std::ostream& myprint(std::ostream& os, const MapItem& item)const;
+
+	void checkCloseAndProcess(std::map<Cell, std::shared_ptr<Tile>> const& map);
 
 private:
 
