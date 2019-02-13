@@ -24,7 +24,7 @@ public:
 
 	std::ostream& myprint(std::ostream& os, const MapItem& item)const;
 
-	void checkCloseAndProcess(std::map<Cell, std::shared_ptr<Tile>> const& map);
+	void checkCloseAndProcess(std::map<Cell, std::shared_ptr<Tile>> const&);
 
 private:
 

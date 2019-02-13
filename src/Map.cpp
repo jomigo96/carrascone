@@ -845,6 +845,28 @@ void Map::closeItems(const Cell& origin){
 			(*it)->checkCloseAndProcess(this->map);
 		}
 	}
+
 	//Also check for cloisters next to me
 
+	std::map<Cell, std::shared_ptr<Tile>>::iterator neigh;
+
+	for(int i=-1; i<2; i++){
+		for(int j=-1; j<2; j++){
+			if((i==0)&&(i==0))
+				continue;
+			neigh = map.find(origin + Cell(i,j));
+			if(neigh != map.end()){
+				if(((*neigh).second->getTile() == 'a')||((*neigh).second->getTile() == 'b')){
+					for(auto it=this->items.begin(); it!=this->items.end(); it++){
+						if((*it)->hasItem((*neigh).second, cloister)){
+							(*it)->checkCloseAndProcess(this->map);
+						}
+					}
+				}
+			}
+		}
+	}
 }
+
+//TODO: Count everything left hanging
+void Map::countRemainingPoints(void){}

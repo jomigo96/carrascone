@@ -7,9 +7,10 @@
 #ifndef CLOISTER_HPP
 #define CLOISTER_HPP
 
+#include "configs.hpp"
 #include "MapItem.hpp"
 #include <ostream>
-#include "configs.hpp"
+
 
 /*!
  * \class Cloister

@@ -22,7 +22,9 @@ enum State : unsigned{
 	lay,
 	follower,
 	accept,
-	end,
+	end_turn,
+	end_game,
+	deck_finished,
 	close,
 	error,
 };

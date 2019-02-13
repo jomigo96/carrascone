@@ -20,7 +20,7 @@ State PlayerManager::getState()const{
 
 void PlayerManager::endDeck(){
 
-    state = end;
+    state = deck_finished;
 }
 
 void PlayerManager::closeWindow(){
@@ -46,10 +46,14 @@ void PlayerManager::nextState(){
         case accept:
             if(++current_player == players.end())
                 current_player = players.begin();
-            state=end;
+            state=end_turn;
             break;
-        case end:
+        case end_turn:
             state=lay;
+            break;
+        case deck_finished:
+            state = end_game;
+            break;
         default:
             break;
     }
@@ -89,6 +93,12 @@ std::ostream& operator<<(std::ostream& os, const PlayerManager& manager){
                 os << "Player " << (*(manager.current_player))->getNickname() << " to invest a follower." << std::endl;
             else
                 os << "No players" << std::endl;
+            break;
+        case end_game:
+            for(auto it=manager.players.cbegin(); it!=manager.players.cend(); it++){
+                os << "Player " << (*it)->getNickname() << " finished with " << (*it)->getPoints() << " points" << std::endl;
+            }
+            break;
         default: break;
     }
 

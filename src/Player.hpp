@@ -36,6 +36,7 @@ public:
 
 	sf::Color const& getColor()const;
 	std::string const& getNickname()const;
+	int getPoints()const;
 
 private:
 	unsigned piece_count;

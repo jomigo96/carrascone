@@ -152,6 +152,10 @@ int main(void){
 											manager.nextState();
 										}
 										break;
+									case sf::Mouse::Right:
+										manager.nextState();
+										map.skipPlayable();
+										break;
 									default: break;
 								}
 								break;
@@ -189,10 +193,24 @@ int main(void){
 #endif
 				manager.nextState();
 				break;
-			case end:
+			case end_turn:
 				//Count points etc
 				map.closeItems(clicked);
 				manager.nextState();
+				break;
+			case deck_finished:
+				map.countRemainingPoints();
+				manager.nextState();
+				std::cout << manager;
+				break;
+			case end_game:
+				while(window.pollEvent(event)){
+					if(event.type == sf::Event::Closed){
+						window.close();
+						manager.closeWindow();
+						break;
+					}
+				}
 				break;
 			case error:
 				window.close();

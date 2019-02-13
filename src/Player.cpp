@@ -11,6 +11,7 @@ Player::Player(){
     piece_count=7;
     color = sf::Color::Red;
     nickname = std::string("Player");
+    points=0;
 }
 
 Player::Player(const std::string& name, const sf::Color& colour){
@@ -18,6 +19,7 @@ Player::Player(const std::string& name, const sf::Color& colour){
     color=colour;
     piece_count=7;
     nickname=name;
+    points=0;
 }
 
 Player::~Player(){}
@@ -68,4 +70,8 @@ void Player::givePoints(int p){
         std::cout << nickname << " gets " << p << " points" << std::endl;
 #endif
     }
+}
+
+int Player::getPoints()const{
+    return points;
 }

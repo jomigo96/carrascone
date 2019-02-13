@@ -137,6 +137,8 @@ public:
 	// Close mapitems and attribute points
 	void closeItems(const Cell& origin);
 
+	void countRemainingPoints(void);
+
 
 private:
 	//Variables

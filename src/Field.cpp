@@ -43,6 +43,6 @@ std::ostream& Field::myprint(std::ostream& os, const MapItem& item)const{
 
 }
 
-void Field::checkCloseAndProcess(std::map<Cell, std::shared_ptr<Tile>> const& map){
+void Field::checkCloseAndProcess(std::map<Cell, std::shared_ptr<Tile>> const&){
 
 }
