@@ -45,13 +45,15 @@ int main(void){
 				manager.addPlayer(pl);
 				pl = std::shared_ptr<Player>(new Player("Scrub", sf::Color::Blue));
 				manager.addPlayer(pl);
+				pl = std::shared_ptr<Player>(new Player("Gay", sf::Color::Yellow));
+				manager.addPlayer(pl);
 				manager.beginGame();
 				break;
 			}
 			/////////////////////////////// Tile set ///////////////////////////
 			case lay:
 
-#ifdef DEBUG_MAIN
+#ifdef DEBUG_MAIN3
 				std::cout << manager;
 #endif
 				try{
@@ -130,7 +132,7 @@ int main(void){
 				}
 				// Also check here if Tile has any remaining items to claim, skip if so
 
-#ifdef DEBUG_MAIN
+#ifdef DEBUG_MAIN3
 				std::cout << manager;
 #endif
 

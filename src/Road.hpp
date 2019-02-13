@@ -10,7 +10,6 @@
 #include "configs.hpp"
 #include "MapItem.hpp"
 #include <ostream>
-#include <set>
 
 
 /*!
@@ -26,7 +25,7 @@ public:
 
 	std::ostream& myprint(std::ostream& os, const MapItem& item)const;
 
-	void checkCloseAndProcess(std::map<Cell, std::shared_ptr<Tile>> const&);
+	int countPoints(void)const;
 
 private:
 

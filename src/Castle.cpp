@@ -38,6 +38,17 @@ std::ostream& Castle::myprint(std::ostream& os, const MapItem& item)const{
 	return os;
 }
 
-void Castle::checkCloseAndProcess(std::map<Cell, std::shared_ptr<Tile>> const& map){
+int Castle::countPoints(void)const{
+
+	int points = 0;
+	std::set<std::shared_ptr<Tile>> instances;
+	for(auto it=span.cbegin(); it!=span.cend(); it++){
+		if(instances.find(std::get<0>(*it)) == instances.end()){
+			instances.insert(std::get<0>(*it));
+			points += (std::get<0>(*it)->hasShield()) ? 2 : 1;
+		}
+	}
+
+	return (this->closed) ? points*2 : points;
 
 }

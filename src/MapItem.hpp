@@ -16,6 +16,7 @@
 #include <vector>
 #include <ostream>
 #include <list>
+#include <set>
 #include <exception>
 #include <string>
 
@@ -98,7 +99,11 @@ public:
 
 	void getOccupiedPosition(std::list<std::tuple<std::shared_ptr<Tile>, TypeIdentifier, std::shared_ptr<Player>>>& list);
 
-	virtual void checkCloseAndProcess(std::map<Cell, std::shared_ptr<Tile>> const& map) = 0;
+	//Checks if it was closed with this play, gives points and followers back
+	//Overriden for field and cloister types
+	virtual void checkCloseAndProcess(std::map<Cell, std::shared_ptr<Tile>> const& map);
+
+	virtual int countPoints(void)const;
 
 protected:
 	std::vector<std::tuple<std::shared_ptr<Tile>, TypeIdentifier, std::shared_ptr<Player>>> span;

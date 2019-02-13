@@ -186,3 +186,91 @@ std::string print_TypeIdentifier(TypeIdentifier t){
 	}
 	return std::string("invalid");
 }
+
+
+void MapItem::checkCloseAndProcess(std::map<Cell, std::shared_ptr<Tile>> const& map){
+
+	TypeIdentifier t1;
+	std::tuple<TypeIdentifier, TypeIdentifier, TypeIdentifier> r;
+	Cell c;
+
+	for(auto it=span.cbegin(); it!=span.cend(); it++){
+
+		for(auto iit=map.cbegin(); iit!=map.cend(); iit++)
+			if((*iit).second == std::get<0>(*it))
+				c = (*iit).first;
+
+		r = std::get<0>(*it)->getMapItems(up);
+		t1 = std::get<1>(*it);
+		if((t1 == std::get<0>(r))||(t1 == std::get<2>(r))){
+			if(map.find(c+Cell(0,-1)) == map.end())
+				return;
+		}
+		r = std::get<0>(*it)->getMapItems(right);
+		t1 = std::get<1>(*it);
+		if((t1 == std::get<0>(r))||(t1 == std::get<2>(r))){
+			if(map.find(c+Cell(1,0)) == map.end())
+				return;
+		}
+		r = std::get<0>(*it)->getMapItems(down);
+		t1 = std::get<1>(*it);
+		if((t1 == std::get<0>(r))||(t1 == std::get<2>(r))){
+			if(map.find(c+Cell(0,1)) == map.end())
+				return;
+		}
+		r = std::get<0>(*it)->getMapItems(left);
+		t1 = std::get<1>(*it);
+		if((t1 == std::get<0>(r))||(t1 == std::get<2>(r))){
+			if(map.find(c+Cell(-1,0)) == map.end())
+				return;
+		}
+	}
+
+#ifdef DEBUG_MAP
+		std::cout << "Road/Castle is closed" << std::endl;
+#endif
+
+		this->closed = true;
+		if(this->occupant){
+			this->occupant=false;
+
+			std::map<std::shared_ptr<Player>, int> players;
+
+			//Get players and inversor count
+			for(auto it=span.begin(); it!= span.end(); it++){
+				if(std::get<2>(*it)!=nullptr){
+
+					try{
+						players.at(std::get<2>(*it))++;
+					}catch(std::out_of_range){
+						players[std::get<2>(*it)]=1;
+					}
+
+					//remove from span
+					std::get<2>(*it).reset();
+				}
+			}
+
+			//Count unique tiles, take into account shields
+			int points = this->countPoints();
+
+
+			//Determine winner(s)
+			int max=0;
+			for(auto it=players.begin(); it!=players.end(); it++){
+				max = ((*it).second > max) ? (*it).second : max;
+			}
+			//Give back followers and points
+			for(auto it=players.begin(); it!=players.end(); it++){
+				for(int i=0; i<(*it).second; i++)
+					(*it).first->givePiece();
+				if(max == (*it).second)
+					(*it).first->givePoints(points);
+			}
+		}
+
+}
+
+int MapItem::countPoints(void)const{
+	return -1;
+}
