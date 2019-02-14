@@ -29,6 +29,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <map>
+#include <set>
 #include <exception>
 #include <memory>
 #include <list>
@@ -139,6 +140,8 @@ public:
 
 	void countRemainingPoints(void);
 
+    void setPlayerColor(sf::Color color);
+
 
 private:
 	//Variables
@@ -169,6 +172,8 @@ private:
 
 	//Tile just played
 	std::shared_ptr<Tile> last_played;
+
+    sf::Color current_player_color;
 
 
 	//Methods

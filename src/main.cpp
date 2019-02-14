@@ -65,6 +65,7 @@ int main(void){
 
 				current_tile = std::shared_ptr<Tile>(new Tile(t));
 				map.setPlayable(current_tile);
+				map.setPlayerColor(manager.getCurrentPlayer()->getColor());
 
 				while(manager.getState() == lay){
 					while( window.pollEvent(event) ){

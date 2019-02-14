@@ -53,3 +53,24 @@ void Cloister::checkCloseAndProcess(std::map<Cell, std::shared_ptr<Tile>> const&
 	}
 
 }
+
+void Cloister::giveRemainingPoints(std::map<Cell, std::shared_ptr<Tile>> const& map){
+
+	if(this->occupant){
+		this->occupant = false;
+
+		Cell c;
+		int count=0;
+
+		//Get cloister's cell
+		for(auto it=map.cbegin(); it!=map.cend(); it++)
+			if((*it).second == std::get<0>(this->span[0]))
+				c = (*it).first;
+		for(int i=-1; i<2; i++)
+			for(int j=-1; j<2; j++)
+				count += map.count(c + Cell(i,j));
+
+		std::get<2>(span[0])->givePiece();
+		std::get<2>(span[0])->givePoints(count);
+	}
+}

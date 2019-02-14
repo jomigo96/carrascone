@@ -26,6 +26,7 @@ public:
 
 	int countPoints(void)const;
 
+
 private:
 
 };

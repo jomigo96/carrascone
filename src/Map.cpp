@@ -400,6 +400,12 @@ void Map::render(void) const{
 		int mod_y=(playable->getOrientation()>90) ? CELL_DIM/2 : -CELL_DIM/2;
 		sprite.setPosition(playable_pos+sf::Vector2f(mod_x, mod_y));
 		window.draw(sprite);
+		sf::RectangleShape rectangle(sf::Vector2f(CELL_DIM, CELL_DIM));
+		rectangle.setPosition(playable_pos-sf::Vector2f(CELL_DIM/2, CELL_DIM/2));
+		rectangle.setFillColor(sf::Color::Transparent);
+		rectangle.setOutlineColor(current_player_color);
+		rectangle.setOutlineThickness(3);
+		window.draw(rectangle);
 	}
 	if(last_played){
 		Cell c;
@@ -412,7 +418,7 @@ void Map::render(void) const{
 		}
 		sf::CircleShape circle(radius, 30);
 		circle.setFillColor(sf::Color::Transparent);
-		circle.setOutlineColor(sf::Color::Red);
+		circle.setOutlineColor(current_player_color);
 		circle.setOutlineThickness(1);
 		circle.setOrigin(radius*sqrt2, radius*sqrt2);
 		sf::Vector2f o_position(c.getX()*CELL_DIM, c.getY()*CELL_DIM);
@@ -476,6 +482,10 @@ void Map::setPlayablePos(int x, int y){
 
 	playable_pos.x=x;
 	playable_pos.y=y;
+}
+
+void Map::setPlayerColor(sf::Color color){
+	current_player_color=color;
 }
 
 void Map::clearPlayable(void){
@@ -869,4 +879,88 @@ void Map::closeItems(const Cell& origin){
 }
 
 //TODO: Count everything left hanging
-void Map::countRemainingPoints(void){}
+void Map::countRemainingPoints(void){
+
+	Castle* c;
+	std::set<std::pair<Castle*,std::shared_ptr<MapItem>>> tagged_fields;
+
+	//Tag closed Castles
+	for(auto it=items.cbegin(); it!=items.cend(); it++){
+		if((*it)->isClosed()){
+			c = dynamic_cast<Castle*>((*it).get());
+			if(c != nullptr){
+				auto span = c->getSpan();
+
+				//For every castle tile, find any touching fields(if any)
+				//and tag them. The tagging is a unique association between
+				//castle and field
+				for(auto it2=span.cbegin(); it2!=span.cend(); it2++){
+					char type = std::get<0>(*it2)->getTile();
+					TypeIdentifier field_type1, field_type2;
+					std::shared_ptr<MapItem> field;
+
+					switch(type){
+						case 'd':
+						case 'k':
+						case 'l':
+							field_type1 = field2;
+							field_type2 = invalid;
+							break;
+						case 'e':
+						case 'h':
+						case 'i':
+						case 'j':
+						case 'm':
+						case 'n':
+						case 'o':
+						case 'p':
+						case 'q':
+						case 'r':
+							field_type1 = field1;
+							field_type2 = invalid;
+							break;
+						case 'f':
+						case 'g':
+						case 't':
+						case 's':
+							field_type1 = field1;
+							field_type1 = field2;
+							break;
+						default:
+						 	field_type1 = invalid;
+							field_type2 = invalid;
+							break;
+					}
+
+					//Find pointer to this field and store it
+					for(auto it3=items.cbegin(); it3!=items.cend(); it3++){
+						if((*it3)->hasItem(std::get<0>(*it2), field_type1)){
+							tagged_fields.emplace(c, (*it3));
+						}
+						if((*it3)->hasItem(std::get<0>(*it2), field_type2)){
+							tagged_fields.emplace(c, (*it3));
+						}
+					}
+				}
+			}
+		}
+	}
+
+	Field* f;
+
+	for(auto it=items.begin(); it!=items.end(); it++){
+		f = dynamic_cast<Field*>((*it).get());
+		if(f != nullptr){
+			int count=0;
+			for(auto it2=tagged_fields.begin(); it2!=tagged_fields.end(); it2++){
+				if(f == (*it2).second.get()){
+					count++;
+				}
+			}
+			f->giveRemainingPoints(count);
+		}else{
+			(*it)->giveRemainingPoints(this->map);
+		}
+	}
+
+}

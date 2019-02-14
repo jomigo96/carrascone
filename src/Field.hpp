@@ -26,6 +26,10 @@ public:
 
 	void checkCloseAndProcess(std::map<Cell, std::shared_ptr<Tile>> const&);
 
+	void giveRemainingPoints(std::map<Cell, std::shared_ptr<Tile>> const& );
+
+	void giveRemainingPoints(int castles);
+
 private:
 
 };

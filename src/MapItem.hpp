@@ -76,9 +76,6 @@ public:
 
 	friend std::ostream& operator<<(std::ostream& os, const MapItem& item);
 
-	// merge - join two mapitems(not for type cloister)
-	// virtual score - attribute points to players uppon closure
-
 	std::vector<std::tuple<std::shared_ptr<Tile>, TypeIdentifier, std::shared_ptr<Player>>>const& getSpan(void)const;
 
 	TypeIdentifier getFirst()const;
@@ -104,6 +101,8 @@ public:
 	virtual void checkCloseAndProcess(std::map<Cell, std::shared_ptr<Tile>> const& map);
 
 	virtual int countPoints(void)const;
+
+	virtual void giveRemainingPoints(std::map<Cell, std::shared_ptr<Tile>> const& );
 
 protected:
 	std::vector<std::tuple<std::shared_ptr<Tile>, TypeIdentifier, std::shared_ptr<Player>>> span;
