@@ -395,7 +395,6 @@ void Map::render(void) const{
 				auto size = meeple_tex.getSize();
 				sprite.setScale(2.0*radius/size.x, 2.0*radius/size.y);
 				sprite.setOrigin(112.5,112.5);
-				//sprite.setPosition(sf::Vector2f(0,0));
 				sprite.setPosition(o_position+offset);
 
 				window.draw(sprite);
@@ -975,4 +974,8 @@ void Map::countRemainingPoints(void){
 		}
 	}
 
+}
+
+sf::Texture Map::getMeeple()const{
+	return meeple_tex;
 }

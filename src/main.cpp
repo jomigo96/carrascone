@@ -14,7 +14,6 @@
 #include "Cell.hpp"
 #include "PlayerManager.hpp"
 #include "Player.hpp"
-#include "SideMenu.hpp"
 
 int main(void){
 
@@ -24,13 +23,12 @@ int main(void){
     window.setFramerateLimit(60);
     Map map(window, std::string("textures/"));
 
-    PlayerManager manager;
+    PlayerManager manager(window, map.getMeeple(), std::string("fonts/"), map.deck_count());
     bool turn=true;
     Cell clicked;
     TileType surroundings;
     TileType t;
     sf::Event event;
-	//std::shared_ptr<Player> current_player;
 	std::shared_ptr<Tile> current_tile;
 
 	//debug;
@@ -84,6 +82,7 @@ int main(void){
 										turn = map.play(current_tile, clicked);
 										if(turn){
 											map.clearPlayable();
+											manager.tilePlayed();
 											manager.nextState();
 										}
 										break;
@@ -117,6 +116,7 @@ int main(void){
 						map.setPlayablePos(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
 						window.clear();
 						map.render();
+						manager.renderMenu();
 						window.display();
 					}
 				}
@@ -180,6 +180,7 @@ int main(void){
 					if(window.isOpen()){
 						window.clear();
 						map.render();
+						manager.renderMenu();
 						window.display();
 					}
 				}
@@ -227,6 +228,7 @@ int main(void){
 		if(window.isOpen()){
 			window.clear();
 			map.render();
+			manager.renderMenu();
 			window.display();
 		}
 

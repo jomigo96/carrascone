@@ -1,8 +1,15 @@
 #include "PlayerManager.hpp"
 
-PlayerManager::PlayerManager(){
+PlayerManager::PlayerManager(sf::RenderWindow& window, sf::Texture tex,
+    std::string const& path, int deck_count) : window(window), meeple_tex(tex), deck_count(deck_count){
 
     state=start;
+    deck_size = deck_count;
+
+    if(!font.loadFromFile(path + std::string("Lato-Medium.ttf"))){
+        std::cerr << "Error opening font" << std::endl;
+        throw std::runtime_error("ttf file error");
+    }
 }
 
 PlayerManager::~PlayerManager(){}
@@ -26,6 +33,10 @@ void PlayerManager::endDeck(){
 void PlayerManager::closeWindow(){
 
     state=close;
+}
+
+void PlayerManager::tilePlayed(){
+    deck_count--;
 }
 
 void PlayerManager::nextState(){
@@ -104,4 +115,44 @@ std::ostream& operator<<(std::ostream& os, const PlayerManager& manager){
 
 
     return os;
+}
+
+void PlayerManager::renderMenu()const{
+
+    const sf::Vector2f origin(1120,50);
+    sf::Sprite sprite(meeple_tex);
+    sf::Text text(std::string(), font, (int)text_height);
+    std::stringstream stream;
+
+    text.setFillColor(sf::Color::White);
+
+
+    auto size = meeple_tex.getSize();
+    sprite.setScale(text_height/size.x, text_height/size.y);
+    //sprite.setOrigin(size.x/2, size.y/2);
+
+    int dev=0;
+    for(auto it=players.cbegin(); it!=players.cend(); it++, dev += text_height*3){
+        sprite.setColor((*it)->getColor());
+        sprite.setPosition(origin + sf::Vector2f(0, dev + text_height*1.2));
+        window.draw(sprite);
+
+        text.setPosition(origin + sf::Vector2f(0, dev));
+        text.setString((*it)->getNickname());
+        window.draw(text);
+
+        text.setPosition(origin + sf::Vector2f(text_height+10, dev + text_height*1.2));
+        stream = std::stringstream();
+        stream << "x" << (*it)->getPieces() << "    " << (*it)->getPoints();
+        text.setString( stream.str() );
+        window.draw(text);
+    }
+
+    stream = std::stringstream();
+    stream << "Tiles: " << deck_count << "/" << deck_size;
+    text.setString( stream.str() );
+    text.setPosition(origin + sf::Vector2f(0, dev + text_height*1.2));
+
+    window.draw(text);
+
 }

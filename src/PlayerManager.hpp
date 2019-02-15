@@ -12,7 +12,9 @@
 #include <vector>
 #include <memory>
 #include <iostream>
+#include <sstream>
 #include "Player.hpp"
+#include "Map.hpp"
 #include "configs.hpp"
 
 
@@ -33,7 +35,7 @@ enum State : unsigned{
 class PlayerManager{
 
 public:
-	PlayerManager();
+	PlayerManager(sf::RenderWindow& window, sf::Texture tex, std::string const& path, int deck_count);
 	~PlayerManager();
 
 	void beginGame();
@@ -47,6 +49,10 @@ public:
 
 	std::shared_ptr<Player> getCurrentPlayer();
 
+	void renderMenu()const;
+
+	void tilePlayed();
+
 	friend std::ostream& operator<<(std::ostream& os, const PlayerManager& manager);
 
 private:
@@ -54,6 +60,15 @@ private:
 	State state;
 	std::vector<std::shared_ptr<Player>> players;
 	std::vector<std::shared_ptr<Player>>::iterator current_player;
+
+	sf::RenderWindow& window;
+    sf::Texture meeple_tex;
+
+	int deck_count;
+	int deck_size;
+
+	sf::Font font;
+	static constexpr float text_height = 18.0;
 };
 
 

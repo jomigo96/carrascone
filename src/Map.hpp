@@ -142,6 +142,8 @@ public:
 
     void setPlayerColor(sf::Color color);
 
+	sf::Texture getMeeple()const;
+
 
 private:
 	//Variables

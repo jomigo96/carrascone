@@ -75,3 +75,7 @@ void Player::givePoints(int p){
 int Player::getPoints()const{
     return points;
 }
+
+int Player::getPieces()const{
+    return (int)piece_count;
+}
