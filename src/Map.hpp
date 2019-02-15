@@ -7,7 +7,7 @@
 #ifndef MAP_HPP
 #define MAP_HPP
 
- #include "configs.hpp"
+#include "configs.hpp"
 
 #define TILESIZE 78
 
@@ -175,6 +175,7 @@ private:
 
     sf::Color current_player_color;
 
+    sf::Texture meeple_tex;
 
 	//Methods
 	std::shared_ptr<const Tile> getTileAt(Cell c)const;

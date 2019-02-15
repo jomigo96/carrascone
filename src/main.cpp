@@ -14,6 +14,7 @@
 #include "Cell.hpp"
 #include "PlayerManager.hpp"
 #include "Player.hpp"
+#include "SideMenu.hpp"
 
 int main(void){
 

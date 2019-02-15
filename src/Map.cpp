@@ -34,6 +34,14 @@ Map::Map(sf::RenderWindow& window, const std::string& path): window(window){
 		deck.emplace(tipe, weights[i]);
 
 	}
+	sf::Image image;
+	if( !image.loadFromFile( path + std::string("meeple_white_on_black.png") )){
+		std::cerr << "Error loading file: "<< file << std::endl;
+		throw std::runtime_error("png file error");
+	}
+	image.createMaskFromColor(sf::Color::Black);
+	meeple_tex.loadFromImage(image);
+
 	struct timeval tp;
 	gettimeofday(&tp, NULL);
 	srand(tp.tv_usec);
@@ -369,11 +377,7 @@ void Map::render(void) const{
 
 			(*it)->getOccupiedPosition(positions);
 			for(auto stuff : positions){
-				sf::CircleShape circle(radius, 30);
 				sf::Color player_color = std::get<2>(stuff)->getColor();
-				circle.setFillColor(player_color);
-				circle.setOutlineColor(player_color);
-				circle.setOrigin(radius*sqrt2, radius*sqrt2);
 
 				Cell c;
 				//Pull cell
@@ -385,8 +389,16 @@ void Map::render(void) const{
 				}
 				sf::Vector2f o_position(c.getX()*CELL_DIM, c.getY()*CELL_DIM);
 				sf::Vector2f offset = std::get<0>(stuff)->getItemPosition(std::get<1>(stuff));
-				circle.setPosition(o_position+offset);
-				window.draw(circle);
+
+				sprite = sf::Sprite(meeple_tex);
+				sprite.setColor(player_color);
+				auto size = meeple_tex.getSize();
+				sprite.setScale(2.0*radius/size.x, 2.0*radius/size.y);
+				sprite.setOrigin(112.5,112.5);
+				//sprite.setPosition(sf::Vector2f(0,0));
+				sprite.setPosition(o_position+offset);
+
+				window.draw(sprite);
 			}
 		}
 	}
@@ -394,7 +406,7 @@ void Map::render(void) const{
 		std::map<TileType, sf::Texture>::const_iterator it = textures.find(*playable);
 		if(it == textures.cend())
 			return; //Maybe exception
-		sprite.setTexture(it->second);
+		sprite = sf::Sprite(it->second);
 		sprite.setRotation(playable->getOrientation());
 		int mod_x=(playable->getOrientation()==90 || playable->getOrientation()==180) ? CELL_DIM/2 : -CELL_DIM/2;
 		int mod_y=(playable->getOrientation()>90) ? CELL_DIM/2 : -CELL_DIM/2;
