@@ -7,19 +7,54 @@
 #include "configs.hpp"
 #include <iostream>
 #include <memory>
+#include <string>
+#include <vector>
 #include <SFML/Graphics.hpp>
 #include "Map.hpp"
+#include "Menu.hpp"
 #include "Tile.hpp"
 #include "TileType.hpp"
 #include "Cell.hpp"
 #include "PlayerManager.hpp"
 #include "Player.hpp"
+#include <boost/program_options.hpp>
 
-int main(void){
+namespace po = boost::program_options;
+
+int main(int argc, char **argv){
+
+	po::options_description desc("Allowed options");
+
+	desc.add_options()
+    ("help,h", "produce help message")
+	("versus,v", "jump to the game in two player mode")
+	;
+
+	po::variables_map vm;
+	try{
+		po::store(po::parse_command_line(argc, argv, desc), vm);
+	}catch(std::exception& e){
+		std::cerr << e.what() << std::endl << "Use --help for more information" << std::endl;
+		return -1;
+	}
+
+	po::notify(vm);
+
+	if (vm.count("help")) {
+    	std::cout << desc << std::endl;
+    	return 1;
+	}
+	/*if (!vm.count("versus")){
+		std::cout << "Still working on start menu. For now use -v for two player mode."<< std::endl;
+		return 0;
+	}*/
 
 	std::cout << "Carrascone is starting!" << std::endl;
 
-	sf::RenderWindow window(sf::VideoMode(1280,720), "Carrascone");
+	const int screen_width = 1280;
+	const int screen_height = 720;
+
+	sf::RenderWindow window(sf::VideoMode(screen_width, screen_height), "Carrascone");
     window.setFramerateLimit(60);
     Map map(window, std::string("textures/"));
 
@@ -30,8 +65,104 @@ int main(void){
     TileType t;
     sf::Event event;
 	std::shared_ptr<Tile> current_tile;
+	int mode = -1;
+	int player_number = -1;
 
-	//debug;
+	if (vm.count("versus")){
+		std::shared_ptr<Player> pl(new Player("Player 1", sf::Color::Red));
+		manager.addPlayer(pl);
+		pl = std::shared_ptr<Player>(new Player("Player 2", sf::Color::Blue));
+		manager.addPlayer(pl);
+	}else{
+		// Start menu
+		Menu menu(window, "textures/", "fonts/", screen_width, screen_height);
+
+		std::vector<std::string> opt;
+		opt.emplace_back("Local play");
+		opt.emplace_back("Network play");
+		menu.setOptionType(opt);
+
+		while((window.isOpen()) && (mode<0)){
+			while( window.pollEvent(event) ){
+				switch (event.type) {
+					case sf::Event::Closed:
+						window.close();
+						return 0;
+					case sf::Event::KeyPressed:
+						switch (event.key.code) {
+							case sf::Keyboard::Up:
+							case sf::Keyboard::K:
+								menu.cycleUp();
+								break;
+							case sf::Keyboard::Down:
+							case sf::Keyboard::J:
+								menu.cycleDown();
+								break;
+							case sf::Keyboard::Return:
+							case sf::Keyboard::Space:
+								mode = menu.getSelectedItem();
+								break;
+							default: break;
+						}
+						break;
+					default: break;
+				}
+			}
+			window.clear();
+			menu.render();
+			window.display();
+		}
+
+		if(mode == 0){
+			std::vector<int> opt2;
+			opt2.push_back(2);
+			opt2.push_back(3);
+			opt2.push_back(4);
+			opt2.push_back(5);
+			menu.setQuerry("Number of players", opt2);
+
+			while((window.isOpen()) && (player_number<0)){
+				while( window.pollEvent(event) ){
+					switch (event.type) {
+						case sf::Event::Closed:
+							window.close();
+							return 0;
+						case sf::Event::KeyPressed:
+							switch (event.key.code) {
+								case sf::Keyboard::Up:
+								case sf::Keyboard::K:
+									menu.cycleUp();
+									break;
+								case sf::Keyboard::Down:
+								case sf::Keyboard::J:
+									menu.cycleDown();
+									break;
+								case sf::Keyboard::Return:
+								case sf::Keyboard::Space:
+									player_number = opt2[(unsigned)menu.getSelectedItem()];
+									break;
+								default: break;
+							}
+							break;
+						default: break;
+					}
+				}
+				window.clear();
+				menu.render();
+				window.display();
+			}
+
+		}else{
+			std::cout << "Network mode will be added in the future!" << std::endl;
+			return 0;
+		}
+
+
+		std::shared_ptr<Player> pl(new Player("Player 1", sf::Color::Red));
+		manager.addPlayer(pl);
+		pl = std::shared_ptr<Player>(new Player("Player 2", sf::Color::Blue));
+		manager.addPlayer(pl);
+	}
 
 
 	// Game loop
@@ -40,12 +171,6 @@ int main(void){
 		switch (manager.getState()) {
 			case start:{
 				// Initial definition of player number and customizations
-				std::shared_ptr<Player> pl(new Player("Ganso", sf::Color::Red));
-				manager.addPlayer(pl);
-				pl = std::shared_ptr<Player>(new Player("Scrub", sf::Color::Blue));
-				manager.addPlayer(pl);
-				pl = std::shared_ptr<Player>(new Player("Gay", sf::Color::Yellow));
-				manager.addPlayer(pl);
 				manager.beginGame();
 				break;
 			}

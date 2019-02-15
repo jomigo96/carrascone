@@ -27,7 +27,7 @@ enum State : unsigned{
 	end_turn,
 	end_game,
 	deck_finished,
-	close,
+	close_state, //close already taken by boost
 	error,
 };
 
@@ -52,6 +52,8 @@ public:
 	void renderMenu()const;
 
 	void tilePlayed();
+
+	sf::Font const& getFont()const;
 
 	friend std::ostream& operator<<(std::ostream& os, const PlayerManager& manager);
 

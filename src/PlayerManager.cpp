@@ -32,11 +32,15 @@ void PlayerManager::endDeck(){
 
 void PlayerManager::closeWindow(){
 
-    state=close;
+    state=close_state;
 }
 
 void PlayerManager::tilePlayed(){
     deck_count--;
+}
+
+sf::Font const& PlayerManager::getFont()const{
+    return font;
 }
 
 void PlayerManager::nextState(){
