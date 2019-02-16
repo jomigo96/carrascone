@@ -430,7 +430,7 @@ void Map::render(void) const{
 		sf::CircleShape circle(radius, 30);
 		circle.setFillColor(sf::Color::Transparent);
 		circle.setOutlineColor(current_player_color);
-		circle.setOutlineThickness(1);
+		circle.setOutlineThickness(2);
 		circle.setOrigin(radius*sqrt2, radius*sqrt2);
 		sf::Vector2f o_position(c.getX()*CELL_DIM, c.getY()*CELL_DIM);
 
@@ -873,7 +873,7 @@ void Map::closeItems(const Cell& origin){
 
 	for(int i=-1; i<2; i++){
 		for(int j=-1; j<2; j++){
-			if((i==0)&&(i==0))
+			if((i==0)&&(j==0))
 				continue;
 			neigh = map.find(origin + Cell(i,j));
 			if(neigh != map.end()){
@@ -889,7 +889,7 @@ void Map::closeItems(const Cell& origin){
 	}
 }
 
-//TODO: Count everything left hanging
+
 void Map::countRemainingPoints(void){
 
 	Castle* c;
@@ -978,4 +978,11 @@ void Map::countRemainingPoints(void){
 
 sf::Texture Map::getMeeple()const{
 	return meeple_tex;
+}
+
+bool Map::hasFreeRealEstate()const{
+	std::list<TypeIdentifier> list;
+	this->getFreeRealEstate(last_played, list);
+
+	return (list.size()>0);
 }

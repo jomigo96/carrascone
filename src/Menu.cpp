@@ -60,6 +60,25 @@ void Menu::render()const{
             window.draw(circle);
         }
         break;
+        case player_nickname:{
+
+            sf::Vector2f origin(x, 200);
+
+            std::string out;
+            for(auto it=nickname.cbegin(); it!=nickname.cend(); it++){
+                out.push_back(*it);
+            }
+
+            text.setPosition(origin);
+            text.setString(std::string("Player ") + std::to_string(player_n) + std::string(" nickname:"));
+            window.draw(text);
+
+            origin+=sf::Vector2f(60, 40);
+            text.setPosition(origin);
+            text.setString(out);
+            window.draw(text);
+        }
+        break;
         default: break;
     }
 
@@ -97,4 +116,31 @@ void Menu::cycleDown(){
 
 int Menu::getSelectedItem()const{
     return selected_item;
+}
+
+void Menu::askPlayer(int player_no){
+    menuType = player_nickname;
+    player_n = player_no;
+    nickname = std::deque<char>();
+}
+
+std::string Menu::getEntry()const{
+
+    std::string out;
+
+    for(auto it=nickname.cbegin(); it!=nickname.cend(); it++){
+        out.push_back(*it);
+    }
+
+    return out;
+}
+
+void Menu::addLetter(char c){
+    nickname.push_back(c);
+    //std::cout << "Letter "<< c << std::endl;
+}
+
+void Menu::removeLetter(){
+    if(!nickname.empty())
+        nickname.pop_back();
 }

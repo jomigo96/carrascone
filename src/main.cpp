@@ -25,9 +25,13 @@ int main(int argc, char **argv){
 
 	po::options_description desc("Allowed options");
 
+	std::string o_path;
+
 	desc.add_options()
     ("help,h", "produce help message")
 	("versus,v", "jump to the game in two player mode")
+	("instructions,i", "see Carrascone instructions")
+	("path,p", po::value<std::string>(&o_path), "path to the src directory, if running from another directory")
 	;
 
 	po::variables_map vm;
@@ -44,10 +48,13 @@ int main(int argc, char **argv){
     	std::cout << desc << std::endl;
     	return 1;
 	}
-	/*if (!vm.count("versus")){
-		std::cout << "Still working on start menu. For now use -v for two player mode."<< std::endl;
-		return 0;
-	}*/
+	if(vm.count("instructions")){
+		std::cout << "Google it noob" << std::endl;
+		return 1;
+	}
+	if(vm.count("path")){
+		o_path.push_back('/');
+	}
 
 	std::cout << "Carrascone is starting!" << std::endl;
 
@@ -56,9 +63,9 @@ int main(int argc, char **argv){
 
 	sf::RenderWindow window(sf::VideoMode(screen_width, screen_height), "Carrascone");
     window.setFramerateLimit(60);
-    Map map(window, std::string("textures/"));
+    Map map(window, o_path + std::string("textures/"));
 
-    PlayerManager manager(window, map.getMeeple(), std::string("fonts/"), map.deck_count());
+    PlayerManager manager(window, map.getMeeple(), o_path + std::string("fonts/"), map.deck_count());
     bool turn=true;
     Cell clicked;
     TileType surroundings;
@@ -75,7 +82,7 @@ int main(int argc, char **argv){
 		manager.addPlayer(pl);
 	}else{
 		// Start menu
-		Menu menu(window, "textures/", "fonts/", screen_width, screen_height);
+		Menu menu(window, o_path + std::string("textures/"), o_path + std::string("fonts/"), screen_width, screen_height);
 
 		std::vector<std::string> opt;
 		opt.emplace_back("Local play");
@@ -152,16 +159,74 @@ int main(int argc, char **argv){
 				window.display();
 			}
 
+			std::shared_ptr<Player> pl;
+			const sf::Color colors[5] = {sf::Color::Red, sf::Color::Blue, sf::Color::Yellow, sf::Color::Black, sf::Color::Green};
+			std::string nickname;
+
+			for(int i=1; i<=player_number; i++){
+				menu.askPlayer(i);
+
+				pl.reset();
+				bool shift_case = false;
+
+				while((window.isOpen()) && (pl==nullptr)){
+					while( window.pollEvent(event) ){
+						switch (event.type) {
+							case sf::Event::Closed:
+								window.close();
+								return 0;
+							case sf::Event::KeyPressed:{
+								if((event.key.code == sf::Keyboard::Return)){
+									nickname = menu.getEntry();
+									if(nickname.size() > 0){
+										pl = std::shared_ptr<Player>(new Player(nickname, colors[i-1]));
+										manager.addPlayer(pl);
+										continue;
+									}
+								}
+								if((event.key.code >= sf::Keyboard::A)&&(event.key.code <= sf::Keyboard::Z)){
+									char c = 'a'+(char)(event.key.code - sf::Keyboard::A);
+									if(shift_case){
+										c += 'A'-'a';
+									}
+									menu.addLetter(c);
+								}
+								if(event.key.code == sf::Keyboard::Space){
+									menu.addLetter(' ');
+								}
+								if(event.key.code == sf::Keyboard::BackSpace){
+									menu.removeLetter();
+								}
+								if(event.key.code == sf::Keyboard::LShift){
+									shift_case = true;
+								}
+							}
+							break;
+							case::sf::Event::KeyReleased:{
+								if(event.key.code == sf::Keyboard::LShift){
+									shift_case = false;
+								}
+							}
+							break;
+							default: break;
+						}
+					}
+					window.clear();
+					menu.render();
+					window.display();
+				}
+			}
+
 		}else{
 			std::cout << "Network mode will be added in the future!" << std::endl;
 			return 0;
 		}
 
-
+/*
 		std::shared_ptr<Player> pl(new Player("Player 1", sf::Color::Red));
 		manager.addPlayer(pl);
 		pl = std::shared_ptr<Player>(new Player("Player 2", sf::Color::Blue));
-		manager.addPlayer(pl);
+		manager.addPlayer(pl);*/
 	}
 
 
@@ -255,9 +320,15 @@ int main(int argc, char **argv){
 
 				if(!(manager.getCurrentPlayer()->hasPieces())){
 					manager.nextState();
+					map.skipPlayable();
 					break;
 				}
-				// Also check here if Tile has any remaining items to claim, skip if so
+				if(!(map.hasFreeRealEstate())){
+					manager.nextState();
+					map.skipPlayable();
+					break;
+				}
+
 
 #ifdef DEBUG_MAIN3
 				std::cout << manager;

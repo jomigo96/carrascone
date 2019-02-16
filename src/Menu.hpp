@@ -6,11 +6,13 @@
 #include <vector>
 #include <exception>
 #include <iostream>
+#include <deque>
 #include <SFML/Graphics.hpp>
 
 enum MenuType : int{
     option_selection,
     number_selection,
+    player_nickname,
 };
 
 class Menu{
@@ -31,6 +33,14 @@ public:
 
     int getSelectedItem()const;
 
+    void askPlayer(int player_no);
+
+    std::string getEntry()const;
+
+    void addLetter(char c);
+
+    void removeLetter();
+
 
 protected:
     sf::RenderWindow& window;
@@ -44,6 +54,9 @@ protected:
 
     std::vector<std::string> options;
     std::string title;
+
+    int player_n;
+    std::deque<char> nickname;
 };
 
 #endif

@@ -144,6 +144,8 @@ public:
 
 	sf::Texture getMeeple()const;
 
+	bool hasFreeRealEstate()const;
+
 
 private:
 	//Variables
