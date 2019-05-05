@@ -75,24 +75,16 @@ TileType const& Map::draw(void){
 
 
 	// To extract one random tile, must be fair with regard to the total number of tiles.
-	int v = rand() % count;
+	int v = rand() % (count+1);
 
 	for (auto i = deck.begin(); i != deck.end(); i++){
 
-		if(i->second==0) //This type is all out
-			continue;
-
-		if((v-i->second) > 0){ //Not going to land here
-
-			v-=i->second;
-		}else{ //Lands here
-
-			return i->first;
-		}
+        v -= i->second;
+        if((v<=0)&&(i->second > 0)){
+            return i->first;
+        }
 	}
-	// By default returns the first I guess
-	std::cerr << "Warning: Random tile pull failed, returning first" << std::endl;
-	return deck.begin()->first;
+    return deck.begin()->first;
 }
 
 int Map::deck_count(void) const{
