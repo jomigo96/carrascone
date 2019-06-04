@@ -44,6 +44,6 @@ and use `--help` to view available options.
 
 ## Licence
 
-Unlicenced
+GNU General Public License 3
 
 This was made as a learning exercise, no commercial use intended. Buy the [Carcassonne app](https://play.google.com/store/apps/details?id=com.asmodeedigital.carcassonne&hl=pt) (link visited on 23/08/2018).
