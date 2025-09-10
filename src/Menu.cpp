@@ -3,7 +3,7 @@
 Menu::Menu(sf::RenderWindow& window, std::string const& path_textures, std::string const& path_fonts, int screen_width, int screen_height):
     window(window), tex_path(path_textures), screen_width(screen_width), screen_height(screen_height){
 
-        if(!font.loadFromFile(path_fonts + std::string("Lato-Medium.ttf"))){
+        if(!font.openFromFile(path_fonts + std::string("Lato-Medium.ttf"))){
             std::cerr << "Error opening font" << std::endl;
             throw std::runtime_error("ttf file error");
         }
@@ -14,11 +14,11 @@ Menu::~Menu(){}
 
 void Menu::render()const{
 
-    sf::Text text(std::string("Carrascone"), font, 50);
+    sf::Text text(font, std::string("Carrascone"), 50);
     text.setFillColor(sf::Color::White);
 
     auto bounds = text.getLocalBounds();
-    const int x = screen_width/2.0-bounds.width/2.0;
+    const int x = screen_width/2.0-bounds.size.x/2.0;
     text.setPosition(sf::Vector2f(x, 50));
     window.draw(text);
 

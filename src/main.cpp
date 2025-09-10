@@ -18,20 +18,24 @@
 #include "PlayerManager.hpp"
 #include "Player.hpp"
 #include <boost/program_options.hpp>
+#include <filesystem>
 
 namespace po = boost::program_options;
 
+// Assuming runtime resources are available in the build folder. TODO integrate a proper install step
+const std::string resource_path{"../resources/"};
+
 int main(int argc, char **argv){
 
-	po::options_description desc("Allowed options");
+	const std::filesystem::path program{argv[0]};
+	const std::string o_path = program.parent_path().string() + "/" + resource_path;
 
-	std::string o_path;
+	po::options_description desc("Allowed options");
 
 	desc.add_options()
     ("help,h", "produce help message")
 	("versus,v", "jump to the game in two player mode")
 	("instructions,i", "see Carrascone instructions")
-	("path,p", po::value<std::string>(&o_path), "path to the src directory, if running from another directory")
 	;
 
 	po::variables_map vm;
@@ -52,16 +56,13 @@ int main(int argc, char **argv){
 		std::cout << "Google it noob" << std::endl;
 		return 1;
 	}
-	if(vm.count("path")){
-		o_path.push_back('/');
-	}
 
 	std::cout << "Carrascone is starting!" << std::endl;
 
 	const int screen_width = 1280;
 	const int screen_height = 720;
 
-	sf::RenderWindow window(sf::VideoMode(screen_width, screen_height), "Carrascone");
+	sf::RenderWindow window(sf::VideoMode({screen_width, screen_height}), "Carrascone");
     window.setFramerateLimit(60);
     Map map(window, o_path + std::string("textures/"));
 
@@ -70,7 +71,6 @@ int main(int argc, char **argv){
     Cell clicked;
     TileType surroundings;
     TileType t;
-    sf::Event event;
 	std::shared_ptr<Tile> current_tile;
 	int mode = -1;
 	int player_number = -1;
@@ -90,29 +90,18 @@ int main(int argc, char **argv){
 		menu.setOptionType(opt);
 
 		while((window.isOpen()) && (mode<0)){
-			while( window.pollEvent(event) ){
-				switch (event.type) {
-					case sf::Event::Closed:
-						window.close();
-						return 0;
-					case sf::Event::KeyPressed:
-						switch (event.key.code) {
-							case sf::Keyboard::Up:
-							case sf::Keyboard::K:
-								menu.cycleUp();
-								break;
-							case sf::Keyboard::Down:
-							case sf::Keyboard::J:
-								menu.cycleDown();
-								break;
-							case sf::Keyboard::Return:
-							case sf::Keyboard::Space:
-								mode = menu.getSelectedItem();
-								break;
-							default: break;
-						}
-						break;
-					default: break;
+			while( const auto event = window.pollEvent() ){
+				if (event->is<sf::Event::Closed>()){
+					window.close();
+					return 0;
+				} else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
+					if (keyPressed->scancode == sf::Keyboard::Scancode::Up || keyPressed->scancode == sf::Keyboard::Scancode::K) {
+						menu.cycleUp();
+					} else if (keyPressed->scancode == sf::Keyboard::Scancode::Down || keyPressed->scancode == sf::Keyboard::Scancode::J) {
+						menu.cycleDown();
+					} else if (keyPressed->code == sf::Keyboard::Key::Enter || keyPressed->scancode == sf::Keyboard::Scancode::Space) {
+						mode = menu.getSelectedItem();
+					}
 				}
 			}
 			window.clear();
@@ -129,31 +118,20 @@ int main(int argc, char **argv){
 			menu.setQuerry("Number of players", opt2);
 
 			while((window.isOpen()) && (player_number<0)){
-				while( window.pollEvent(event) ){
-					switch (event.type) {
-						case sf::Event::Closed:
-							window.close();
-							return 0;
-						case sf::Event::KeyPressed:
-							switch (event.key.code) {
-								case sf::Keyboard::Up:
-								case sf::Keyboard::K:
-									menu.cycleUp();
-									break;
-								case sf::Keyboard::Down:
-								case sf::Keyboard::J:
-									menu.cycleDown();
-									break;
-								case sf::Keyboard::Return:
-								case sf::Keyboard::Space:
-									player_number = opt2[(unsigned)menu.getSelectedItem()];
-									break;
-								default: break;
-							}
-							break;
-						default: break;
+			while( const auto event = window.pollEvent() ){
+				if (event->is<sf::Event::Closed>()){
+					window.close();
+					return 0;
+				} else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
+					if (keyPressed->scancode == sf::Keyboard::Scancode::Up || keyPressed->scancode == sf::Keyboard::Scancode::K) {
+						menu.cycleUp();
+					} else if (keyPressed->scancode == sf::Keyboard::Scancode::Down || keyPressed->scancode == sf::Keyboard::Scancode::J) {
+						menu.cycleDown();
+					} else if (keyPressed->code == sf::Keyboard::Key::Enter || keyPressed->scancode == sf::Keyboard::Scancode::Space) {
+						player_number = opt2[(unsigned)menu.getSelectedItem()];
 					}
 				}
+			}
 				window.clear();
 				menu.render();
 				window.display();
@@ -170,45 +148,32 @@ int main(int argc, char **argv){
 				bool shift_case = false;
 
 				while((window.isOpen()) && (pl==nullptr)){
-					while( window.pollEvent(event) ){
-						switch (event.type) {
-							case sf::Event::Closed:
-								window.close();
-								return 0;
-							case sf::Event::KeyPressed:{
-								if((event.key.code == sf::Keyboard::Return)){
-									nickname = menu.getEntry();
-									if(nickname.size() > 0){
-										pl = std::shared_ptr<Player>(new Player(nickname, colors[i-1]));
-										manager.addPlayer(pl);
-										continue;
-									}
+					while( const auto event = window.pollEvent() ){
+						if (event->is<sf::Event::Closed>()){
+							window.close();
+							return 0;
+						}
+						else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
+							if (keyPressed->code == sf::Keyboard::Key::Enter) {
+								nickname = menu.getEntry();
+								if(nickname.size() > 0){
+									pl = std::shared_ptr<Player>(new Player(nickname, colors[i-1]));
+									manager.addPlayer(pl);
+									continue;
 								}
-								if((event.key.code >= sf::Keyboard::A)&&(event.key.code <= sf::Keyboard::Z)){
-									char c = 'a'+(char)(event.key.code - sf::Keyboard::A);
-									if(shift_case){
-										c += 'A'-'a';
-									}
-									menu.addLetter(c);
+							} else if((keyPressed->scancode >= sf::Keyboard::Scancode::A)&&(keyPressed->scancode <= sf::Keyboard::Scancode::Z)){
+								char c = 'a' + (static_cast<int>(keyPressed->scancode) - static_cast<int>(sf::Keyboard::Scancode::A));
+								if(keyPressed->shift){
+									c += 'A'-'a';
 								}
-								if(event.key.code == sf::Keyboard::Space){
-									menu.addLetter(' ');
-								}
-								if(event.key.code == sf::Keyboard::BackSpace){
-									menu.removeLetter();
-								}
-								if(event.key.code == sf::Keyboard::LShift){
-									shift_case = true;
-								}
+								menu.addLetter(c);
 							}
-							break;
-							case::sf::Event::KeyReleased:{
-								if(event.key.code == sf::Keyboard::LShift){
-									shift_case = false;
-								}
+							else if(keyPressed->code == sf::Keyboard::Key::Space){
+								menu.addLetter(' ');
 							}
-							break;
-							default: break;
+							else if(keyPressed->code == sf::Keyboard::Key::Backspace){
+								menu.removeLetter();
+							}
 						}
 					}
 					window.clear();
@@ -257,51 +222,34 @@ int main(int argc, char **argv){
 				map.setPlayerColor(manager.getCurrentPlayer()->getColor());
 
 				while(manager.getState() == lay){
-					while( window.pollEvent(event) ){
-						switch(event.type){
-							case sf::Event::Closed:
-								window.close();
-								manager.closeWindow();
-								break;
-
-							case sf::Event::MouseButtonPressed:
-								switch (event.key.code) {
-									case sf::Mouse::Left:
-										clicked = Cell(sf::Mouse::getPosition(window).x/CELL_DIM, sf::Mouse::getPosition(window).y/CELL_DIM);
-
-										turn = map.play(current_tile, clicked);
-										if(turn){
-											map.clearPlayable();
-											manager.tilePlayed();
-											manager.nextState();
-										}
-										break;
-									case sf::Mouse::Right:
-										current_tile->rotate_clockwise();
-										break;
-									default: break;
-								}
-								break;
-
+					while( const auto event = window.pollEvent() ){
+						if (event->is<sf::Event::Closed>()){
+							window.close();
+							return 0;
+						} else if (const auto* mousePressed = event->getIf<sf::Event::MouseButtonPressed>()) {
+							if (mousePressed->button == sf::Mouse::Button::Left) {
+								clicked = Cell(sf::Mouse::getPosition(window).x/CELL_DIM, sf::Mouse::getPosition(window).y/CELL_DIM);
+								turn = map.play(current_tile, clicked);
+								if(turn){
+									map.clearPlayable();
+									manager.tilePlayed();
+									manager.nextState();
+								}								
+							} else if (mousePressed->button == sf::Mouse::Button::Right) {
+								current_tile->rotate_clockwise();
+							}
+						}
 #ifdef DEBUG_MAIN
-							case sf::Event::KeyPressed:
-
-								switch (event.key.code) {
-									case sf::Keyboard::P:
-										std::cout << map;
-										break;
-									case sf::Keyboard::O:
-										current_tile=std::shared_ptr<Tile>(new Tile(map.draw().getTile()));
-										map.setPlayable(current_tile);
-										break;
-									default: break;
-								}
-
-								break;
-#endif
-							default: break;
+						else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
+							if(keyPressed->code == sf::Keyboard::Key::P){
+								std::cout << map;
+							} else if (keyPressed->code == sf::Keyboard::Key::O) {
+								current_tile=std::shared_ptr<Tile>(new Tile(map.draw().getTile()));
+								map.setPlayable(current_tile);
+							}
 						}
 					}
+#endif
 					if(window.isOpen()){
 						map.setPlayablePos(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
 						window.clear();
@@ -335,42 +283,25 @@ int main(int argc, char **argv){
 #endif
 
 				while(manager.getState() == follower){
-					while( window.pollEvent(event) ){
-						switch(event.type){
-							case sf::Event::Closed:
-								window.close();
-								manager.closeWindow();
-								break;
-
-							case sf::Event::MouseButtonPressed:
-								switch (event.key.code) {
-									case sf::Mouse::Left:
-										turn=map.selectItemAt(sf::Vector2f(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y), manager.getCurrentPlayer());
-										if(turn){
-											manager.nextState();
-										}
-										break;
-									case sf::Mouse::Right:
-										manager.nextState();
-										map.skipPlayable();
-										break;
-									default: break;
+					while( const auto event = window.pollEvent() ){
+						if (event->is<sf::Event::Closed>()){
+							window.close();
+							return 0;
+						} else if (const auto* mousePressed = event->getIf<sf::Event::MouseButtonPressed>()) {
+							if (mousePressed->button == sf::Mouse::Button::Right) {
+								manager.nextState();
+								map.skipPlayable();								
+							} else if (mousePressed->button == sf::Mouse::Button::Left) {
+								turn=map.selectItemAt(sf::Vector2f(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y), manager.getCurrentPlayer());
+								if(turn){
+									manager.nextState();
 								}
-								break;
-
-							case sf::Event::KeyPressed:
-
-								switch (event.key.code) {
-									case sf::Keyboard::S:
-										manager.nextState();
-										map.skipPlayable();
-										break;
-									default: break;
-								}
-
-									break;
-
-							default: break;
+							}
+						} else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
+							if (keyPressed->code == sf::Keyboard::Key::S) {
+								manager.nextState();
+								map.skipPlayable();
+							}
 						}
 					}
 					if(window.isOpen()){
@@ -403,11 +334,11 @@ int main(int argc, char **argv){
 				std::cout << manager;
 				break;
 			case end_game:
-				while(window.pollEvent(event)){
-					if(event.type == sf::Event::Closed){
+				while( const auto event = window.pollEvent() ){
+					if (event->is<sf::Event::Closed>()){
 						window.close();
 						manager.closeWindow();
-						break;
+						return 0;
 					}
 				}
 				break;

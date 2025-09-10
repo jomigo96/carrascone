@@ -6,7 +6,7 @@
 //#define DEBUG_ROAD
 //#define DEBUG_PLAYER
 //#define DEBUG_CLOISTER
-//#define DEBUG_ALL
+#define DEBUG_ALL
 //#define SMALL_SCALE_RUN
 
 #ifdef DEBUG_ALL

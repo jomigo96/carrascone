@@ -40,7 +40,9 @@ Map::Map(sf::RenderWindow& window, const std::string& path): window(window){
 		throw std::runtime_error("png file error");
 	}
 	image.createMaskFromColor(sf::Color::Black);
-	meeple_tex.loadFromImage(image);
+	if (false == meeple_tex.loadFromImage(image)) {
+		throw std::runtime_error("load image error");
+    }
 
 	struct timeval tp;
 	gettimeofday(&tp, NULL);
@@ -338,7 +340,6 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell){
 
 void Map::render(void) const{
 
-	sf::Sprite sprite;
 	const int radius = CIRCLE_RADIUS;
 	const float sqrt2 = 0.7071068;
 
@@ -354,8 +355,8 @@ void Map::render(void) const{
 			continue;
 		}
 
-		sprite.setTexture(it->second);
-		sprite.setRotation(tile.getOrientation());
+        sf::Sprite sprite(it->second);
+		sprite.setRotation(sf::degrees(tile.getOrientation()));
 		int mod_x=(tile.getOrientation()==90 || tile.getOrientation()==180) ? 1 : 0;
 		int mod_y=(tile.getOrientation()>90) ? 1 : 0;
 		sprite.setPosition(sf::Vector2f(CELL_DIM*(cell.getX()+mod_x), CELL_DIM*(cell.getY()+mod_y)));
@@ -382,11 +383,11 @@ void Map::render(void) const{
 				sf::Vector2f o_position(c.getX()*CELL_DIM, c.getY()*CELL_DIM);
 				sf::Vector2f offset = std::get<0>(stuff)->getItemPosition(std::get<1>(stuff));
 
-				sprite = sf::Sprite(meeple_tex);
+				sf::Sprite sprite(meeple_tex);
 				sprite.setColor(player_color);
 				auto size = meeple_tex.getSize();
-				sprite.setScale(2.0*radius/size.x, 2.0*radius/size.y);
-				sprite.setOrigin(112.5,112.5);
+				sprite.setScale(sf::Vector2f{static_cast<float>(2.0*radius/size.x), static_cast<float>(2.0*radius/size.y)});
+				sprite.setOrigin(sf::Vector2f{112.5f,112.5f});
 				sprite.setPosition(o_position+offset);
 
 				window.draw(sprite);
@@ -397,8 +398,8 @@ void Map::render(void) const{
 		std::map<TileType, sf::Texture>::const_iterator it = textures.find(*playable);
 		if(it == textures.cend())
 			return; //Maybe exception
-		sprite = sf::Sprite(it->second);
-		sprite.setRotation(playable->getOrientation());
+		sf::Sprite sprite(it->second);
+		sprite.setRotation(sf::degrees(playable->getOrientation()));
 		int mod_x=(playable->getOrientation()==90 || playable->getOrientation()==180) ? CELL_DIM/2 : -CELL_DIM/2;
 		int mod_y=(playable->getOrientation()>90) ? CELL_DIM/2 : -CELL_DIM/2;
 		sprite.setPosition(playable_pos+sf::Vector2f(mod_x, mod_y));
@@ -423,7 +424,7 @@ void Map::render(void) const{
 		circle.setFillColor(sf::Color::Transparent);
 		circle.setOutlineColor(current_player_color);
 		circle.setOutlineThickness(2);
-		circle.setOrigin(radius*sqrt2, radius*sqrt2);
+		circle.setOrigin(sf::Vector2f{radius*sqrt2, radius*sqrt2});
 		sf::Vector2f o_position(c.getX()*CELL_DIM, c.getY()*CELL_DIM);
 
 		std::list<TypeIdentifier> list;

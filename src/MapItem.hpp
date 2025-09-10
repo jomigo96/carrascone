@@ -19,6 +19,7 @@
 #include <set>
 #include <exception>
 #include <string>
+#include <map>
 
 class Tile;
 

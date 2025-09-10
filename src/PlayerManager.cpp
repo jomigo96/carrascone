@@ -6,7 +6,7 @@ PlayerManager::PlayerManager(sf::RenderWindow& window, sf::Texture tex,
     state=start;
     deck_size = deck_count;
 
-    if(!font.loadFromFile(path + std::string("Lato-Medium.ttf"))){
+    if(!font.openFromFile(path + std::string("Lato-Medium.ttf"))){
         std::cerr << "Error opening font" << std::endl;
         throw std::runtime_error("ttf file error");
     }
@@ -125,14 +125,14 @@ void PlayerManager::renderMenu()const{
 
     const sf::Vector2f origin(1120,50);
     sf::Sprite sprite(meeple_tex);
-    sf::Text text(std::string(), font, (int)text_height);
+    sf::Text text(font, std::string(), (int)text_height);
     std::stringstream stream;
 
     text.setFillColor(sf::Color::White);
 
 
     auto size = meeple_tex.getSize();
-    sprite.setScale(text_height/size.x, text_height/size.y);
+    sprite.setScale(sf::Vector2f{text_height/size.x, text_height/size.y});
     //sprite.setOrigin(size.x/2, size.y/2);
 
     int dev=0;
