@@ -49,7 +49,7 @@ and use `--help` to view available options.
 $ clang-format --version
 clang-format version 20.1.8
 
-clang-format -i --verbose --style=file:.clang-format ./**/*[^catch].hpp ./**/*.cpp
+clang-format -i --verbose --style=file:.clang-format ./**/*.hpp ./**/*.cpp
 ```
 
 ## Licence
