@@ -3,11 +3,11 @@ Replica of board game Carcassonne
 
 Carcassone program for local multiplayer, to run in UNIX systems.
 
-## Libraries used
+## Requirements
 
-+ C++11
-+ [SFML](https://www.sfml-dev.org/) graphic library
-+ [catch](https://github.com/catchorg/Catch2) testing framework
++ C++23
++ [SFML](https://www.sfml-dev.org/) graphic library, version 3
++ [catch](https://github.com/catchorg/Catch2) testing framework, version 3
 + [boost](https://www.boost.org/library/latest/program_options/) program options
 
 ## Future expansions
