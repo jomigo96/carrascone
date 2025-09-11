@@ -151,7 +151,6 @@ int main(int argc, char** argv)
                 menu.askPlayer(i);
 
                 pl.reset();
-                bool shift_case = false;
 
                 while( (window.isOpen()) && (pl == nullptr) ) {
                     while( const auto event = window.pollEvent() ) {
@@ -209,7 +208,7 @@ int main(int argc, char** argv)
                 break;
             }
             /////////////////////////////// Tile set ///////////////////////////
-            case lay:
+            case lay: {
 
 #ifdef DEBUG_MAIN3
                 std::cout << manager;
@@ -253,8 +252,8 @@ int main(int argc, char** argv)
                                 map.setPlayable(current_tile);
                             }
                         }
-                    }
 #endif
+                    }
                     if( window.isOpen() ) {
                         map.setPlayablePos(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
                         window.clear();
@@ -265,10 +264,10 @@ int main(int argc, char** argv)
                 }
 
                 break;
-
+            }
                 /////////////////////////////// Follower set ///////////////////////
 
-            case follower:
+            case follower: {
 
                 if( !(manager.getCurrentPlayer()->hasPieces()) ) {
                     manager.nextState();
@@ -318,8 +317,8 @@ int main(int argc, char** argv)
                 }
 
                 break;
-
-            case accept:
+            }
+            case accept: {
 #ifdef DEBUG_MAIN1
                 std::cout << "Map boundaries: " << std::endl
                           << "Up: " << map.getBoundaries(up) << std::endl
@@ -329,17 +328,20 @@ int main(int argc, char** argv)
 #endif
                 manager.nextState();
                 break;
-            case end_turn:
+            }
+            case end_turn: {
                 // Count points etc
                 map.closeItems(clicked);
                 manager.nextState();
                 break;
-            case deck_finished:
+            }
+            case deck_finished: {
                 map.countRemainingPoints();
                 manager.nextState();
                 std::cout << manager;
                 break;
-            case end_game:
+            }
+            case end_game: {
                 while( const auto event = window.pollEvent() ) {
                     if( event->is<sf::Event::Closed>() ) {
                         window.close();
@@ -348,9 +350,11 @@ int main(int argc, char** argv)
                     }
                 }
                 break;
-            case error:
+            }
+            case error: {
                 window.close();
                 break;
+            }
             default:
                 break;
         }
