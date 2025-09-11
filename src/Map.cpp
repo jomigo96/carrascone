@@ -130,7 +130,7 @@ bool Map::play(std::shared_ptr<Tile> tile, Cell cell)
     try {
         flag = fits((*tile), surroundings);
 
-    } catch( std::exception ) {
+    } catch( std::exception& ) {
         // Weird error, should never happen
         return false;
     }
@@ -503,7 +503,7 @@ TileType Map::getSurroundings(const Cell& c) const
 
     try {
         right = map.at(aux)->getLeft();
-    } catch( std::out_of_range ) {
+    } catch( std::out_of_range& ) {
         right = none;
     }
 
@@ -511,7 +511,7 @@ TileType Map::getSurroundings(const Cell& c) const
 
     try {
         down = map.at(aux)->getUp();
-    } catch( std::out_of_range ) {
+    } catch( std::out_of_range& ) {
         down = none;
     }
 
@@ -519,7 +519,7 @@ TileType Map::getSurroundings(const Cell& c) const
 
     try {
         left = map.at(aux)->getRight();
-    } catch( std::out_of_range ) {
+    } catch( std::out_of_range& ) {
         left = none;
     }
 
@@ -527,7 +527,7 @@ TileType Map::getSurroundings(const Cell& c) const
 
     try {
         up = map.at(aux)->getDown();
-    } catch( std::out_of_range ) {
+    } catch( std::out_of_range& ) {
         up = none;
     }
 
@@ -852,7 +852,7 @@ void Map::closeItems(const Cell& origin)
 
     try {
         last = this->map.at(origin);
-    } catch( std::out_of_range ) {
+    } catch( std::out_of_range& ) {
         return;
     }
 

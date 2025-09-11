@@ -32,16 +32,6 @@ class Cell
     Cell(int x, int y);
 
     /*!
-     * \brief Destructor
-     */
-    ~Cell();
-
-    /*!
-     * \brief Copy assignment
-     */
-    Cell& operator=(const Cell& other);
-
-    /*!
      * \brief Comparison operator
      *
      * Returns true if and only if both coordinates are the same

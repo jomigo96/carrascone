@@ -12,17 +12,6 @@ Cell::Cell(int x, int y)
 {
 }
 
-Cell::~Cell() {}
-
-Cell& Cell::operator=(const Cell& other)
-{
-
-    this->x = other.getX();
-    this->y = other.getY();
-
-    return *this;
-}
-
 bool Cell::operator==(const Cell& other) const { return ((this->x == other.getX()) && (this->y == other.getY())); }
 
 Cell Cell::operator+(const Cell& other) const { return Cell(this->x + other.getX(), this->y + other.getY()); }

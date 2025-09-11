@@ -240,7 +240,7 @@ void MapItem::checkCloseAndProcess(std::map<Cell, std::shared_ptr<Tile>> const& 
 
                 try {
                     players.at(std::get<2>(*it))++;
-                } catch( std::out_of_range ) {
+                } catch( std::out_of_range& ) {
                     players[std::get<2>(*it)] = 1;
                 }
 

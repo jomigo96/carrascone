@@ -215,7 +215,7 @@ int main(int argc, char** argv)
 #endif
                 try {
                     t = map.draw();
-                } catch( std::length_error ) {
+                } catch( std::length_error& ) {
                     manager.endDeck();
                     break;
                 }
