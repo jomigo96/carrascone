@@ -9,19 +9,21 @@
 #include <deque>
 #include <SFML/Graphics.hpp>
 
-enum MenuType : int{
+enum MenuType : int {
     option_selection,
     number_selection,
     player_nickname,
 };
 
-class Menu{
+class Menu
+{
 
-public:
-    Menu(sf::RenderWindow& window, std::string const& path_textures, std::string const& path_fonts, int screen_width, int screen_height);
+  public:
+    Menu(sf::RenderWindow& window, std::string const& path_textures, std::string const& path_fonts, int screen_width,
+         int screen_height);
     virtual ~Menu();
 
-    void render()const;
+    void render() const;
 
     void setOptionType(std::vector<std::string> const& option_list);
 
@@ -31,18 +33,17 @@ public:
 
     void cycleDown();
 
-    int getSelectedItem()const;
+    int getSelectedItem() const;
 
     void askPlayer(int player_no);
 
-    std::string getEntry()const;
+    std::string getEntry() const;
 
     void addLetter(char c);
 
     void removeLetter();
 
-
-protected:
+  protected:
     sf::RenderWindow& window;
     sf::Font font;
     std::string tex_path;

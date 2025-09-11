@@ -1,194 +1,193 @@
-#include "catch.hpp"
+#include <catch2/catch_all.hpp>
 #include "../src/Map.hpp"
 #include <SFML/Graphics.hpp>
 #include <cmath>
 #include <string>
 #include <iostream>
 #include <memory>
-
+#include "test-main.hpp"
 
 using namespace std;
 
 // Some of these tests are slow, so they are commented out
 
 /*
-TEST_CASE("Map: Randomness"){
+TEST_CASE("Map: Randomness")
+{
 
-	sf::RenderWindow window(sf::VideoMode(1280,720), "Carrascone");
+    sf::RenderWindow window(sf::VideoMode({1280, 720}), "Carrascone");
     window.setFramerateLimit(60);
-	window.close();
+    window.close();
 
-	const int tests = 500;
-	int weights[] = TILE_WEIGHTS;
-	int expected[24];
-	int results[24];
+    const int tests = 500;
+    int weights[]   = TILE_WEIGHTS;
+    int expected[24];
+    int results[24];
 
-	int tilecount=0;
-	for(int i=0; i<24; i++){
+    int tilecount = 0;
+    for( int i = 0; i < 24; i++ ) {
 
-		tilecount+=weights[i];
-	}
+        tilecount += weights[i];
+    }
 
-	for(int i=0; i<24; i++){
+    for( int i = 0; i < 24; i++ ) {
 
-		results[i] = 0;
-		expected[i] = tests * weights[i] / tilecount;
-	}
-	char c;
+        results[i]  = 0;
+        expected[i] = tests * weights[i] / tilecount;
+    }
+    char c;
 
+    for( int i = 0; i < tests; i++ ) {
 
-	for(int i=0; i<tests; i++){
+        Map* map = new Map(window, std::string(get_resource_path() + "/textures/"));
+        c        = map->draw().getTile();
+        results[c - 'a']++;
+        delete map;
+    }
 
-		Map* map = new Map(window, std::string("../src/textures/"));
-		c=map->draw().getTile();
-		results[c-'a']++;
-		delete map;
-	}
+    for( int i = 0; i < 24; i++ ) {
 
-	for(int i=0; i<24; i++){
+        std::cout << "Tile " << char(i + 'a') << ": " << results[i] << "/" << expected[i] << std::endl;
+        // CHECK( (double)abs(results[i]-expected[i]) / (double)results[i] < 0.25 );
+    }
+}
 
-		std::cout << "Tile " << char(i+'a') << ": " << results[i] << "/" << expected[i] << std::endl;
-		//CHECK( (double)abs(results[i]-expected[i]) / (double)results[i] < 0.25 );
-	}
+TEST_CASE("Map: draw, count")
+{
+
+    sf::RenderWindow window;
+
+    Map map(window, std::string(get_resource_path() + "/textures/"));
+    int weights[] = TILE_WEIGHTS;
+    int tiles     = TILE_NUMBER;
+
+    int count = 0;
+    for( int i = 0; i < tiles; i++ )
+        count += weights[i];
+
+    REQUIRE(count == map.deck_count());
+    Tile tile = map.draw();
+    REQUIRE(count == map.deck_count());
+
+    // play that piece somewhere
+    Cell c(7, 5);
+    int j = 0;
+    std::shared_ptr<Tile> play(new Tile(tile.getTile()));
+
+    while( !map.play(play, c) ) {
+        play->rotate_clockwise();
+        j++;
+        if( j > 4 ) {
+            c = Cell(8, 4);
+            if( j > 8 )
+                c = Cell(6, 4);
+        }
+    }
+    REQUIRE(--count == map.deck_count());
+}
+
+TEST_CASE("Merges")
+{
+
+    sf::RenderWindow window(sf::VideoMode({1280, 720}), "Carrascone");
+    window.setFramerateLimit(60);
+    window.close();
+
+    Map map(window, std::string(get_resource_path() + "/textures/"));
+
+    shared_ptr<Tile> tile(new Tile('u'));
+    CHECK(map.play(tile, Cell(6, 4)) == true);
+
+    tile = shared_ptr<Tile>(new Tile('u'));
+    CHECK(map.play(tile, Cell(7, 5)) == true);
+
+    tile = shared_ptr<Tile>(new Tile('v'));
+    tile->rotate_clockwise();
+    CHECK(map.play(tile, Cell(6, 5)) == true);
+
+    tile = shared_ptr<Tile>(new Tile('a'));
+    CHECK(map.play(tile, Cell(7, 3)) == true);
+
+    tile = shared_ptr<Tile>(new Tile('v'));
+    map.play(tile, Cell(7, 3));
+    tile = shared_ptr<Tile>(new Tile('v'));
+    tile->rotate_clockwise();
+    tile->rotate_clockwise();
+    map.play(tile, Cell(6, 3));
+    tile = shared_ptr<Tile>(new Tile('v'));
+    map.play(tile, Cell(7, 2));
+    tile = shared_ptr<Tile>(new Tile('v'));
+    tile->rotate_clockwise();
+    tile->rotate_clockwise();
+    map.play(tile, Cell(8, 3));
+    tile = shared_ptr<Tile>(new Tile('u'));
+    tile->rotate_clockwise();
+    map.play(tile, Cell(7, 2));
+    tile = shared_ptr<Tile>(new Tile('v'));
+    tile->rotate_counter_clockwise();
+    map.play(tile, Cell(6, 2));
+
+    cout << map;
+    // This fails
+    tile = shared_ptr<Tile>(new Tile('v'));
+    map.play(tile, Cell(8, 2));
+
+    map.render();
+    window.display();
+    getchar();
+    std::cout << map;
 }
 */
 
-/*
-TEST_CASE("Map: draw, count"){
+bool list_contains_one(list<TypeIdentifier>& li, TypeIdentifier t)
+{
 
-	sf::RenderWindow window;
+    int count = 0;
 
-	Map map(window, std::string("../src/textures/"));
-	int weights[] = TILE_WEIGHTS;
-	int tiles = TILE_NUMBER;
+    for( auto it = li.cbegin(); it != li.cend(); it++ ) {
+        if( *it == t )
+            count++;
+    }
+    return count == 1;
+}
 
-	int count = 0;
-	for(int i=0; i<tiles; i++)
-		count+=weights[i];
+TEST_CASE("Map: free real estate")
+{
 
-	REQUIRE(count == map.deck_count());
-	Tile tile = map.draw();
-	REQUIRE(count == map.deck_count());
-
-	//play that piece somewhere
-	Cell c(7,5);
-	int j=0;
-	std::shared_ptr<Tile> play(new Tile(tile.getTile()));
-
-	while(!map.play(play, c)){
-		play->rotate_clockwise();
-		j++;
-		if(j>4){
-			c=Cell(8,4);
-			if(j>8)
-				c=Cell(6,4);
-		}
-	}
-	REQUIRE(--count == map.deck_count());
-}*/
-
-/*
-TEST_CASE("Merges"){
-
-	sf::RenderWindow window(sf::VideoMode(1280,720), "Carrascone");
+    sf::RenderWindow window(sf::VideoMode({1280, 720}), "Carrascone");
     window.setFramerateLimit(60);
-	//window.close();
+    window.close();
 
-	Map map(window, std::string("../src/textures/"));
+    Map map(window, std::string(get_resource_path() + "textures/"));
 
-	shared_ptr<Tile> tile(new Tile('u'));
-	CHECK(map.play(tile, Cell(6,4))==true);
+    shared_ptr<Tile> tile(new Tile('a'));
+    map.play(tile, START_POSITION + Cell(0, -1));
 
-	tile = shared_ptr<Tile>(new Tile('u'));
-	CHECK(map.play(tile, Cell(7,5))==true);
+    list<TypeIdentifier> li;
 
-	tile = shared_ptr<Tile>(new Tile('v'));
-	tile->rotate_clockwise();
-	CHECK(map.play(tile, Cell(6,5))==true);
+    map.getFreeRealEstate(tile, li);
 
-
-	shared_ptr<Tile> tile(new Tile('a'));
-	CHECK(map.play(tile, Cell(7,3))==true);
-
-
-	shared_ptr<Tile> tile(new Tile('v'));
-	map.play(tile, Cell(7,3));
-	tile=shared_ptr<Tile>(new Tile('v'));
-	tile->rotate_clockwise(); tile->rotate_clockwise();
-	map.play(tile, Cell(6,3));
-	tile=shared_ptr<Tile>(new Tile('v'));
-	map.play(tile, Cell(7,2));
-	tile=shared_ptr<Tile>(new Tile('v'));
-	tile->rotate_clockwise(); tile->rotate_clockwise();
-	map.play(tile, Cell(8,3));
-	tile=shared_ptr<Tile>(new Tile('u'));
-	tile->rotate_clockwise();
-	map.play(tile, Cell(7,2));
-	tile=shared_ptr<Tile>(new Tile('v'));
-	tile->rotate_counter_clockwise();
-	map.play(tile, Cell(6,2));
-
-	cout<<map;
-	//This fails
-	tile=shared_ptr<Tile>(new Tile('v'));
-	map.play(tile, Cell(8,2));
-
-
-	map.render();
-	window.display();
-	getchar();
-	std::cout << map;
-}
-*/
-
-bool list_contains_one(list<TypeIdentifier>& li, TypeIdentifier t){
-
-	int count=0;
-
-	for(auto it=li.cbegin(); it!= li.cend(); it++){
-		if(*it == t)
-			count++;
-	}
-	return count==1;
+    CHECK(li.size() == 3);
+    CHECK(list_contains_one(li, cloister));
+    CHECK(list_contains_one(li, field1));
+    CHECK(list_contains_one(li, road1));
+    CHECK(list_contains_one(li, road2) == false);
 }
 
+TEST_CASE("Map: plying followers")
+{
 
-TEST_CASE("Map: free real estate"){
+    sf::RenderWindow window(sf::VideoMode({1280, 720}), "Carrascone");
+    window.setFramerateLimit(60);
+    window.close();
+    Map map(window, std::string(get_resource_path() + "textures/"));
 
-	sf::RenderWindow window(sf::VideoMode(1280,720), "Carrascone");
-	window.setFramerateLimit(60);
-	window.close();
+    shared_ptr<Tile> tile(new Tile('a'));
+    map.play(tile, START_POSITION + Cell(0, -1));
 
-	Map map(window, std::string("../src/textures/"));
+    shared_ptr<Player> player1(new Player());
 
-	shared_ptr<Tile> tile(new Tile('a'));
-	map.play(tile, START_POSITION + Cell(0,-1));
-
-	list<TypeIdentifier> li;
-
-	map.getFreeRealEstate(tile, li);
-
-	CHECK(li.size() == 3);
-	CHECK(list_contains_one(li, cloister));
-	CHECK(list_contains_one(li, field1));
-	CHECK(list_contains_one(li, road1));
-	CHECK(list_contains_one(li, road2) == false);
-
-}
-
-TEST_CASE("Map: plying followers"){
-
-	sf::RenderWindow window(sf::VideoMode(1280,720), "Carrascone");
-	window.setFramerateLimit(60);
-	window.close();
-	Map map(window, std::string("../src/textures/"));
-
-	shared_ptr<Tile> tile(new Tile('a'));
-	map.play(tile, START_POSITION + Cell(0,-1));
-
-	shared_ptr<Player> player1(new Player());
-
-	CHECK(map.setPiece(cloister, player1));
-	CHECK(map.setPiece(cloister, player1) == false);
-	CHECK(map.setPiece(castle1, player1) == false);
+    CHECK(map.setPiece(cloister, player1));
+    CHECK(map.setPiece(cloister, player1) == false);
+    CHECK(map.setPiece(castle1, player1) == false);
 }

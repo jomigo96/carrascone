@@ -34,3 +34,7 @@ main
 
 # IDE stuff
 .atomignore
+.vscode
+
+# default build directory
+build

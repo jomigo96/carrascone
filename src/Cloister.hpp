@@ -11,25 +11,24 @@
 #include "MapItem.hpp"
 #include <ostream>
 
-
 /*!
  * \class Cloister
  * \brief
  * */
-class Cloister : public MapItem{
+class Cloister : public MapItem
+{
 
-public:
-	Cloister();
-	Cloister(std::shared_ptr<Tile> tile, TypeIdentifier key);
-	~Cloister();
+  public:
+    Cloister();
+    Cloister(std::shared_ptr<Tile> tile, TypeIdentifier key);
+    ~Cloister();
 
-	std::ostream& myprint(std::ostream& os, const MapItem& item)const;
+    std::ostream& myprint(std::ostream& os, const MapItem& item) const;
 
-	void checkCloseAndProcess(std::map<Cell, std::shared_ptr<Tile>> const& map);
+    void checkCloseAndProcess(std::map<Cell, std::shared_ptr<Tile>> const& map);
 
-	void giveRemainingPoints(std::map<Cell, std::shared_ptr<Tile>> const& map);
+    void giveRemainingPoints(std::map<Cell, std::shared_ptr<Tile>> const& map);
 
-private:
-
+  private:
 };
 #endif /* CLOISTER_HPP */

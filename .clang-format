@@ -1,0 +1,20 @@
+---
+BasedOnStyle: LLVM
+AlignConsecutiveMacros: true
+AlignConsecutiveAssignments: true
+AlignEscapedNewlines: Right
+BreakBeforeBraces: Linux
+BreakConstructorInitializers: BeforeComma
+ColumnLimit: 120
+IncludeBlocks: Preserve
+IndentCaseLabels: true
+IndentWidth: 4
+TabWidth: 4
+PointerAlignment: Left
+SortIncludes: false
+SpaceBeforeParens: Never
+SpaceBeforeRangeBasedForLoopColon: false
+SpaceInEmptyParentheses: false
+SpacesInCStyleCastParentheses: false
+SpacesInContainerLiterals: false
+SpacesInConditionalStatement: true

@@ -7,7 +7,7 @@
 #ifndef MAPITEM_HPP
 #define MAPITEM_HPP
 
-//#include "Cell.hpp"
+// #include "Cell.hpp"
 #include "configs.hpp"
 #include "Player.hpp"
 #include "Tile.hpp"
@@ -19,6 +19,7 @@
 #include <set>
 #include <exception>
 #include <string>
+#include <map>
 
 class Tile;
 
@@ -35,31 +36,31 @@ class Tile;
  * on the bottom left, road1 on top, road2 on bottom, road3 on the left,
  * and castle1 on the right.
  * */
-enum TypeIdentifier: unsigned int{
+enum TypeIdentifier : unsigned int {
 
-	//Roads
-	road1,
-	road2,
-	road3,
-	road4,
+    // Roads
+    road1,
+    road2,
+    road3,
+    road4,
 
-	//Castles
-	castle1,
-	castle2,
+    // Castles
+    castle1,
+    castle2,
 
-	//Fields
-	field1,
-	field2,
-	field3,
-	field4,
+    // Fields
+    field1,
+    field2,
+    field3,
+    field4,
 
-	cloister,
+    cloister,
 
-	//none
-	invalid
+    // none
+    invalid
 };
 
-//forward declarations
+// forward declarations
 class Tile;
 class Player;
 
@@ -67,52 +68,53 @@ class Player;
  * \class MapItem
  * \brief Base class for map elements such as castles, fields, roads
  * */
-class MapItem{
+class MapItem
+{
 
-public:
-	MapItem();
-	MapItem(std::shared_ptr<Tile> tile, TypeIdentifier key);
-	~MapItem();
+  public:
+    MapItem();
+    MapItem(std::shared_ptr<Tile> tile, TypeIdentifier key);
+    ~MapItem();
 
-	friend std::ostream& operator<<(std::ostream& os, const MapItem& item);
+    friend std::ostream& operator<<(std::ostream& os, const MapItem& item);
 
-	std::vector<std::tuple<std::shared_ptr<Tile>, TypeIdentifier, std::shared_ptr<Player>>>const& getSpan(void)const;
+    std::vector<std::tuple<std::shared_ptr<Tile>, TypeIdentifier, std::shared_ptr<Player>>> const& getSpan(void) const;
 
-	TypeIdentifier getFirst()const;
+    TypeIdentifier getFirst() const;
 
-	void mergeWith(std::shared_ptr<MapItem> other);
+    void mergeWith(std::shared_ptr<MapItem> other);
 
-	bool hasItem(std::shared_ptr<const Tile> tileptr, TypeIdentifier type)const;
+    bool hasItem(std::shared_ptr<const Tile> tileptr, TypeIdentifier type) const;
 
-	bool hasTile(std::shared_ptr<Tile> tileptr)const;
+    bool hasTile(std::shared_ptr<Tile> tileptr) const;
 
-	bool hasOccupant()const;
+    bool hasOccupant() const;
 
-	bool isClosed()const;
+    bool isClosed() const;
 
-	void freeRealEstate(std::shared_ptr<Tile> tile, std::list<TypeIdentifier>& target)const;
+    void freeRealEstate(std::shared_ptr<Tile> tile, std::list<TypeIdentifier>& target) const;
 
-	bool claim(std::shared_ptr<const Tile> tile, TypeIdentifier type, std::shared_ptr<Player> player);
+    bool claim(std::shared_ptr<const Tile> tile, TypeIdentifier type, std::shared_ptr<Player> player);
 
-	void getOccupiedPosition(std::list<std::tuple<std::shared_ptr<Tile>, TypeIdentifier, std::shared_ptr<Player>>>& list);
+    void
+    getOccupiedPosition(std::list<std::tuple<std::shared_ptr<Tile>, TypeIdentifier, std::shared_ptr<Player>>>& list);
 
-	//Checks if it was closed with this play, gives points and followers back
-	//Overriden for field and cloister types
-	virtual void checkCloseAndProcess(std::map<Cell, std::shared_ptr<Tile>> const& map);
+    // Checks if it was closed with this play, gives points and followers back
+    // Overriden for field and cloister types
+    virtual void checkCloseAndProcess(std::map<Cell, std::shared_ptr<Tile>> const& map);
 
-	virtual int countPoints(void)const;
+    virtual int countPoints(void) const;
 
-	virtual void giveRemainingPoints(std::map<Cell, std::shared_ptr<Tile>> const& );
+    virtual void giveRemainingPoints(std::map<Cell, std::shared_ptr<Tile>> const&);
 
-protected:
-	std::vector<std::tuple<std::shared_ptr<Tile>, TypeIdentifier, std::shared_ptr<Player>>> span;
-	bool occupant;
-	bool closed;
-	// connects;
+  protected:
+    std::vector<std::tuple<std::shared_ptr<Tile>, TypeIdentifier, std::shared_ptr<Player>>> span;
+    bool occupant;
+    bool closed;
+    // connects;
 
-private:
-	virtual std::ostream& myprint(std::ostream& os, const MapItem& item)const;
-
+  private:
+    virtual std::ostream& myprint(std::ostream& os, const MapItem& item) const;
 };
 
 // Non Member functions for debugging

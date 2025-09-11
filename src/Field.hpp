@@ -15,22 +15,22 @@
  * \class Field
  * \brief
  * */
-class Field : public MapItem{
+class Field : public MapItem
+{
 
-public:
-	Field();
-	Field(std::shared_ptr<Tile> tile, TypeIdentifier key);
-	~Field();
+  public:
+    Field();
+    Field(std::shared_ptr<Tile> tile, TypeIdentifier key);
+    ~Field();
 
-	std::ostream& myprint(std::ostream& os, const MapItem& item)const;
+    std::ostream& myprint(std::ostream& os, const MapItem& item) const;
 
-	void checkCloseAndProcess(std::map<Cell, std::shared_ptr<Tile>> const&);
+    void checkCloseAndProcess(std::map<Cell, std::shared_ptr<Tile>> const&);
 
-	void giveRemainingPoints(std::map<Cell, std::shared_ptr<Tile>> const& );
+    void giveRemainingPoints(std::map<Cell, std::shared_ptr<Tile>> const&);
 
-	void giveRemainingPoints(int castles);
+    void giveRemainingPoints(int castles);
 
-private:
-
+  private:
 };
 #endif /* FIELD_HPP */

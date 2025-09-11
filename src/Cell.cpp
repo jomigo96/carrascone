@@ -1,55 +1,33 @@
 #include "Cell.hpp"
 
-Cell::Cell(){
-	x=0;
-	y=0;
+Cell::Cell()
+{
+    x = 0;
+    y = 0;
 }
 
-Cell::Cell(int x, int y) : x(x), y(y) {}
-
-Cell::~Cell(){}
-
-Cell& Cell::operator=(const Cell& other){
-
-	this->x=other.getX();
-	this->y=other.getY();
-	
-	return *this;
+Cell::Cell(int x, int y)
+    : x(x)
+    , y(y)
+{
 }
 
-bool Cell::operator==(const Cell& other)const{
-	
-	return ((this->x==other.getX()) && (this->y==other.getY()));
-}
+bool Cell::operator==(const Cell& other) const { return ((this->x == other.getX()) && (this->y == other.getY())); }
 
-Cell Cell::operator+(const Cell& other)const{
-	
-	return Cell(this->x+other.getX(), this->y+other.getY());
-}
+Cell Cell::operator+(const Cell& other) const { return Cell(this->x + other.getX(), this->y + other.getY()); }
 
-Cell Cell::operator-(const Cell& other)const{
-	
-	return Cell(this->x-other.getX(), this->y-other.getY());
-}
-		
-int Cell::getX()const{
-	
-	return x;
-}
+Cell Cell::operator-(const Cell& other) const { return Cell(this->x - other.getX(), this->y - other.getY()); }
 
-int Cell::getY()const{
-	
-	return y;
-}
+int Cell::getX() const { return x; }
 
-int Cell::greatest()const{
-	
-	return (abs(x)>abs(y)) ? abs(x) : abs(y);
-}
+int Cell::getY() const { return y; }
 
-bool Cell::operator<(const Cell& other)const{
-	
-	if (x==other.getX())
-		return y<other.getY();
-	return x<other.getX();
+int Cell::greatest() const { return (abs(x) > abs(y)) ? abs(x) : abs(y); }
+
+bool Cell::operator<(const Cell& other) const
+{
+
+    if( x == other.getX() )
+        return y < other.getY();
+    return x < other.getX();
 }
