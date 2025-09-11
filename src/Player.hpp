@@ -16,33 +16,33 @@
  * \class Player
  * \brief
  * */
-class Player{
+class Player
+{
 
-public:
+  public:
+    Player();
+    ~Player();
+    Player(const std::string& name, const sf::Color& colour);
 
-	Player();
-	~Player();
-	Player(const std::string& name, const sf::Color& colour);
+    bool hasPieces() const;
 
-	bool hasPieces()const;
+    // true if either name or color match
+    bool operator==(const Player& other) const;
+    bool operator!=(const Player& other) const;
 
-	// true if either name or color match
-	bool operator==(const Player& other)const;
-	bool operator!=(const Player& other)const;
+    bool takePiece();
+    bool givePiece();
+    void givePoints(int p);
 
-	bool takePiece();
-	bool givePiece();
-	void givePoints(int p);
+    sf::Color const& getColor() const;
+    std::string const& getNickname() const;
+    int getPoints() const;
+    int getPieces() const;
 
-	sf::Color const& getColor()const;
-	std::string const& getNickname()const;
-	int getPoints()const;
-	int getPieces()const;
-
-private:
-	unsigned piece_count;
-	sf::Color color;
-	std::string nickname;
-	int points;
+  private:
+    unsigned piece_count;
+    sf::Color color;
+    std::string nickname;
+    int points;
 };
 #endif /* PLAYER_HPP */

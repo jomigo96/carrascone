@@ -6,7 +6,6 @@
  * \author João Gonçalves
  */
 
-
 #include <cstdlib>
 #include "configs.hpp"
 #define CELL_DIM 78
@@ -16,73 +15,73 @@
  * \brief Grid system, with the same axis as the SFML window
  *
  */
-class Cell{
-public:
-	/*!
+class Cell
+{
+  public:
+    /*!
      * \brief Default contructor
      */
-	Cell();
+    Cell();
 
-	/*!
+    /*!
      * \brief Constructor
      *
      * \param x x grid coordinate
      * \param y y grid coordinate
      */
-	Cell(int x, int y);
+    Cell(int x, int y);
 
-	/*!
+    /*!
      * \brief Destructor
      */
-	~Cell();
+    ~Cell();
 
-	/*!
+    /*!
      * \brief Copy assignment
      */
-	Cell& operator=(const Cell& other);
+    Cell& operator=(const Cell& other);
 
-	/*!
+    /*!
      * \brief Comparison operator
      *
      * Returns true if and only if both coordinates are the same
      */
-	bool operator==(const Cell& other)const;
+    bool operator==(const Cell& other) const;
 
-	bool operator<(const Cell& other)const;
+    bool operator<(const Cell& other) const;
 
-	/*!
+    /*!
      * \brief subtraction operator
      *
      * The result is a displacement, analogous to a cartesian vector
      */
-	Cell operator-(const Cell& other)const;
+    Cell operator-(const Cell& other) const;
 
-	/*!
+    /*!
      * \brief adition operator
      *
      * Analogous to adding vectors
      */
-	Cell operator+(const Cell& other)const;
+    Cell operator+(const Cell& other) const;
 
-	/*!
+    /*!
      * \brief Return the greatest coordinate
      */
-	int greatest()const;
+    int greatest() const;
 
-	/*!
+    /*!
      * \brief Return X coordinate
      */
-	int getX()const;
+    int getX() const;
 
-	/*!
+    /*!
      * \brief Return Y coordinate
      */
-	int getY()const;
+    int getY() const;
 
-private:
-	int x;
-	int y;
+  private:
+    int x;
+    int y;
 };
-
 
 #endif /* CELL_HPP */

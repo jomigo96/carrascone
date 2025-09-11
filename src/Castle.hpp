@@ -15,19 +15,18 @@
  * \class Castle
  * \brief
  * */
-class Castle : public MapItem{
+class Castle : public MapItem
+{
 
-public:
-	Castle();
-	Castle(std::shared_ptr<Tile> tile, TypeIdentifier key);
-	~Castle();
+  public:
+    Castle();
+    Castle(std::shared_ptr<Tile> tile, TypeIdentifier key);
+    ~Castle();
 
-	std::ostream& myprint(std::ostream& os, const MapItem& item)const;
+    std::ostream& myprint(std::ostream& os, const MapItem& item) const;
 
-	int countPoints(void)const;
+    int countPoints(void) const;
 
-
-private:
-
+  private:
 };
 #endif /* CASTLE_HPP */
