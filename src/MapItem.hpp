@@ -74,7 +74,7 @@ class MapItem
   public:
     MapItem();
     MapItem(std::shared_ptr<Tile> tile, TypeIdentifier key);
-    ~MapItem();
+    virtual ~MapItem();
 
     friend std::ostream& operator<<(std::ostream& os, const MapItem& item);
 
